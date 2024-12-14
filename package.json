@@ -1,0 +1,26 @@
+{
+  "name": "express-postgres-ejs",
+  "version": "1.0.0",
+  "description": "Template Repo for Node + Express + Postgres + EJS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --watch app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Snehamoy Bag",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "ejs": "^3.1.10",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.11.0",
+    "prettier": "3.3.3"
+  }
+}
