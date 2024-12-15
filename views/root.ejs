@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= title %></title>
+    <link href="styles/root.css" rel="stylesheet">
+  </head>
+  <body>
+    <header>
+      <h2>Clubhouse</h2>
+    </header>
+      <!-- looks for locals.mainView, e.g. locals.mainView = "homepage" -->    
+      <!-- locals.mainView should be the <main> of a page  -->
+      <!-- and must live directly inside the 'views' folder -->
+      <%- include(`./${mainView}.ejs`) %>
+    <footer>
+      <p>Build by Snehamoy Bag</p>
+    </footer>
+  </body>
+</html>

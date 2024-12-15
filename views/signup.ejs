@@ -1,0 +1,76 @@
+<main>
+  <h2 class="title title--primary">Create new account</h2>
+  <form action="/sign-up" method="POST" class="signup-form">
+    <p class="signup-form__input-wrapper">
+      <label for="first-name" class="signup-form__label">
+        First name<span class="required" title="required">*</span> : 
+      </label>
+      <input 
+        type="text"
+        id="first-name"
+        name="firstName"
+        maxlength="35"
+        placeholder="John"
+        required
+        class="signup-form__input"
+      />
+    </p>
+    <p class="signup-form__input-wrapper">
+      <label for="last-name" class="signup-form__label">
+        Last name<span class="required" title="required">*</span> : 
+      </label>
+      <input
+        type="text"
+        id="last-name"
+        name="lastName"
+        maxlength="35"
+        placeholder="Doe"
+        required
+        class="signup-form__input"
+      />
+    </p>
+    <p class="signup-form__input-wrapper">
+      <label for="email" class="signup-form__label">
+        Email address<span class="required" title="required">*</span> : 
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="johndoe21@email.com"
+        maxlength="320"
+        required
+        class="signup-form__input"
+      />
+    </p>
+    <p class="signup-form__input-wrapper">
+      <label for="password" class="signup-form__label">
+        Password<span class="required" title="required">*</span> :
+      </label>
+      <input 
+        type="password" 
+        id="password"
+        name="password"
+        minlength="8"
+        maxlength="32"
+        required
+        class="signup-form__input"
+      />
+    </p>
+    <p class="signup-form__input-wrapper">
+      <label for="confirm-password" class="signup-form__label">
+        Confirm password<span class="required" title="required">*</span> :
+      </label>
+      <input 
+        type="text" 
+        id="confirm-password"
+        name="confirmPassword"
+        minlength="8"
+        maxlength="32"
+        required
+        class="signup-form__input"
+      />
+    </p>
+    <button type="submit" class="btn btn--submit">Sign up</button>
+  </form>
+</main>

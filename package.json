@@ -1,10 +1,9 @@
 {
-  "name": "express-postgres-ejs",
+  "name": "Clubhouse App",
   "version": "1.0.0",
   "description": "Template Repo for Node + Express + Postgres + EJS",
-  "main": "index.js",
   "scripts": {
-    "start": "node --watch app.js",
+    "dev": "node --watch app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,6 +12,11 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-async-handler": "^1.2.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.13.0"
   },
   "devDependencies": {
