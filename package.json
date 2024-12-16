@@ -1,9 +1,11 @@
 {
   "name": "Clubhouse App",
   "version": "1.0.0",
-  "description": "Template Repo for Node + Express + Postgres + EJS",
+  "description": "Clubhouse App",
   "scripts": {
+    "start": "node app.js",
     "dev": "node --watch app.js",
+    "seeddb": "node db/seeddb.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
