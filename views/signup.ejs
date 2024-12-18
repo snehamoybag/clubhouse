@@ -5,12 +5,16 @@
       <label for="first-name" class="signup-form__label">
         First name<span class="required" title="required">*</span> : 
       </label>
+      <label id="first-name" class="signup-form_label">
+        <%= locals.errors && errors.firstName ? errors.firstName.msg : ""; %>
+      </label>
       <input 
         type="text"
         id="first-name"
         name="firstName"
         maxlength="35"
         placeholder="John"
+        value="<%= locals.fieldValues ? fieldValues.firstName : ''; %>"
         required
         class="signup-form__input"
       />
@@ -19,12 +23,16 @@
       <label for="last-name" class="signup-form__label">
         Last name<span class="required" title="required">*</span> : 
       </label>
+      <label id="last-name" class="signup-form_label">
+        <%= locals.errors && errors.lastName ? errors.lastName.msg : ""; %>
+      </label>
       <input
         type="text"
         id="last-name"
         name="lastName"
         maxlength="35"
         placeholder="Doe"
+        value="<%= locals.fieldValues ? fieldValues.lastName : ''; %>"
         required
         class="signup-form__input"
       />
@@ -33,12 +41,16 @@
       <label for="email" class="signup-form__label">
         Email address<span class="required" title="required">*</span> : 
       </label>
+      <label id="email" class="signup-form_label">
+        <%= locals.errors && errors.email ? errors.email.msg : ""; %>
+      </label>
       <input
         type="email"
         id="email"
         name="email"
         placeholder="johndoe21@email.com"
         maxlength="320"
+        value="<%= locals.fieldValues ? fieldValues.email : ''; %>"
         required
         class="signup-form__input"
       />
@@ -47,12 +59,16 @@
       <label for="password" class="signup-form__label">
         Password<span class="required" title="required">*</span> :
       </label>
+      <label id="password" class="signup-form_label">
+        <%= locals.errors && errors.password ? errors.password.msg : ""; %>
+      </label>
       <input 
         type="password" 
         id="password"
         name="password"
         minlength="8"
         maxlength="32"
+        value="<%= locals.fieldValues ? fieldValues.password : ''; %>"
         required
         class="signup-form__input"
       />
@@ -61,12 +77,16 @@
       <label for="confirm-password" class="signup-form__label">
         Confirm password<span class="required" title="required">*</span> :
       </label>
+      <label id="confirm-password" class="signup-form_label">
+        <%= locals.errors && errors.confirmPassword ? errors.confirmPassword.msg : ""; %>
+      </label>
       <input 
         type="text" 
         id="confirm-password"
         name="confirmPassword"
         minlength="8"
         maxlength="32"
+        value="<%= locals.fieldValues ? fieldValues.confirmPassword : ''; %>"
         required
         class="signup-form__input"
       />

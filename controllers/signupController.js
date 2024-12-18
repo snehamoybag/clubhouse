@@ -33,12 +33,20 @@ const formValidationChains = [
   ),
 ];
 
+const getViewData = (fieldValues, errors) => ({
+  title: "Sign up",
+  mainView: "signup",
+  fieldValues,
+  errors,
+});
+
 exports.GET = asyncHandler(async (req, res) => {
-  res.render("root", { title: "Sign up to Clubhouse", mainView: "signup" });
+  res.render("root", getViewData());
 });
 
 exports.POST = [
   formValidationChains,
+
   asyncHandler(async (req, res) => {
     const validationErrors = validationResult(req);
 
@@ -47,6 +55,8 @@ exports.POST = [
       return;
     }
 
-    res.status(422).send(validationErrors.mapped());
+    res
+      .status(422)
+      .render("root", getViewData(req.body, validationErrors.mapped()));
   }),
 ];

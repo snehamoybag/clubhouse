@@ -1,3 +1,3 @@
-exports.get = (req, res) => {
+exports.GET = (req, res) => {
   res.send("Hello App");
 };
