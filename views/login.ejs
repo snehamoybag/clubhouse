@@ -1,0 +1,42 @@
+<main>
+  <h1>Login to Clubhouse</h1>
+  <form action="/login" method="POST" class="form">
+    <p class="form__input-wrapper">
+      <label for="email" class="form__label">
+        Email address<span class="required" title="required">*</span> : 
+      </label>
+      <label id="email" class="form_label">
+        <%= locals.errors && errors.email ? errors.email : ""; %>
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="johndoe21@email.com"
+        maxlength="320"
+        value="<%= locals.fieldValues ? fieldValues.email : ''; %>"
+        required
+        class="form__input"
+      />
+    </p>
+    <p class="form__input-wrapper">
+      <label for="password" class="form__label">
+        Password<span class="required" title="required">*</span> :
+      </label>
+      <label id="password" class="form_label">
+        <%= locals.errors && errors.password ? errors.password : ""; %>
+      </label>
+      <input 
+        type="password" 
+        id="password"
+        name="password"
+        minlength="8"
+        maxlength="32"
+        value="<%= locals.fieldValues ? fieldValues.password : ''; %>"
+        required
+        class="form__input"
+      />
+    </p>
+    <button type="submit" class="btn btn--submit">Login</button>
+  </form>
+</main>

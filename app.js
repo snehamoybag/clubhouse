@@ -2,11 +2,16 @@ require("dotenv").config; // gain access to .env file varialbles
 const path = require("node:path");
 const express = require("express");
 const session = require("express-session");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const passport = require("./config/passport");
 
 const indexRouter = require("./routes/indexRouter");
 const signupRouter = require("./routes/signupRouter");
+const loginRouter = require("./routes/loginRouter");
+const logoutRouter = require("./routes/logoutRouter");
+const successRouter = require("./routes/successRouter");
+
+const errorHandler = require("./middlewares/errorHandler");
+const notFound404Handler = require("./middlewares/notFound404Handler");
 
 const app = express();
 
@@ -16,7 +21,11 @@ app.set("view engine", "ejs");
 
 // session middleware
 app.use(
-  session({ secret: "abrakadbara", resave: false, saveUninitialized: false }),
+  session({
+    secret: process.env.SESSION_SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+  }),
 );
 app.use(passport.session());
 
@@ -26,26 +35,15 @@ app.use(express.urlencoded({ extended: true })); // parses html data
 // routes
 app.use("/", indexRouter);
 app.use("/sign-up", signupRouter);
+app.use("/login", loginRouter);
+app.use("/logout", logoutRouter);
+app.use("/success", successRouter);
 
 // error handler
-app.use((err, req, res, next) => {
-  console.error(err.message);
-
-  res.status(err.statusCode || 500).render("error", {
-    name: err.name || "error",
-    statusCode: err.statusCode || 500,
-    message: err.message || "internal server error",
-  });
-});
+app.use(errorHandler);
 
 // error 404 route. Make sure it is at the end of all middleware functions
-app.use((req, res, next) => {
-  res.status(404).render("error", {
-    name: "NotFound",
-    statusCode: 404,
-    message: "Page not found.",
-  });
-});
+app.use(notFound404Handler);
 
 // run server
 const HOST = process.env.HOST || "localhost";

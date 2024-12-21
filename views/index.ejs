@@ -1,3 +1,13 @@
 <main>
   <h1>Index page</h1>
+  <form action="" method="POST" class="message">
+    <p>
+      <label for="message" class="message__label">
+        Hi <%= locals.user ? user.first_name : 'Anonymous' %>, what's in your mind?
+      </label>
+      <textarea id="message" name="message" id="" cols="30" rows="10" class="message__input"></textarea>
+    </p>
+    <button type="submit" class="btn btn--submit">Post Message</button>
+  </form>
+  <form action="/logout" method="POST"><button type="submit">Logout</button></form>
 </main>
