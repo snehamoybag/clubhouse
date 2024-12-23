@@ -1,14 +1,10 @@
-require("dotenv").config; // gain access to .env file varialbles
+require("dotenv").config();
 const path = require("node:path");
 const express = require("express");
-const session = require("express-session");
+const expressSession = require("./config/expressSession");
 const passport = require("./config/passport");
 
-const indexRouter = require("./routes/indexRouter");
-const signupRouter = require("./routes/signupRouter");
-const loginRouter = require("./routes/loginRouter");
-const logoutRouter = require("./routes/logoutRouter");
-const successRouter = require("./routes/successRouter");
+const routes = require("./routes");
 
 const errorHandler = require("./middlewares/errorHandler");
 const notFound404Handler = require("./middlewares/notFound404Handler");
@@ -19,25 +15,15 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-// session middleware
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET_KEY,
-    resave: false,
-    saveUninitialized: false,
-  }),
-);
+// session middlewares
+app.use(expressSession);
 app.use(passport.session());
 
 // body parser for html forms
-app.use(express.urlencoded({ extended: true })); // parses html data
+app.use(express.urlencoded({ extended: true }));
 
 // routes
-app.use("/", indexRouter);
-app.use("/sign-up", signupRouter);
-app.use("/login", loginRouter);
-app.use("/logout", logoutRouter);
-app.use("/success", successRouter);
+app.use(routes);
 
 // error handler
 app.use(errorHandler);
