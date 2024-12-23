@@ -16,6 +16,12 @@ const query = `
     name VARCHAR(128) UNIQUE,
     about VARCHAR(255)
   );
+
+  CREATE TABLE IF NOT EXISTS posts(
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    message TEXT,
+    date TIMESTAMP
+  );
  
   CREATE TABlE IF NOT EXISTS members_of_clubs(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -26,15 +32,21 @@ const query = `
     FOREIGN KEY(member_id) REFERENCES users(id)
   );
 
-  CREATE TABLE IF NOT EXISTS posts(
+  CREATE TABLE posts_of_users(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    message TEXT,
-    date TIMESTAMP,
     user_id INTEGER UNIQUE,
-    club_id INTEGER UNIQUE,
+    post_id INTEGER UNIQUE,
     FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(club_id) REFERENCES clubs(id)
+    FOREIGN KEY(post_id) REFERENCES posts(id)
   );
+
+  CREATE TABLE posts_in_clubs(
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    club_id INTEGER UNIQUE,
+    post_id INTEGER UNIQUE,
+    FOREIGN KEY(club_id) REFERENCES clubs(id),
+    FOREIGN KEY(post_id) REFERENCES posts(id)
+  )
 `;
 
 const main = async () => {
