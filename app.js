@@ -22,6 +22,12 @@ app.use(passport.session());
 // body parser for html forms
 app.use(express.urlencoded({ extended: true }));
 
+// set global locals variables
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
 // routes
 app.use(routes);
 

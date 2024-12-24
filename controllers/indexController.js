@@ -1,13 +1,23 @@
 const asyncHandler = require("express-async-handler");
-const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
+const isAuthenticated = require("../middlewares/isAuthenticated");
+const addPost = require("../middlewares/addPost");
+const { getPostsAsync } = require("../db/queries/posts");
 
 exports.GET = asyncHandler(async (req, res) => {
-  console.log(req.user);
-  if (!req.isAuthenticated()) {
-    throw new CustomAccessDeniedError(
-      "You do not have permission to view this page.",
-    );
-  }
+  const posts = await getPostsAsync(30);
+  console.log(posts);
 
-  res.render("root", { title: "Clubhouse", mainView: "index", user: req.user });
+  res.render("root", {
+    title: "Clubhouse",
+    mainView: "index",
+    posts: posts,
+  });
 });
+
+exports.postPOST = [
+  isAuthenticated,
+  addPost,
+  (req, res) => {
+    res.redirect("/");
+  },
+];

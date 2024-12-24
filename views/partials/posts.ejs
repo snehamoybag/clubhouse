@@ -1,0 +1,15 @@
+<% if (locals.posts && posts.length) { %>
+  <div class="posts">
+    <% posts.forEach((post) => { %>
+     <article class="post">
+      <h2 class="post__title"><%= post.author_first_name %> says:</h2>
+      <p class="post__text"><%= post.message %></p>
+      <footer class="post__footer">
+        <p>
+          Posted on <time datetime="<%= post.date %>"><%= post.date %></time>.
+        </p>
+      </footer>
+     </article> 
+    <% }); %>
+  </div>
+<% }; %>

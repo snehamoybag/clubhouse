@@ -34,16 +34,16 @@ const query = `
 
   CREATE TABLE posts_of_users(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    user_id INTEGER UNIQUE,
     post_id INTEGER UNIQUE,
+    user_id INTEGER,
     FOREIGN KEY(user_id) REFERENCES users(id),
     FOREIGN KEY(post_id) REFERENCES posts(id)
   );
 
   CREATE TABLE posts_in_clubs(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    club_id INTEGER UNIQUE,
     post_id INTEGER UNIQUE,
+    club_id INTEGER,
     FOREIGN KEY(club_id) REFERENCES clubs(id),
     FOREIGN KEY(post_id) REFERENCES posts(id)
   )
