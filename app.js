@@ -5,7 +5,6 @@ const expressSession = require("./config/expressSession");
 const passport = require("./config/passport");
 
 const routes = require("./routes");
-
 const errorHandler = require("./middlewares/errorHandler");
 const notFound404Handler = require("./middlewares/notFound404Handler");
 

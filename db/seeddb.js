@@ -14,7 +14,8 @@ const query = `
   CREATE TABLE IF NOT EXISTS clubs(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(128) UNIQUE,
-    about VARCHAR(255)
+    about VARCHAR(255),
+    privacy VARCHAR(20)
   );
 
   CREATE TABLE IF NOT EXISTS posts(
@@ -25,9 +26,9 @@ const query = `
  
   CREATE TABlE IF NOT EXISTS members_of_clubs(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    club_id INTEGER UNIQUE,
-    member_id INTEGER UNIQUE,
-    member_status VARCHAR(20),
+    club_id INTEGER,
+    member_id INTEGER,
+    member_role VARCHAR(10),
     FOREIGN KEY(club_id) REFERENCES clubs(id),
     FOREIGN KEY(member_id) REFERENCES users(id)
   );
