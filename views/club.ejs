@@ -2,5 +2,9 @@
   <h1 class="title title-primary"><%= club.name %></h1>
   <p>About Club: <%= club.about %></p>
   <p>Privacy: <%= club.privacy %></p>
-  <p>Number of members: <%= club.numberOfMembers %></p>
+  <p>Number of members: <%= club.number_of_members %></p>
+  <div>
+    <%- include("./partials/postsBox.ejs") %> <%-
+    include("./partials/posts.ejs") %>
+  </div>
 </main>

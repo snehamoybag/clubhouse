@@ -4,30 +4,33 @@ const {
   addClubAsync,
   addClubMemberAsync,
   assignClubRoleAdminAsync,
-  getNumberOfClubMembersAsync,
 } = require("../db/queries/clubs");
 const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
+const { getPostsAsync } = require("../db/queries/posts");
 
-exports.GET = [
-  asyncHandler(async (req, res) => {
-    const clubId = Number(req.params.id);
+exports.GET = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
 
-    if (!clubId) {
-      throw new CustomBadRequestError("Invalid club id: " + req.params.id);
-    }
+  if (!clubId) {
+    throw new CustomBadRequestError("Invalid club id: " + req.params.id);
+  }
 
-    const club = await getClubAsync(clubId);
+  const club = await getClubAsync(clubId);
 
-    if (!club) {
-      throw new CustomNotFoundError("Club not found.");
-    }
+  if (!club) {
+    throw new CustomNotFoundError("Club not found.");
+  }
 
-    club.numberOfMembers = await getNumberOfClubMembersAsync(club.id);
+  const postsInClub = await getPostsAsync(clubId, 30);
 
-    res.render("root", { mainView: "club", title: club.name, club: club });
-  }),
-];
+  res.render("root", {
+    mainView: "club",
+    title: club.name,
+    club,
+    posts: postsInClub,
+  });
+});
 
 exports.newClubGET = (req, res) => {
   res.render("root", { title: "Create New Club", mainView: "newClub" });

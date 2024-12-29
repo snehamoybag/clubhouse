@@ -1,6 +1,6 @@
 <% if (locals.user) { %>
   <div class="post-box">
-    <form action="" method="POST" class="post-box__form form">
+    <form action="<%= locals.club ? `${club.id}/post-message` : 'post-message'; %>" method="POST" class="post-box__form form">
       <p class="form__input-wrapper">
         <label for="post" class="form__label sr-only">
           Post a message

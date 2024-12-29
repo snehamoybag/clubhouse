@@ -27,17 +27,45 @@ exports.addPostAsync = async (message, timeStamp, authorId, clubId) => {
   }
 };
 
-exports.getPostsAsync = async (limit, offset = 0) => {
-  const query = `
-    SELECT posts.*, users.id AS author_id, users.first_name AS author_first_name,
-      users.last_name AS author_last_name 
-    FROM posts INNER JOIN posts_of_users 
-    ON posts_of_users.post_id = posts.id
-    INNER JOIN users ON posts_of_users.user_id = users.id
+exports.getPostsAsync = async (clubId, limit, offset = 0) => {
+  const selectColumns = `
+    SELECT posts.*, users.id AS author_id, 
+      users.first_name AS author_first_name,
+      users.last_name AS author_last_name
+  `;
+
+  const joinTables = `
+    FROM posts
+    LEFT OUTER JOIN posts_in_clubs on posts_in_clubs.post_id = posts.id
+    INNER JOIN posts_of_users ON posts_of_users.post_id = posts.id 
+    INNER JOIN users ON users.id = posts_of_users.user_id
+  `;
+
+  const orderLimitOffset = `
     ORDER BY posts.date DESC
     LIMIT $1 OFFSET $2;
   `;
 
-  const { rows } = await pool.query(query, [limit, offset]);
+  // return posts that are not in any clubs
+  if (!clubId) {
+    const query = `
+      ${selectColumns}
+      ${joinTables}
+      WHERE posts_in_clubs.club_id IS NULL
+      ${orderLimitOffset}
+    `;
+
+    const { rows } = await pool.query(query, [limit, offset]);
+    return rows;
+  }
+
+  // return posts in club
+  const query = `
+      ${selectColumns}
+      ${joinTables}
+      WHERE posts_in_clubs.club_id = $3
+      ${orderLimitOffset}
+    `;
+  const { rows } = await pool.query(query, [limit, offset, clubId]);
   return rows;
 };

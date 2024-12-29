@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const clubController = require("../controllers/clubController");
+const postController = require("../controllers/postController");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
 const router = new Router();
@@ -12,5 +13,7 @@ router.get("/new", clubController.newClubGET);
 router.post("/new", clubController.newClubPOST);
 
 router.get("/:id", clubController.GET);
+
+router.post("/:id/post-message", postController.add);
 
 module.exports = router;

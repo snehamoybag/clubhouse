@@ -1,9 +1,13 @@
 const pool = require("../../config/pool");
 
 exports.getClubAsync = async (clubId) => {
-  const { rows } = await pool.query("SELECT * FROM clubs WHERE id = $1", [
-    clubId,
-  ]);
+  const query = `
+    SELECT clubs.*, COUNT(members_of_clubs.club_id) AS number_of_members FROM clubs
+    INNER JOIN members_of_clubs ON members_of_clubs.club_id = clubs.id
+    WHERE clubs.id = $1
+    GROUP BY clubs.id
+  `;
+  const { rows } = await pool.query(query, [clubId]);
   return rows[0];
 };
 
