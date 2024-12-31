@@ -1,0 +1,9 @@
+<main>
+  <ul>
+    <% clubs.forEach((club) => { %>
+    <li>
+      <a href="/club/<%= club.id %>"><%= club.name %></a>
+    </li>
+    <% }); %>
+  </ul>
+</main>

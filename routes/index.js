@@ -6,6 +6,7 @@ const logoutRouter = require("./logoutRouter");
 const successRouter = require("./successRouter");
 const profileRouter = require("./profileRouter");
 const clubRouter = require("./clubRouter");
+const clubsListRouter = require("./clubsListRouter");
 
 const router = new Router();
 
@@ -16,5 +17,6 @@ router.use("/logout", logoutRouter);
 router.use("/success", successRouter);
 router.use("/profile", profileRouter);
 router.use("/club", clubRouter);
+router.use("/list-of-clubs", clubsListRouter);
 
 module.exports = router;

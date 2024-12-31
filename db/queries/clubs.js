@@ -11,6 +11,15 @@ exports.getClubAsync = async (clubId) => {
   return rows[0];
 };
 
+exports.getAllClubsAsync = async (limit, offset = 0) => {
+  const { rows } = await pool.query("SELECT * FROM clubs LIMIT $1 OFFSET $2", [
+    limit,
+    offset,
+  ]);
+
+  return rows;
+};
+
 exports.addClubAsync = async (name, about, privacy) => {
   const { rows } = await pool.query(
     "INSERT INTO clubs(name, about, privacy) VALUES($1, $2, $3) RETURNING id",
