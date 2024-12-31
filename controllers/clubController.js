@@ -13,6 +13,7 @@ const { getPostsAsync } = require("../db/queries/posts");
 const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
 const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
+const url = require("node:url");
 
 exports.GET = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);
@@ -48,7 +49,16 @@ exports.joinClubPOST = asyncHandler(async (req, res) => {
 
   if (club.privacy === "open") {
     await addClubMemberAsync(clubId, req.user.id);
-    res.redirect(req.get("referer")); // back to club page
+
+    const redirectUrl = url.format({
+      pathname: "/success/join-club",
+      query: {
+        clubId,
+        clubName: club.name,
+      },
+    });
+
+    res.redirect(redirectUrl);
   }
 });
 
@@ -64,7 +74,15 @@ exports.leaveClubPOST = asyncHandler(async (req, res) => {
   }
 
   await removeClubMemberAsync(clubId, userId);
-  res.redirect("/success/leave-club");
+
+  const redirectUrl = url.format({
+    pathname: "/success/leave-club",
+    query: {
+      clubId: clubId,
+    },
+  });
+
+  res.redirect(redirectUrl);
 });
 
 exports.newClubGET = (req, res) => {

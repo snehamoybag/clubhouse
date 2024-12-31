@@ -30,18 +30,26 @@ exports.logoutGET = (req, res) => {
   );
 };
 
-exports.leaveClubGET = (req, res) => {
-  const prevUrl = req.get("referer");
-  const redirectUrl = prevUrl || "/";
-  const redirectUrlText = prevUrl ? "Return to Clubpage" : "Return to Homepage";
+exports.joinClubGET = (req, res) => {
+  res.render(
+    "root",
+    getViewData(
+      "Club joined successfuly!",
+      `Congratulations! You're now an honourable member of '${req.query.clubName}'. 🥳`,
+      `/club/${req.query.clubId}`,
+      "Go to Clubpage",
+    ),
+  );
+};
 
+exports.leaveClubGET = (req, res) => {
   res.render(
     "root",
     getViewData(
       "Leaving club successful!",
       "You're no longer a member of the club.",
-      redirectUrl,
-      redirectUrlText,
+      `/club/${req.query.clubId}`,
+      "Return to Clubpage",
     ),
   );
 };
