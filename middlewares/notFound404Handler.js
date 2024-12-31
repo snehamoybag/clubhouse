@@ -4,5 +4,7 @@ module.exports = (req, res, next) => {
     statusCode: 404,
     message:
       "The resource you're looking for doesn't exist or may have been deleted permanently.",
+    redirectUrl: "/",
+    redirectUrlText: "Return to Homepage",
   });
 };
