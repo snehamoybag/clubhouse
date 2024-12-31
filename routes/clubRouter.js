@@ -14,6 +14,9 @@ router.post("/new", clubController.newClubPOST);
 
 router.get("/:id", clubController.GET);
 
-router.post("/:id/post-message", postController.add);
+router.post("/:id/post-message", postController.addPOST);
+
+router.post("/:id/join-club", clubController.joinClubPOST);
+router.post("/:id/leave-club", clubController.leaveClubPOST);
 
 module.exports = router;

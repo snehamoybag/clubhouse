@@ -3,8 +3,41 @@
   <p>About Club: <%= club.about %></p>
   <p>Privacy: <%= club.privacy %></p>
   <p>Number of members: <%= club.number_of_members %></p>
-  <div>
-    <%- include("./partials/postsBox.ejs") %> <%-
-    include("./partials/posts.ejs") %>
-  </div>
+
+  <% if (!isMember) { %>
+
+    <!-- join button -->
+    <% if (club.privacy !== "closed") { %>
+      <form action="./<%= club.id %>/join-club" method="post">
+        <button type="submit" class="btn btn--submit">
+        <% if (club.privacy === "open") { %>
+          Join club
+        <% } else if (club.privacty === "invite-only") { %>
+          Request to join club
+        <% }; %>
+        </button>
+      </form>
+
+      <!-- posts -->
+      <%-include("./partials/posts.ejs") %>
+    <% }; %>
+
+  <% }; %>
+
+  <% if (isMember) { %>
+
+    <!-- postbox and posts -->
+    <%- include("./partials/postsBox.ejs") %> 
+    <%-include("./partials/posts.ejs") %>
+
+    <!-- leave button -->
+    <form 
+      action="./<%= club.id %>/leave-club" 
+      method="post"
+      onsubmit="return confirm('Are you sure you want to leave this club?')"
+    >
+      <button type="submit" class="btn btn--danger">Leave club</button>
+    </form>
+
+  <% }; %>
 </main>

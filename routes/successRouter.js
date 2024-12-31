@@ -5,5 +5,6 @@ const router = new Router();
 
 router.get("/signup", successController.signupGET);
 router.get("/logout", successController.logoutGET);
+router.get("/leave-club", successController.leaveClubGET);
 
 module.exports = router;

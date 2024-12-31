@@ -29,3 +29,19 @@ exports.logoutGET = (req, res) => {
     ),
   );
 };
+
+exports.leaveClubGET = (req, res) => {
+  const prevUrl = req.get("referer");
+  const redirectUrl = prevUrl || "/";
+  const redirectUrlText = prevUrl ? "Return to Clubpage" : "Return to Homepage";
+
+  res.render(
+    "root",
+    getViewData(
+      "Leaving club successful!",
+      "You're no longer a member of the club.",
+      redirectUrl,
+      redirectUrlText,
+    ),
+  );
+};

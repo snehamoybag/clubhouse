@@ -3,21 +3,12 @@ const pool = require("../../config/pool");
 exports.getClubAsync = async (clubId) => {
   const query = `
     SELECT clubs.*, COUNT(members_of_clubs.club_id) AS number_of_members FROM clubs
-    INNER JOIN members_of_clubs ON members_of_clubs.club_id = clubs.id
+    LEFT OUTER JOIN members_of_clubs ON members_of_clubs.club_id = clubs.id
     WHERE clubs.id = $1
     GROUP BY clubs.id
   `;
   const { rows } = await pool.query(query, [clubId]);
   return rows[0];
-};
-
-exports.getNumberOfClubMembersAsync = async (clubId) => {
-  const { rows } = await pool.query(
-    "SELECT COUNT(id) FROM members_of_clubs WHERE club_id = $1",
-    [clubId],
-  );
-
-  return rows[0].count;
 };
 
 exports.addClubAsync = async (name, about, privacy) => {
@@ -27,6 +18,21 @@ exports.addClubAsync = async (name, about, privacy) => {
   );
 
   return rows[0].id;
+};
+
+exports.isClubMemberAsync = async (clubId, userId) => {
+  const query = `
+    SELECT CASE WHEN EXISTS (
+      SELECT 1 FROM members_of_clubs
+      WHERE members_of_clubs.club_id = $1 
+        AND members_of_clubs.member_id = $2
+    )
+    THEN 1
+    ELSE 0 END;
+  `;
+
+  const { rows } = await pool.query(query, [clubId, userId]);
+  return Boolean(rows[0].case);
 };
 
 exports.addClubMemberAsync = async (clubId, userId) => {
@@ -61,5 +67,28 @@ exports.assignClubRoleMemberAsync = async (clubId, memberId) => {
       SET member_role = 'member'
       WHERE club_id = $1 AND member_id = $2;
   `;
+  await pool.query(query, [clubId, memberId]);
+};
+
+exports.getMemberClubRoleAsync = async (clubId, memberId) => {
+  const query =
+    "SELECT member_role FROM members_of_clubs WHERE club_id = $1 AND member_id = $2";
+
+  const { rows } = await pool.query(query, [clubId, memberId]);
+  return rows[0].member_role;
+};
+
+exports.getNumberOfClubAdminsAsync = async (clubId) => {
+  const query =
+    "SELECT COUNT(DISTINCT member_id) FROM members_of_clubs WHERE club_id = $1";
+
+  const { rows } = await pool.query(query, [clubId]);
+  return Number(rows[0].count);
+};
+
+exports.removeClubMemberAsync = async (clubId, memberId) => {
+  const query =
+    "DELETE FROM members_of_clubs WHERE club_id = $1 AND member_id = $2";
+
   await pool.query(query, [clubId, memberId]);
 };

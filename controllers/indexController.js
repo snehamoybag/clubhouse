@@ -1,5 +1,4 @@
 const asyncHandler = require("express-async-handler");
-const postController = require("./postController");
 const { getPostsAsync } = require("../db/queries/posts");
 
 exports.GET = asyncHandler(async (req, res) => {
@@ -12,5 +11,3 @@ exports.GET = asyncHandler(async (req, res) => {
     posts,
   });
 });
-
-exports.postMessagePOST = postController.add;
