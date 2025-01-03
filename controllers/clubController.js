@@ -23,15 +23,19 @@ exports.GET = asyncHandler(async (req, res) => {
     throw new CustomNotFoundError("Club not found.");
   }
 
-  const isMember = await isClubMemberAsync(clubId, req.user.id);
-  const postsInClub = await getPostsAsync(clubId, 30);
+  const userId = req.user.id;
+  const isMember = await isClubMemberAsync(clubId, userId);
+  const posts = await getPostsAsync(clubId, 30);
+
+  console.log(posts);
 
   res.render("root", {
     mainView: "club",
     title: club.name,
     club,
+    posts,
     isMember,
-    posts: postsInClub,
+    styles: "club",
   });
 });
 
@@ -44,7 +48,7 @@ exports.joinClubPOST = asyncHandler(async (req, res) => {
   }
 
   if (club.privacy === "invite-only") {
-    // do something
+    // TODO
   }
 
   if (club.privacy === "open") {
@@ -101,4 +105,28 @@ exports.newClubPOST = asyncHandler(async (req, res) => {
   await assignClubRoleAdminAsync(clubId, req.user.id);
 
   res.redirect(`/club/${clubId}`);
+});
+
+// TODO
+exports.controlPanelGET = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  const club = await getClubAsync(clubId);
+
+  if (!club) {
+    throw new CustomNotFoundError("Club not found.");
+  }
+
+  const userId = req.user.id;
+  const memberRole = await getMemberClubRoleAsync(clubId, userId);
+
+  if (memberRole !== "admin") {
+    throw new CustomAccessDeniedError(
+      "Only a club admin can access this page.",
+    );
+  }
+
+  res.render("root", {
+    title: `Control Panel | ${club.name}`,
+    mainView: "clubControlPanel",
+  });
 });

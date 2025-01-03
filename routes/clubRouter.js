@@ -19,4 +19,6 @@ router.post("/:id/post-message", postController.addPOST);
 router.post("/:id/join-club", clubController.joinClubPOST);
 router.post("/:id/leave-club", clubController.leaveClubPOST);
 
+router.get("/:id/control-panel", clubController.controlPanelGET);
+
 module.exports = router;

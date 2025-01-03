@@ -1,0 +1,35 @@
+/* all child excluding the first */
+.posts > * + * {
+  margin-top: 1rem;
+}
+
+.post {
+  max-width: 40rem;
+  padding: 1em;
+  border: 1px solid;
+}
+
+.post__author-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: bold;
+}
+
+.post__author-name > a {
+  text-decoration: none;
+}
+
+.post__author-id {
+  opacity: 0.5;
+}
+
+.post__time-role-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.post__body {
+  padding: 1em 0;
+}

@@ -7,12 +7,16 @@ const passport = require("./config/passport");
 const routes = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");
 const notFound404Handler = require("./middlewares/notFound404Handler");
+const formatDateDistanceToNow = require("./lib/formatDateDistanceToNow");
 
 const app = express();
 
 // set view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
+// set root folder to serve static files
+app.use(express.static("public"));
 
 // session middlewares
 app.use(expressSession);
@@ -24,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 // set global locals variables
 app.use((req, res, next) => {
   res.locals.user = req.user;
+  res.locals.formatDateDistanceToNow = formatDateDistanceToNow;
   next();
 });
 

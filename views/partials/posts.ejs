@@ -1,15 +1,33 @@
 <% if (locals.posts && posts.length) { %>
-  <div class="posts">
+  <div class="posts" id="posts">
     <% posts.forEach((post) => { %>
      <article class="post">
-      <h2 class="post__title"><%= post.author_first_name %> says:</h2>
-      <p class="post__text"><%= post.message %></p>
-      <footer class="post__footer">
-        <p>
-          Posted on <time datetime="<%= post.date %>"><%= post.date %></time>.
-        </p>
-      </footer>
-     </article> 
+      <section class="post__header">
+        <!-- <img src="" alt="" class="post__avatar"> -->
+        <h2 class="post__author-name">
+          <a href="/profile/<%= post.author_id %>">
+            <%= post.author_first_name %> <%= post.author_last_name %>
+          </a> 
+          <span class="post__author-id" title="atuthor ID">#<%= post.author_id %></span>
+        </h2>
+        <div class="post__time-role-wrapper">
+          <p class="post__time">
+            <!-- make sure to pass date-fns function 'formatDistanceToNow' from the renderer -->
+            <time datetime="<%= post.date %>">
+              <%= formatDateDistanceToNow(post.date) %>
+            </time>
+          </p>
+          <% if (post.author_club_role) { %>
+            &middot; <p class="post__role"><%= post.author_club_role %></p>
+          <% }; %>
+        </div>
+      </section>
+      <section class="post__body">
+        <p class="post__message"><%= post.message %></p>
+      </section>
+      <section class="post__footer">
+      </section> 
+    </article>
     <% }); %>
   </div>
 <% }; %>
