@@ -1,4 +1,4 @@
-const pool = require("../../config/pool");
+const pool = require("../../configs/pool");
 
 exports.addUserAsync = async (firstName, lastName, email, password) => {
   await pool.query(

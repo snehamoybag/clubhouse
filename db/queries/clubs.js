@@ -1,4 +1,4 @@
-const pool = require("../../config/pool");
+const pool = require("../../configs/pool");
 
 exports.getClubAsync = async (clubId) => {
   const query = `

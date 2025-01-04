@@ -1,8 +1,8 @@
 require("dotenv").config();
 const path = require("node:path");
 const express = require("express");
-const expressSession = require("./config/expressSession");
-const passport = require("./config/passport");
+const expressSession = require("./configs/expressSession");
+const passport = require("./configs/passport");
 
 const routes = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");

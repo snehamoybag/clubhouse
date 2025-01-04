@@ -1,4 +1,4 @@
-const pool = require("../../config/pool");
+const pool = require("../../configs/pool");
 
 exports.addPostAsync = async (message, timeStamp, authorId, clubId) => {
   // insert into 'posts' tabe
