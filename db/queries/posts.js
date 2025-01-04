@@ -1,4 +1,5 @@
 const pool = require("../../configs/pool");
+const { post } = require("../../routes/indexRouter");
 
 exports.addPostAsync = async (message, timeStamp, authorId, clubId) => {
   // insert into 'posts' tabe
@@ -27,6 +28,17 @@ exports.addPostAsync = async (message, timeStamp, authorId, clubId) => {
   }
 };
 
+exports.deletePostAsync = async (postId) => {
+  // delete from posts_of_users table
+  await pool.query("DELETE FROM posts_of_users WHERE post_id = $1", [postId]);
+
+  // delete from posts_in_clubs table
+  await pool.query("DELETE FROM posts_in_clubs WHERE post_id = $1", [postId]);
+
+  // delete from posts table
+  await pool.query("DELETE FROM posts WHERE id = $1", [postId]);
+};
+
 exports.getPostsAsync = async (clubId, limit, offset = 0) => {
   const query = `
     SELECT posts.*, users.id AS author_id, 
@@ -53,6 +65,15 @@ exports.getPostsAsync = async (clubId, limit, offset = 0) => {
   `;
 
   const { rows } = await pool.query(query, [limit, offset, clubId]);
-  console.log(rows);
   return rows;
+};
+
+exports.isPostAuthorAsync = async (postId, userId) => {
+  const query = `
+    SELECT 1 FROM posts_of_users
+    WHERE posts_of_users.post_id = $1 AND posts_of_users.user_id = $2;
+  `;
+
+  const { rows } = await pool.query(query, [postId, userId]);
+  return Boolean(rows[0]);
 };

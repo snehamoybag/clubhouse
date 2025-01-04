@@ -4,7 +4,7 @@
   <p>Privacy: <%= club.privacy %></p>
   <p>Number of members: <%= club.number_of_members %></p>
 
-  <% if (!isMember) { %>
+  <% if (!locals.memberRole) { %>
 
     <!-- join button -->
     <% if (club.privacy !== "closed") { %>
@@ -28,7 +28,7 @@
 
   <% }; %>
 
-  <% if (isMember) { %>
+  <% if (locals.memberRole) { %>
 
     <!-- postbox and posts -->
     <%- include("./partials/postBox.ejs") %> 

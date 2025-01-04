@@ -84,7 +84,8 @@ exports.getMemberClubRoleAsync = async (clubId, memberId) => {
     "SELECT member_role FROM members_of_clubs WHERE club_id = $1 AND member_id = $2";
 
   const { rows } = await pool.query(query, [clubId, memberId]);
-  return rows[0].member_role;
+
+  return rows[0] ? rows[0].member_role : null;
 };
 
 exports.getNumberOfClubAdminsAsync = async (clubId) => {

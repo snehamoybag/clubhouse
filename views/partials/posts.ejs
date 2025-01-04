@@ -26,6 +26,17 @@
         <p class="post__message"><%= post.message %></p>
       </section>
       <section class="post__footer">
+
+      <% if (post.author_id === user.id || locals.memberRole === "admin" || locals.memberRole === "mod") { %>
+        <form 
+          action="/delete/post/?postId=<%= post.id %>&clubId=<%= locals.club ? club.id : '' ; %>"
+          method="post"
+          onsubmit="return confirm('Are you sure, you want to delete this post?')"
+        >
+          <button type="submit">delete post</button>
+        </form>
+      <% }; %>
+
       </section> 
     </article>
     <% }); %>

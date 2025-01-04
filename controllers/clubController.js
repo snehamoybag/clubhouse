@@ -4,7 +4,6 @@ const {
   addClubAsync,
   addClubMemberAsync,
   assignClubRoleAdminAsync,
-  isClubMemberAsync,
   getMemberClubRoleAsync,
   getNumberOfClubAdminsAsync,
   removeClubMemberAsync,
@@ -24,17 +23,15 @@ exports.GET = asyncHandler(async (req, res) => {
   }
 
   const userId = req.user.id;
-  const isMember = await isClubMemberAsync(clubId, userId);
+  const memberRole = await getMemberClubRoleAsync(clubId, userId);
   const posts = await getPostsAsync(clubId, 30);
-
-  console.log(posts);
 
   res.render("root", {
     mainView: "club",
     title: club.name,
     club,
     posts,
-    isMember,
+    memberRole,
     styles: "club",
   });
 });
@@ -55,7 +52,7 @@ exports.joinClubPOST = asyncHandler(async (req, res) => {
     await addClubMemberAsync(clubId, req.user.id);
 
     const redirectUrl = url.format({
-      pathname: "/success/join-club",
+      pathname: "/success/join-club/",
       query: {
         clubId,
         clubName: club.name,
@@ -80,7 +77,7 @@ exports.leaveClubPOST = asyncHandler(async (req, res) => {
   await removeClubMemberAsync(clubId, userId);
 
   const redirectUrl = url.format({
-    pathname: "/success/leave-club",
+    pathname: "/success/leave-club/",
     query: {
       clubId: clubId,
     },
