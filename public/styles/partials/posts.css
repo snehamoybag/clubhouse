@@ -1,12 +1,11 @@
-/* all child excluding the first */
-.posts > * + * {
-  margin-top: 1rem;
+.posts {
+  margin-top: 2rem;
 }
 
 .post {
-  max-width: 40rem;
-  padding: 1em;
-  border: 1px solid;
+  background-color: var(--clr-neutral-100);
+  padding: 2em 1em;
+  margin-top: 0.5rem;
 }
 
 .post__author-name {
@@ -32,4 +31,9 @@
 
 .post__body {
   padding: 1em 0;
+}
+
+.post__message {
+  word-wrap: break-word;
+  word-break: normal;
 }

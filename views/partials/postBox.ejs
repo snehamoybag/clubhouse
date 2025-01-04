@@ -1,0 +1,42 @@
+<% if (locals.user) { %>
+  <div class="postbox">
+    <form action="<%= locals.club ? `${club.id}/post-message` : 'post-message'; %>" method="POST" class="postbox__form">
+      <p class="postbox__input-wrapper">
+        <label for="post" class="postbox__label sr-only">
+          Post a message
+        </label>
+        <textarea 
+          name="post" 
+          id="post" 
+          class="postbox__textarea"
+          placeholder="Hi <%= user.first_name %>, What's on you mind?"
+          maxlength="2000"
+          required
+        ></textarea>
+        <label id="post-max-character-label" for="post" class="postbox__label postbox__label--max-length" style="display: none;"></label>
+      </p>
+      <button type="submit" class="postbox__btn postbox__btn--post">post message</button>
+    </form>
+
+    <script>
+      // increase height of the textarea if user wants to type longer message
+      const postInputEl = document.querySelector("#post")
+      const maxCharacterLabelEl = document.querySelector("#post-max-character-label")
+
+      const idealCharLength = 250
+      const maxCharLength = 2000
+
+      postInputEl.addEventListener("input", () => {
+        const valueLength = postInputEl.value.length;
+
+        if (valueLength > idealCharLength) {
+          postInputEl.style.height = 20 + "rem";
+
+          maxCharacterLabelEl.textContent = `${maxCharLength - valueLength} characters left (max ${maxCharLength}).`;
+          maxCharacterLabelEl.removeAttribute("style")
+        };
+
+      });
+    </script>
+  </div>
+<% }; %>

@@ -1,3 +1,14 @@
+:root {
+  --clr-neutral-100: hsl(0, 0%, 100%);
+  --clr-neutral-200: hsl(0, 0%, 90%);
+  --clr-neutral-400: hsl(0, 0%, 50%);
+
+  --clr-primary-400: hsl(240, 100%, 50%);
+
+  --fw-reqular: 400;
+  --fw-bold: 700;
+}
+
 /* CSS RESET */
 * {
   margin: 0;
@@ -29,4 +40,27 @@ button {
 html,
 body {
   height: 100%;
+}
+
+/* STYLING */
+body {
+  background-color: var(--clr-neutral-200);
+}
+
+a {
+  color: var(--clr-primary-400);
+}
+
+/* UTILITY CLASSES */
+
+/* Hiding class, making content visible only to screen readers but not visually */
+/* "sr" meaning "screen-reader" */
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }

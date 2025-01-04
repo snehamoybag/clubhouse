@@ -20,7 +20,7 @@ const query = `
 
   CREATE TABLE IF NOT EXISTS posts(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    message TEXT,
+    message VARCHAR(2000),
     date TIMESTAMP
   );
  
