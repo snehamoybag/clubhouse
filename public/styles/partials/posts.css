@@ -8,6 +8,13 @@
   margin-top: 0.5rem;
 }
 
+.post__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 1rem;
+}
+
 .post__author-name {
   display: flex;
   align-items: center;
@@ -36,4 +43,24 @@
 .post__message {
   word-wrap: break-word;
   word-break: normal;
+}
+
+.post__options_list {
+  list-style: none;
+}
+
+.post__btn--options {
+  border: none;
+}
+
+.post__btn--options:hover {
+  cursor: pointer;
+}
+
+.post__btn--options::after {
+  content: "···";
+}
+
+.post__btn--options.close::after {
+  content: "X";
 }

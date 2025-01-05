@@ -1,44 +1,195 @@
 <% if (locals.posts && posts.length) { %>
   <div class="posts" id="posts">
     <% posts.forEach((post) => { %>
-     <article class="post">
+    <article id="post<%= post.id %>" class="post">
       <section class="post__header">
-        <!-- <img src="" alt="" class="post__avatar"> -->
-        <h2 class="post__author-name">
-          <a href="/profile/<%= post.author_id %>">
-            <%= post.author_first_name %> <%= post.author_last_name %>
-          </a> 
-          <span class="post__author-id" title="atuthor ID">#<%= post.author_id %></span>
-        </h2>
-        <div class="post__time-role-wrapper">
-          <p class="post__time">
-            <!-- make sure to pass date-fns function 'formatDistanceToNow' from the renderer -->
-            <time datetime="<%= post.date %>">
-              <%= formatDateDistanceToNow(post.date) %>
-            </time>
-          </p>
-          <% if (post.author_club_role) { %>
-            &middot; <p class="post__role"><%= post.author_club_role %></p>
+        <div class="post__header-content">
+          <!-- <img src="" alt="" class="post__avatar"> -->
+          <h2 class="post__author-name">
+            <a href="/profile/<%= post.author_id %>">
+              <%= post.author_first_name %> <%= post.author_last_name %>
+            </a> 
+            <span class="post__author-id" title="atuthor ID">#<%= post.author_id %></span>
+          </h2>
+          <div class="post__time-role-wrapper">
+            <p class="post__time">
+              <time datetime="<%= post.date %>">
+                <%= locals.formatDateDistanceToNow(post.date) %>
+              </time>
+            </p>
+            <% if (post.author_club_role) { %>
+              &middot; <p class="post__role"><%= post.author_club_role %></p>
+            <% }; %>
+          </div>
+        </div>
+        <div class="post__options">
+          <button 
+            type="button" 
+            class="post__btn post__btn--options" 
+            aria-controls="post-options-<%= post.id %>" 
+            aria-expanded="false"
+            title="post options"
+            data-btn="post-options"
+          >
+            <sapn class="sr-only">Open post options</sapn>
+          </button>
+          <ul id="post-options-<%= post.id %>" class="post__options_list hidden" aria-label="Post options">
+          <% if (post.author_id === user.id) { %>
+            <li>
+              <button 
+                type="button" 
+                id="btn-edit-post"
+                aria-controls="form-post-edit-<%= post.id %>"
+                aria-expanded="false"
+                data-btn="edit-post"
+                data-post-id="<%= post.id %>"
+              >
+                Edit post
+              </button>
+            </li>
           <% }; %>
+
+          <% if (post.author_id === user.id || locals.memberRole === "admin" || locals.memberRole === "mod") { %>
+            <li>
+              <form 
+                action="/delete/post/?postId=<%= post.id %>&clubId=<%= locals.club ? club.id : '' ; %>"
+                method="post"
+                onsubmit="return confirm('Are you sure, you want to delete this post?')"
+              >
+                <button type="submit">delete post</button>
+              </form>
+            </li>
+          <% }; %>
+
+          </ul>
         </div>
       </section>
       <section class="post__body">
-        <p class="post__message"><%= post.message %></p>
+        <p id="post-message-<%= post.id %>" class="post__message"><%= post.message %></p>
+
+        <form 
+          id="form-post-edit-<%= post.id %>" 
+          action="/edit/post/<%= post.id %>" 
+          method="post" 
+          class="post__edit-form hidden"
+        >
+          <p>
+            <label for="edit-post-input-<%= post.id %>" class="sr-only">Edit post</label>
+            <textarea 
+              id="edit-post-input-<%= post.id %>"
+              name="editPost<%= post.id %>"
+              maxlength="2000"
+              required
+              autofocus
+            ><%= post.message %></textarea>
+            <label for="edit-post-input-<%= post.id %>">max: 2000 characters</label>         
+          </p>
+          <button type="submit">Done</button>
+        </form>
+
       </section>
       <section class="post__footer">
-
-      <% if (post.author_id === user.id || locals.memberRole === "admin" || locals.memberRole === "mod") { %>
-        <form 
-          action="/delete/post/?postId=<%= post.id %>&clubId=<%= locals.club ? club.id : '' ; %>"
-          method="post"
-          onsubmit="return confirm('Are you sure, you want to delete this post?')"
-        >
-          <button type="submit">delete post</button>
-        </form>
-      <% }; %>
-
       </section> 
     </article>
     <% }); %>
+
+  <script>
+    const isControlledElOpen = (btnEl) => {
+      return btnEl.getAttribute("aria-expanded") === "true"
+    }
+
+   const getControlledEl = (btnEl) => {
+      const controlledElId = btnEl.getAttribute("aria-controls")
+      return document.querySelector(`#${controlledElId}`)
+   }
+
+   // toggle post options   
+    const openPostOptions = (btnEl) => {
+     const srOnlyEl = btnEl.querySelector(".sr-only")
+
+      btnEl.setAttribute("aria-expanded", true)
+      btnEl.classList.add("close")
+      srOnlyEl.textContent = "close post options"
+      
+
+      getControlledEl(btnEl).classList.remove("hidden")
+    }
+
+
+    const closePostOptions = (btnEl) => {
+     const srOnlyEl = btnEl.querySelector(".sr-only")
+
+      btnEl.setAttribute("aria-expanded", false)
+      btnEl.classList.remove("close")
+      srOnlyEl.textContent = "open post options"
+
+      getControlledEl(btnEl).classList.add("hidden")
+    }
+
+    const togglePostOptions = (btnEl) => {
+      if (isControlledElOpen(btnEl)) {
+        closePostOptions(btnEl)
+      }
+      else {
+        openPostOptions(btnEl)
+      }
+    }
+
+    const postOptionsBtnEls = document.querySelectorAll("[data-btn='post-options']")
+
+    postOptionsBtnEls.forEach((btnEl) => {
+      btnEl.addEventListener("click", () => togglePostOptions(btnEl))
+    });
+
+    // toggle post edit field
+    const openPostEditField = (btnEl) => {
+      btnEl.setAttribute("aria-expanded", true)
+      btnEl.textContent = "Cancel edit"
+
+      getControlledEl(btnEl).classList.remove("hidden")
+    }
+
+
+    const closePostEditField = (btnEl) => {
+      btnEl.setAttribute("aria-expanded", false)
+      btnEl.textContent = "Edit post"
+
+      getControlledEl(btnEl).classList.add("hidden")
+    }
+
+    const getPostMessageEl = (btnEl) => {
+      const postId = btnEl.dataset.postId
+      return document.querySelector(`#post-message-${postId}`)
+    }
+
+    const hidePostMessageEl = (btnEl) => {
+      const messageEl = getPostMessageEl(btnEl)
+      messageEl.classList.add("hidden")
+    }
+
+
+    const showPostMessageEl = (btnEl) => {
+      const messageEl = getPostMessageEl(btnEl)
+      messageEl.classList.remove("hidden")
+    }
+
+    const togglePostEditField = (btnEl) => {
+      if (isControlledElOpen(btnEl)) {
+        closePostEditField(btnEl)
+        showPostMessageEl(btnEl)
+      }
+      else {
+        hidePostMessageEl(btnEl)
+        openPostEditField(btnEl)
+      }
+    }
+    
+    const editPostBtnEls = document.querySelectorAll("[data-btn='edit-post']")
+
+    editPostBtnEls.forEach((btnEl) => {
+      btnEl.addEventListener("click", () => togglePostEditField(btnEl))
+    })
+   
+  </script> 
   </div>
 <% }; %>

@@ -1,5 +1,4 @@
 const pool = require("../../configs/pool");
-const { post } = require("../../routes/indexRouter");
 
 exports.addPostAsync = async (message, timeStamp, authorId, clubId) => {
   // insert into 'posts' tabe
@@ -26,6 +25,14 @@ exports.addPostAsync = async (message, timeStamp, authorId, clubId) => {
       postId,
     ]);
   }
+};
+
+exports.editPostAsync = async (postId, newMessage) => {
+  const query = `
+    UPDATE posts SET message = $2 
+    WHERE id = $1
+  `;
+  await pool.query(query, [postId, newMessage]);
 };
 
 exports.deletePostAsync = async (postId) => {

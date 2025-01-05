@@ -1,4 +1,5 @@
 const { Router } = require("express");
+
 const indexRouter = require("./indexRouter");
 const signupRouter = require("./signupRouter");
 const loginRouter = require("./loginRouter");
@@ -7,6 +8,7 @@ const successRouter = require("./successRouter");
 const profileRouter = require("./profileRouter");
 const clubRouter = require("./clubRouter");
 const clubsListRouter = require("./clubsListRouter");
+const editRouter = require("./editRouter");
 const deleteRouter = require("./deleteRouter");
 
 const router = new Router();
@@ -19,6 +21,7 @@ router.use("/success", successRouter);
 router.use("/profile", profileRouter);
 router.use("/club", clubRouter);
 router.use("/list-of-clubs", clubsListRouter);
+router.use("/edit", editRouter);
 router.use("/delete", deleteRouter);
 
 module.exports = router;
