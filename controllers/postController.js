@@ -6,7 +6,7 @@ const {
   editPostAsync,
 } = require("../db/queries/posts");
 const { getMemberClubRoleAsync } = require("../db/queries/clubs");
-const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
+const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
 
 exports.addPOST = asyncHandler(async (req, res) => {
   const clubId = req.params.id ? Number(req.params.id) : null;
@@ -24,7 +24,7 @@ exports.editPOST = asyncHandler(async (req, res) => {
   const isPostAuthor = await isPostAuthorAsync(postId, userId);
 
   if (!isPostAuthor) {
-    throw new CustomBadRequestError(
+    throw new CustomAccessDeniedError(
       "Only the post's author can edit this post.",
     );
   }
@@ -46,7 +46,7 @@ exports.deletePOST = asyncHandler(async (req, res) => {
   const isPostAuthor = await isPostAuthorAsync(postId, userId);
 
   if (!isAdminOrMod && !isPostAuthor) {
-    throw new CustomBadRequestError(
+    throw new CustomAccessDeniedError(
       "Only the post's author or club admins/moderators can delete this post.",
     );
   }
