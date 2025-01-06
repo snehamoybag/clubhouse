@@ -73,18 +73,18 @@
           method="post" 
           class="post__edit-form hidden"
         >
-          <p>
+          <p class="post__edit-form_input-wrapper">
             <label for="edit-post-input-<%= post.id %>" class="sr-only">Edit post</label>
             <textarea 
               id="edit-post-input-<%= post.id %>"
+              class="post__edit-form_input"
               name="editPost<%= post.id %>"
               maxlength="2000"
               required
-              autofocus
             ><%= post.message %></textarea>
-            <label for="edit-post-input-<%= post.id %>">max: 2000 characters</label>         
+            <label for="edit-post-input-<%= post.id %>" class="post__edit-form_max-limit">max: 2000 characters</label>         
           </p>
-          <button type="submit">Done</button>
+          <button type="submit" class="btn btn--submit">Done</button>
         </form>
 
       </section>

@@ -64,3 +64,23 @@
 .post__btn--options.close::after {
   content: "X";
 }
+
+.post__edit-form_input-wrapper {
+  display: grid;
+}
+
+.post__edit-form_input {
+  height: 10rem;
+  padding: 1em;
+  border: 1px solid var(--clr-neutral-400);
+}
+
+.post__edit-form_input {
+  border-color: var(--clr-primary-400);
+  outline-color: var(--clr-primary-400);
+}
+
+.post__edit-form_max-limit {
+  text-align: right;
+  margin-top: 0.5rem;
+}
