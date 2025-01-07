@@ -53,3 +53,15 @@ exports.leaveClubGET = (req, res) => {
     ),
   );
 };
+
+exports.editGET = (req, res) => {
+  const successType = req.query.type;
+  const successName = req.query.name;
+
+  const message = `${successType} ${successName} edited successfully.`;
+
+  res.render(
+    "root",
+    getViewData("Edit Successful!", message, req.get("Referrer"), "Go back"),
+  );
+};

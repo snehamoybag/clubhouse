@@ -30,6 +30,10 @@
 
   <% if (locals.memberRole) { %>
 
+    <% if (memberRole === "admin") { %>
+      <a href="/club/<%= club.id %>/control-panel">Control Panel</a>
+    <% }; %>
+
     <!-- postbox and posts -->
     <%- include("./partials/postBox.ejs") %> 
     <%-include("./partials/posts.ejs") %>

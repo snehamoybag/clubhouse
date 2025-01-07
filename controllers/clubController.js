@@ -7,12 +7,16 @@ const {
   getMemberClubRoleAsync,
   getNumberOfClubAdminsAsync,
   removeClubMemberAsync,
+  editClubNameAsync,
+  editClubAboutAsync,
+  editClubPrivacyAsync,
 } = require("../db/queries/clubs");
 const { getPostsAsync } = require("../db/queries/posts");
 const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
 const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
 const url = require("node:url");
+const handleInvalidClub = require("../middlewares/handleInvalidClub");
 
 exports.GET = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);
@@ -125,5 +129,33 @@ exports.controlPanelGET = asyncHandler(async (req, res) => {
   res.render("root", {
     title: `Control Panel | ${club.name}`,
     mainView: "clubControlPanel",
+    club,
   });
 });
+
+exports.editClubNamePOST = [
+  handleInvalidClub,
+  asyncHandler(async (req, res) => {
+    const clubId = Number(req.params.id);
+    await editClubNameAsync(clubId, req.body.clubName);
+    res.redirect("/success/edit/?type=club&name=name");
+  }),
+];
+
+exports.editClubAboutPOST = [
+  handleInvalidClub,
+  asyncHandler(async (req, res) => {
+    const clubId = Number(req.params.id);
+    await editClubAboutAsync(clubId, req.body.clubAbout);
+    res.redirect("/success/edit/?type=club&name=about");
+  }),
+];
+
+exports.editClubPrivacyPOST = [
+  handleInvalidClub,
+  asyncHandler(async (req, res) => {
+    const clubId = Number(req.params.id);
+    await editClubPrivacyAsync(clubId, req.body.clubPrivacy);
+    res.redirect("/success/edit/?type=club&name=privacy");
+  }),
+];

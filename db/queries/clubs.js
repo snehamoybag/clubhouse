@@ -1,5 +1,19 @@
 const pool = require("../../configs/pool");
 
+exports.isClubValidAsync = async (clubId) => {
+  const query = `
+    SELECT CASE WHEN EXISTS (
+      SELECT 1 FROM clubs WHERE id = $1
+    )
+      THEN 1 
+      ELSE 0 
+    END;
+  `;
+
+  const { rows } = await pool.query(query, [clubId]);
+  return Boolean(rows[0].case);
+};
+
 exports.getClubAsync = async (clubId) => {
   const query = `
     SELECT clubs.*, COUNT(members_of_clubs.club_id) AS number_of_members FROM clubs
@@ -101,4 +115,25 @@ exports.removeClubMemberAsync = async (clubId, memberId) => {
     "DELETE FROM members_of_clubs WHERE club_id = $1 AND member_id = $2";
 
   await pool.query(query, [clubId, memberId]);
+};
+
+exports.editClubNameAsync = async (clubId, newName) => {
+  await pool.query("UPDATE clubs SET name = $2 WHERE id = $1", [
+    clubId,
+    newName,
+  ]);
+};
+
+exports.editClubAboutAsync = async (clubId, newAbout) => {
+  await pool.query("UPDATE clubs SET about = $2 WHERE id = $1", [
+    clubId,
+    newAbout,
+  ]);
+};
+
+exports.editClubPrivacyAsync = async (clubId, newPrivacy) => {
+  await pool.query("UPDATE clubs SET privacy = $2 WHERE id = $1", [
+    clubId,
+    newPrivacy,
+  ]);
 };

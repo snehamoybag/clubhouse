@@ -17,7 +17,7 @@ exports.addPOST = asyncHandler(async (req, res) => {
 
 exports.editPOST = asyncHandler(async (req, res) => {
   const userId = req.user.id;
-  const postId = Number(req.params.postId);
+  const postId = Number(req.params.id);
   const message = req.body[`editPost${postId}`];
   console.log(message);
 

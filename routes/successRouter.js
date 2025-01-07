@@ -7,5 +7,6 @@ router.get("/signup", successController.signupGET);
 router.get("/logout", successController.logoutGET);
 router.get("/join-club", successController.joinClubGET);
 router.get("/leave-club", successController.leaveClubGET);
+router.get("/edit", successController.editGET);
 
 module.exports = router;
