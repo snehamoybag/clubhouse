@@ -33,7 +33,7 @@ const query = `
     FOREIGN KEY(member_id) REFERENCES users(id)
   );
 
-  CREATE TABLE posts_of_users(
+  CREATE TABLE IF NOT EXISTS posts_of_users(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     post_id INTEGER UNIQUE,
     user_id INTEGER,
@@ -41,12 +41,22 @@ const query = `
     FOREIGN KEY(post_id) REFERENCES posts(id)
   );
 
-  CREATE TABLE posts_in_clubs(
+  CREATE TABLE IF NOT EXISTS posts_in_clubs(
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     post_id INTEGER UNIQUE,
     club_id INTEGER,
     FOREIGN KEY(club_id) REFERENCES clubs(id),
     FOREIGN KEY(post_id) REFERENCES posts(id)
+  )
+
+  CREATE TABLE IF NOT EXISTS users_notifications (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    user_id INTEGER,
+    notification VARCHAR(255),
+    link VARCHAR(255),
+    is_read BOOLEAN,
+    date TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id)
   )
 `;
 
