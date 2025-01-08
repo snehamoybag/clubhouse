@@ -1,12 +1,17 @@
 const { Router } = require("express");
 const successController = require("../controllers/successController");
+const handleNotAuthenticated = require("../middlewares/handleNotAuthenticated");
 
 const router = new Router();
 
-router.get("/signup", successController.signupGET);
+router.get("/signup", handleNotAuthenticated, successController.signupGET);
 router.get("/logout", successController.logoutGET);
-router.get("/join-club", successController.joinClubGET);
-router.get("/leave-club", successController.leaveClubGET);
-router.get("/edit", successController.editGET);
+router.get("/join-club", handleNotAuthenticated, successController.joinClubGET);
+router.get(
+  "/leave-club",
+  handleNotAuthenticated,
+  successController.leaveClubGET,
+);
+router.get("/edit", handleNotAuthenticated, successController.editGET);
 
 module.exports = router;

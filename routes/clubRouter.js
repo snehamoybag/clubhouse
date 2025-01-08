@@ -1,11 +1,11 @@
 const { Router } = require("express");
 const clubController = require("../controllers/clubController");
 const postController = require("../controllers/postController");
-const isAuthenticated = require("../middlewares/isAuthenticated");
+const handleNotAuthenticated = require("../middlewares/handleNotAuthenticated");
 
 const router = new Router();
 
-router.all("/*", isAuthenticated);
+router.all("/*", handleNotAuthenticated);
 
 // make sure the 'new' routes are above '/:id' routes
 // else  'new' will be considered an id of club
