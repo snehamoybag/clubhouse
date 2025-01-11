@@ -1,0 +1,8 @@
+<main>
+  <h1 class="title title--primary"><%= title %></h1>
+  <ul class="notifications__list">
+    <% notifications.forEach((notification) => { %>
+      <li><%= JSON.stringify(notification) %></li>
+    <% }); %>
+  </ul>
+</main>
