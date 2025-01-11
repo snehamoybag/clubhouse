@@ -1,0 +1,19 @@
+<main>
+  <h1 class="title title--primary"><%= title %></h1>
+  <ul>
+    <% joinRequests.forEach((req) => { %>
+    <li>
+      <div class="club-join-request">
+        <h2><%= req.user_first_name %> <%= req.user_last_name %></h2>
+        <p>on: <%= req.date %></p>
+        <form action="/club/<%= clubId %>/accept-join-request/?senderId=<%= req.user_id %>" method="post">
+          <button>Accept Request</button>
+        </form>
+        <form action="/club/<%= clubId %>/decline-join-request/?senderId=<%= req.user_id %>" method="post">
+          <button>Decline Request</button>
+        </form>
+      </div>
+    </li>
+    <% }); %>
+  </ul>
+</main>

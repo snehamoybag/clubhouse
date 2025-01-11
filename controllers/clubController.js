@@ -10,13 +10,18 @@ const {
   editClubNameAsync,
   editClubAboutAsync,
   editClubPrivacyAsync,
+  getClubJoinRequestsAsync,
+  sendClubJoinRequestAsync,
+  deleteClubJoinRequestAsync,
+  isClubMemberAsync,
 } = require("../db/queries/clubs");
 const { getPostsAsync } = require("../db/queries/posts");
 const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
 const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
 const url = require("node:url");
-const handleInvalidClub = require("../middlewares/handleInvalidClub");
+const { getUserByIdAsync } = require("../db/queries/users");
+const { sendNotificactionToUserAsync } = require("../db/queries/notifications");
 
 exports.GET = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);
@@ -49,7 +54,18 @@ exports.joinClubPOST = asyncHandler(async (req, res) => {
   }
 
   if (club.privacy === "invite-only") {
-    // TODO
+    await sendClubJoinRequestAsync(clubId, req.user.id);
+
+    const redirectUrl = url.format({
+      pathname: "/success/join-club-request-send",
+      query: {
+        clubId,
+        clubName: club.name,
+      },
+    });
+
+    res.redirect(redirectUrl);
+    return;
   }
 
   if (club.privacy === "open") {
@@ -64,6 +80,7 @@ exports.joinClubPOST = asyncHandler(async (req, res) => {
     });
 
     res.redirect(redirectUrl);
+    return;
   }
 });
 
@@ -102,13 +119,12 @@ exports.newClubPOST = asyncHandler(async (req, res) => {
     req.body.privacy,
   );
 
-  await addClubMemberAsync(clubId, req.user.id);
+  await addClubMemberAsync(clubId, req.user.id, new Date());
   await assignClubRoleAdminAsync(clubId, req.user.id);
 
   res.redirect(`/club/${clubId}`);
 });
 
-// TODO
 exports.controlPanelGET = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);
   const club = await getClubAsync(clubId);
@@ -133,29 +149,78 @@ exports.controlPanelGET = asyncHandler(async (req, res) => {
   });
 });
 
-exports.editClubNamePOST = [
-  handleInvalidClub,
-  asyncHandler(async (req, res) => {
-    const clubId = Number(req.params.id);
-    await editClubNameAsync(clubId, req.body.clubName);
-    res.redirect("/success/edit/?type=club&name=name");
-  }),
-];
+exports.editClubNamePOST = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  await editClubNameAsync(clubId, req.body.clubName);
+  res.redirect("/success/edit/?type=club&name=name");
+});
 
-exports.editClubAboutPOST = [
-  handleInvalidClub,
-  asyncHandler(async (req, res) => {
-    const clubId = Number(req.params.id);
-    await editClubAboutAsync(clubId, req.body.clubAbout);
-    res.redirect("/success/edit/?type=club&name=about");
-  }),
-];
+exports.editClubAboutPOST = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  await editClubAboutAsync(clubId, req.body.clubAbout);
+  res.redirect("/success/edit/?type=club&name=about");
+});
 
-exports.editClubPrivacyPOST = [
-  handleInvalidClub,
-  asyncHandler(async (req, res) => {
-    const clubId = Number(req.params.id);
-    await editClubPrivacyAsync(clubId, req.body.clubPrivacy);
-    res.redirect("/success/edit/?type=club&name=privacy");
-  }),
-];
+exports.editClubPrivacyPOST = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  await editClubPrivacyAsync(clubId, req.body.clubPrivacy);
+  res.redirect("/success/edit/?type=club&name=privacy");
+});
+
+exports.clubJoinRequestsGET = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  const joinRequests = await getClubJoinRequestsAsync(clubId, 30);
+
+  res.render("root", {
+    title: "Club Join Requests",
+    mainView: "clubJoinRequests",
+    clubId,
+    joinRequests,
+  });
+});
+
+exports.acceptClubJoinRequestPOST = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  const senderId = Number(req.query.senderId);
+
+  if (!(await getUserByIdAsync(senderId))) {
+    await deleteClubJoinRequestAsync(clubId, senderId);
+    throw new CustomNotFoundError("User not found.");
+  }
+
+  if (await isClubMemberAsync(clubId, senderId)) {
+    await deleteClubJoinRequestAsync(clubId, senderId);
+    throw new CustomBadRequestError("User aleady a member of this club.");
+  }
+
+  await addClubMemberAsync(clubId, senderId);
+  await deleteClubJoinRequestAsync(clubId, senderId);
+
+  const club = await getClubAsync(clubId);
+  const clubLink = `/club/${clubId}`;
+  const notficationMessage = `Congratulations! Your request to join '${club.name}' has been accepted.🥳`;
+
+  await sendNotificactionToUserAsync(senderId, notficationMessage, clubLink);
+
+  res.status(200).redirect(req.get("Referrer"));
+});
+
+exports.declineClubJoinRequestPOST = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  const senderId = Number(req.query.senderId);
+
+  if (!(await getUserByIdAsync(senderId))) {
+    await deleteClubJoinRequestAsync(clubId, senderId);
+    throw new CustomNotFoundError("User not found.");
+  }
+
+  await deleteClubJoinRequestAsync(clubId, senderId);
+
+  const club = await getClubAsync(clubId);
+  const clubLink = `/club/${clubId}`;
+  const notficationMessage = `We are sorry, your request to join '${club.name}' has been declined.😥`;
+
+  await sendNotificactionToUserAsync(senderId, notficationMessage, clubLink);
+
+  res.status(200).redirect(req.get("Referrer"));
+});

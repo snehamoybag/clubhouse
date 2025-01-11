@@ -60,8 +60,8 @@ exports.isClubMemberAsync = async (clubId, userId) => {
 
 exports.addClubMemberAsync = async (clubId, userId) => {
   await pool.query(
-    "INSERT INTO members_of_clubs(club_id, member_id, member_role) VALUES($1, $2, 'member')",
-    [clubId, userId],
+    "INSERT INTO members_of_clubs(club_id, member_id, member_role, joining_date) VALUES($1, $2, 'member', $3)",
+    [clubId, userId, new Date()],
   );
 };
 
@@ -136,4 +136,32 @@ exports.editClubPrivacyAsync = async (clubId, newPrivacy) => {
     clubId,
     newPrivacy,
   ]);
+};
+
+exports.sendClubJoinRequestAsync = async (clubId, userId) => {
+  const query =
+    "INSERT INTO clubs_join_requests(club_id, user_id, date) VALUES($1, $2, $3)";
+  await pool.query(query, [clubId, userId, new Date()]);
+};
+
+exports.deleteClubJoinRequestAsync = async (clubId, userId) => {
+  await pool.query(
+    "DELETE FROM clubs_join_requests WHERE club_id = $1 AND user_id = $2",
+    [clubId, userId],
+  );
+};
+
+exports.getClubJoinRequestsAsync = async (clubId, limit, offset = 0) => {
+  const query = `
+    SELECT clubs_join_requests.*, users.first_name AS user_first_name, 
+      users.last_name AS user_last_name
+    FROM clubs_join_requests 
+    INNER JOIN users ON users.id = clubs_join_requests.user_id
+    WHERE clubs_join_requests.club_id = $1
+    ORDER BY clubs_join_requests.date DESC
+    LIMIT $2 OFFSET $3;
+  `;
+
+  const { rows } = await pool.query(query, [clubId, limit, offset]);
+  return rows;
 };

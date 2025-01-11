@@ -29,6 +29,7 @@ const query = `
     club_id INTEGER,
     member_id INTEGER,
     member_role VARCHAR(10),
+    joining_date TIMESTAMP,
     FOREIGN KEY(club_id) REFERENCES clubs(id),
     FOREIGN KEY(member_id) REFERENCES users(id)
   );
@@ -49,10 +50,19 @@ const query = `
     FOREIGN KEY(post_id) REFERENCES posts(id)
   )
 
+  CREATE TABLE IF NOT EXISTS clubs_join_requests (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    user_id INTEGER,
+    club_id INTEGER,
+    date TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(club_id) REFERENCES clubs(id)
+  )
+
   CREATE TABLE IF NOT EXISTS users_notifications (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_id INTEGER,
-    notification VARCHAR(255),
+    message VARCHAR(255),
     link VARCHAR(255),
     is_read BOOLEAN,
     date TIMESTAMP,

@@ -9,14 +9,14 @@
     <!-- join button -->
     <% if (club.privacy !== "closed") { %>
       <form 
-        action="./<%= club.id %>/join-club"
+        action="/club/<%= club.id %>/join-club"
         method="post"
         onsubmit="return confirm('Are you sure you want to join this club?')"
       >
         <button type="submit" class="btn btn--submit">
         <% if (club.privacy === "open") { %>
           Join club
-        <% } else if (club.privacty === "invite-only") { %>
+        <% } else if (club.privacy === "invite-only") { %>
           Request to join club
         <% }; %>
         </button>

@@ -1,6 +1,11 @@
 <main>
-  <h1>Control Panel</h1>
-  <p>Here you can manage and monitor your club's activities.</p>
+  <section>
+    <h1 class="title title--primary">Control Panel</h1>
+    <p>Here you can manage and monitor your club's activities.</p>
+    <ul>
+      <li><a href="/club/<%= club.id %>/control-panel/join-requests">Join Requests</a></li>
+    </ul>
+  </section>
 
   <section>
     <h2>Club Settings</h2>
@@ -57,6 +62,8 @@
 
     </ul>
   </section>
+
+
   <script>
     const getControlledEl = (btnEl) =>  {
       const id = btnEl.getAttribute("aria-controls")

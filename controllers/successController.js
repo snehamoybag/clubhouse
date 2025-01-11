@@ -34,8 +34,20 @@ exports.joinClubGET = (req, res) => {
   res.render(
     "root",
     getViewData(
-      "Club joined successfuly!",
+      "Club joined successfully!",
       `Congratulations! You're now an honourable member of '${req.query.clubName}'. 🥳`,
+      `/club/${req.query.clubId}`,
+      "Go to Clubpage",
+    ),
+  );
+};
+
+exports.clubJoinRequestSendGET = (req, res) => {
+  res.render(
+    "root",
+    getViewData(
+      "Requrest send successfully!",
+      `Request to join '${req.query.clubName}' is successful. Please wait for the admin's approval.`,
       `/club/${req.query.clubId}`,
       "Go to Clubpage",
     ),
