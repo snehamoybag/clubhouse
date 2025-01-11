@@ -2,7 +2,51 @@
   <h1 class="title title--primary"><%= title %></h1>
   <ul class="notifications__list">
     <% notifications.forEach((notification) => { %>
-      <li><%= JSON.stringify(notification) %></li>
+      <li 
+        data-name="notification-item"
+        data-notification-id="<%= notification.id %>"
+        data-notification-link="<%= notification.link %>"
+      >
+        <p>
+          <%= notification.message %>
+          <time datetime="<%= notification.date %>"><%= locals.formatDateDistanceToNow(notification.date) %></time>
+        </p>
+        <%= notification.is_read %>
+      </li>
     <% }); %>
   </ul>
+
+  <script>
+    const markAsReadAsync = async (notificationId) => {
+      const url = "/profile/<%= user.id %>/notification/mark-read"
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({notificationId}), // only works if 'express.json()' middleware is set 
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to mark notification as read.")
+        } 
+      } catch (err) {
+        throw err
+      }
+    }
+
+    const notificationEls = document.querySelectorAll("[data-name='notification-item']")
+    notificationEls.forEach((notificationEl) => {
+      notificationEl.addEventListener(
+        "click", 
+        () => {
+          markAsReadAsync(notificationEl.dataset.notificationId)
+          location.href = notificationEl.dataset.notificationLink
+        },
+      )
+    })
+  </script>
 </main>
+

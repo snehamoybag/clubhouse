@@ -14,4 +14,9 @@ router.get(
   profileController.noitficationsGET,
 );
 
+router.post(
+  "/:id/notification/mark-read",
+  profileController.markNotificationAsReadSilentlyPOST,
+);
+
 module.exports = router;

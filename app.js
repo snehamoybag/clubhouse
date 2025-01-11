@@ -22,8 +22,9 @@ app.use(express.static("public"));
 app.use(expressSession);
 app.use(passport.session());
 
-// body parser for html forms
+// body parsers
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // set global locals variables
 app.use((req, res, next) => {

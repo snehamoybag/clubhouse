@@ -20,13 +20,13 @@ exports.getUserNotificationsAsync = async (userId, limit, offset = 0) => {
   return rows;
 };
 
-exports.markUserNotificationAsReadAsync = async (userId, notification) => {
+exports.markUserNotificationAsReadAsync = async (notificationId, userId) => {
   const query = `
     UPDATE users_notifications SET is_read = true
-    WHERE user_id = $1 AND notification = $2;
+    WHERE id = $1 AND user_id = $2;
   `;
 
-  await pool.query(query, [userId, notification]);
+  await pool.query(query, [notificationId, userId]);
 };
 
 exports.deleteNotificationFromUserAsync = async (userId, notification) => {

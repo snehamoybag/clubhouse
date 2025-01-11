@@ -1,5 +1,8 @@
 const asyncHandler = require("express-async-handler");
-const { getUserNotificationsAsync } = require("../db/queries/notifications");
+const {
+  getUserNotificationsAsync,
+  markUserNotificationAsReadAsync,
+} = require("../db/queries/notifications");
 
 exports.GET = (req, res) => {
   const user = req.user;
@@ -20,3 +23,17 @@ exports.noitficationsGET = asyncHandler(async (req, res) => {
     notifications,
   });
 });
+
+// try-catching cause we want errors to happen silently
+exports.markNotificationAsReadSilentlyPOST = async (req, res) => {
+  console.log(req.body);
+  const notificationId = Number(req.body.notificationId);
+
+  try {
+    await markUserNotificationAsReadAsync(notificationId, req.user.id);
+    res.status(200).end();
+  } catch (err) {
+    console.log(err);
+    res.status(500).end();
+  }
+};
