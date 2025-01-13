@@ -8,22 +8,34 @@
   margin-top: 0.5rem;
 }
 
-.post__header {
+.post__head {
   display: flex;
   justify-content: space-between;
   align-items: start;
   gap: 1rem;
 }
 
+.post__title-wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.post__author-name,
+.post__club-name {
+  font-weight: bold;
+}
+
+.post__author-name > a,
+.post__club-name > a {
+  text-decoration: none;
+}
+
 .post__author-name {
   display: flex;
   align-items: center;
   gap: 0.5em;
-  font-weight: bold;
-}
-
-.post__author-name > a {
-  text-decoration: none;
 }
 
 .post__author-id {
@@ -34,6 +46,15 @@
   display: flex;
   align-items: center;
   gap: 0.5em;
+}
+
+.in-club-icon {
+  width: 1em;
+  height: 1em;
+  background-image: url("../../assets/icons/arrow-right.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 .post__body {

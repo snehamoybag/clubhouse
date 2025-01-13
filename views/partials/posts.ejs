@@ -2,15 +2,26 @@
   <div class="posts" id="posts">
     <% posts.forEach((post) => { %>
     <article id="post<%= post.id %>" class="post">
-      <section class="post__header">
-        <div class="post__header-content">
-          <!-- <img src="" alt="" class="post__avatar"> -->
-          <h2 class="post__author-name">
-            <a href="/profile/<%= post.author_id %>">
-              <%= post.author_first_name %> <%= post.author_last_name %>
-            </a> 
-            <span class="post__author-id" title="atuthor ID">#<%= post.author_id %></span>
-          </h2>
+      <section class="post__head">
+        <div class="post__author-details">
+          <div class="post__title-wrapper">
+            <!-- <img src="" alt="" class="post__avatar"> -->
+            <h2 class="post__author-name">
+              <a href="/profile/<%= post.author_id %>">
+                <%= post.author_first_name %> <%= post.author_last_name %>
+              </a> 
+              <span class="post__author-id" title="atuthor ID">#<%= post.author_id %></span>
+            </h2>
+            <% if (post.club_id) { %>
+              <p class="in-club-icon"><span class="sr-only">in club</span></p>
+              <h2 class="post__club-name">
+                <a href="/club/<%= post.club_id %>">
+                  <%= post.club_name %>
+                </a>
+              </h2>
+            <% }; %>
+          </div>
+
           <div class="post__time-role-wrapper">
             <p class="post__time">
               <time datetime="<%= post.date %>">

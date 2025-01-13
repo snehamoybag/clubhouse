@@ -75,6 +75,27 @@ exports.getPostsAsync = async (clubId, limit, offset = 0) => {
   return rows;
 };
 
+exports.getUserPostsAsync = async (userId, limit, offset = 0) => {
+  const query = `
+    SELECT posts.*,  
+      clubs.id AS club_id, clubs.name AS club_name, clubs.privacy AS club_privacy, 
+      users.id AS author_id, 
+      users.first_name AS author_first_name,
+      users.last_name AS author_last_name
+    FROM posts 
+    INNER JOIN posts_of_users ON posts_of_users.post_id = posts.id
+    INNER JOIN users ON users.id = posts_of_users.user_id
+    LEFT JOIN posts_in_clubs ON posts_in_clubs.post_id = posts.id
+    LEFT JOIN clubs ON clubs.id = posts_in_clubs.club_id
+    WHERE posts_of_users.user_id = $1
+    ORDER BY posts.date DESC 
+    LIMIT $2 OFFSET $3;
+  `;
+
+  const { rows } = await pool.query(query, [userId, limit, offset]);
+  return rows;
+};
+
 exports.isPostAuthorAsync = async (postId, userId) => {
   const query = `
     SELECT 1 FROM posts_of_users
