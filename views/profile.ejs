@@ -1,7 +1,22 @@
-<main>
-  <h1 class="title title--primary">
-    Profile of <%= user.first_name %> <%= user.last_name %>
-  </h1>
-  <a href="/profile/<%= profileId %>/notifications">Notifications</a>
+<main class="profile">
+  <h1 class="sr-only"><%= title %></h1>
+  <section class="profile-head">
+    <h2 class="sr-only">Profile details</h2>
+    <div class="profile-head__details">
+      <img src="<%= profile.avatar || '/assets/icons/face.svg' %>" alt="profile avatar" class="profile__avatar">
+      <div class="profile-head__texts-wrapper">
+        <h3 class="profile__name"><%= profile.first_name %> <%= profile.last_name %> 
+        </h3>
+        <p>ID: <b><%= profile.id %></b></p>
+        <p>Reputation: <b>100%</b></p>
+      </div>
+    </div>
+  </section>
+  
+  <section class="profile-posts">
+    <h2 class="title title--primary">Posts</h2>
+    <%- include("./partials/posts.ejs") %>
+  </section>
+
   <a href="/">Return to homepage</a>
 </main>

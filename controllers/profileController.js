@@ -3,16 +3,34 @@ const {
   getUserNotificationsAsync,
   markUserNotificationAsReadAsync,
 } = require("../db/queries/notifications");
+const { getUserByIdAsync } = require("../db/queries/users");
+const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
+const { getUserPostsAsync } = require("../db/queries/posts");
 
-exports.GET = (req, res) => {
-  const user = req.user;
+exports.GET = asyncHandler(async (req, res) => {
+  const profileId = Number(req.params.id);
+  const profileUser = await getUserByIdAsync(profileId);
+
+  if (!profileUser) {
+    throw new CustomNotFoundError("Profile not found.");
+  }
+
+  const isUserProfileOwner = profileId === Number(req.user.id);
+  const title = isUserProfileOwner
+    ? "Profile"
+    : `Profile of ${profileUser.first_name} ${profileUser.last_name}`;
+
+  const postsOfProfileUser = await getUserPostsAsync(profileId, 30);
 
   res.render("root", {
-    title: `Profile | ${user.first_name} ${user.last_name}`,
+    title,
     mainView: "profile",
-    profileId: req.params.id,
+    profile: profileUser,
+    isUserProfileOwner,
+    posts: postsOfProfileUser,
+    styles: "profile",
   });
-};
+});
 
 exports.noitficationsGET = asyncHandler(async (req, res) => {
   const notifications = await getUserNotificationsAsync(req.user.id, 30);

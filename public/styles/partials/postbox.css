@@ -1,6 +1,6 @@
 .postbox {
-  padding: 3em 2em;
-  background-color: var(--clr-neutral-100);
+  padding: 2em;
+  border-bottom: 1px solid var(--clr-accent-400);
 }
 
 .postbox__input-wrapper {
@@ -15,12 +15,11 @@
 .postbox__textarea {
   height: 7rem;
   padding: 1em;
-  border: 1px solid var(--clr-neutral-400);
+  border: 1px solid var(--clr-primary-400);
   transition: height 400ms ease;
 }
 
 .postbox__textarea:focus {
-  border-color: var(--clr-primary-400);
   outline-color: var(--clr-primary-400);
 }
 

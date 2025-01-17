@@ -1,12 +1,21 @@
 :root {
+  --clr-primary-400: hsl(258, 50%, 43%);
+
+  --clr-accent-400: hsl(265, 32%, 78%);
+
   --clr-neutral-100: hsl(0, 0%, 100%);
-  --clr-neutral-200: hsl(0, 0%, 90%);
-  --clr-neutral-400: hsl(0, 0%, 50%);
+  --clr-neutral-700: hsl(0, 0%, 20%);
+  --clr-neutral-900: hsl(0, 0%, 0%);
 
-  --clr-primary-400: hsl(240, 100%, 50%);
+  --ff-title: "Roboto Condensed", serif;
+  --ff-body: "Roboto", serif;
 
-  --fw-reqular: 400;
+  --fw-regular: 400;
   --fw-bold: 700;
+
+  --fs-200: 0.875rem;
+  --fs-400: 1rem;
+  --fs-700: 1.25rem;
 }
 
 /* CSS RESET */
@@ -44,7 +53,10 @@ body {
 
 /* STYLING */
 body {
-  background-color: var(--clr-neutral-200);
+  font-family: var(--ff-body);
+  font-weight: var(--fw-regular);
+  background-color: var(--clr-neutral-100);
+  color: var(--clr-neutral-700);
 }
 
 a {
@@ -92,4 +104,16 @@ a {
 
 .btn--submit:active {
   box-shadow: none;
+}
+
+.title {
+  font-family: var(--ff-title);
+  font-weight: var(--fw-bold);
+}
+
+.title--primary {
+  font-size: var(--fs-700);
+  padding: 1em;
+  background: var(--clr-accent-400);
+  color: var(--clr-neutral-900);
 }
