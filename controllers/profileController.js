@@ -42,9 +42,8 @@ exports.noitficationsGET = asyncHandler(async (req, res) => {
   });
 });
 
-// try-catching cause we want errors to happen silently
+// try-catching cause we want errors to happen silently on client side
 exports.markNotificationAsReadSilentlyPOST = async (req, res) => {
-  console.log(req.body);
   const notificationId = Number(req.body.notificationId);
 
   try {

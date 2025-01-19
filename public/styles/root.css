@@ -7,6 +7,8 @@
   --clr-neutral-700: hsl(0, 0%, 20%);
   --clr-neutral-900: hsl(0, 0%, 0%);
 
+  --clr-alert-400: hsl(360, 100%, 50%);
+
   --ff-title: "Roboto Condensed", serif;
   --ff-body: "Roboto", serif;
 
@@ -52,6 +54,17 @@ body {
 }
 
 /* STYLING */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: var(--clr-primary-400);
+  color: var(--clr-neutral-100);
+  padding: 2em 1em;
+}
+
 body {
   font-family: var(--ff-body);
   font-weight: var(--fw-regular);
@@ -61,6 +74,81 @@ body {
 
 a {
   color: var(--clr-primary-400);
+}
+
+.navbar {
+  background-color: var(--clr-accent-400);
+  padding: 1em;
+}
+
+.navbar__list {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+  list-style: none;
+}
+
+.navbar__icon {
+  fill: var(--clr-neutral-700);
+  opacity: 0.75;
+  transition: transform 200 linear;
+}
+
+.navbar__icon:hover {
+  fill: var(--clr-neutral-900);
+  opacity: 1;
+  transform: scale(110%);
+}
+
+.navbar__icon:active {
+  transform: scale(95%);
+}
+
+.navbar__icon.cta {
+  opacity: 1;
+  fill: var(--clr-neutral-900);
+}
+
+.navbar__back-link {
+  margin-right: auto;
+}
+
+.notification-icon {
+  position: relative;
+}
+
+.notification-icon:hover {
+  cursor: pointer;
+  transform: scale(110%);
+}
+
+.notification-icon:active {
+  transform: scale(95%);
+}
+
+.notification-icon svg {
+  fill: var(--clr-accent-400);
+}
+
+.notification-icon:hover svg {
+  fill: var(--clr-neutral-100);
+}
+
+.notification-icon.active svg {
+  fill: var(--clr-neutral-100);
+}
+
+.notification-icon__bubble {
+  font-family: var(--ff-title);
+  font-weight: var(--fw-bold);
+  font-size: 0.75rem;
+  text-align: center;
+  background-color: var(--clr-alert-400);
+  color: var(--clr-neutral-100);
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 /* UTILITY CLASSES */
@@ -114,6 +202,6 @@ a {
 .title--primary {
   font-size: var(--fs-700);
   padding: 1em;
-  background: var(--clr-accent-400);
   color: var(--clr-neutral-900);
+  border: 1px solid var(--clr-neutral-700);
 }
