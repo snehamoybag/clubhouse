@@ -34,3 +34,10 @@ exports.deleteNotificationFromUserAsync = async (userId, notification) => {
     "DELETE from usres_notifications WHERE user_id = $1 AND notification = $2";
   await pool.query(query, [userId, notification]);
 };
+
+exports.getUnreadUserNotificationsCountAsync = async (userId) => {
+  const query =
+    "SELECT COUNT(id) FROM users_notifications WHERE user_id = $1 AND is_read = false";
+  const { rows } = await pool.query(query, [userId]);
+  return Number(rows[0].count);
+};

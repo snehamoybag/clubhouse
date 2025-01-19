@@ -1,6 +1,7 @@
 require("dotenv").config();
 const path = require("node:path");
 const express = require("express");
+const asyncHandler = require("express-async-handler");
 const expressSession = require("./configs/expressSession");
 const passport = require("./configs/passport");
 
@@ -8,6 +9,9 @@ const routes = require("./routes");
 const errorHandler = require("./middlewares/errorHandler");
 const notFound404Handler = require("./middlewares/notFound404Handler");
 const formatDateDistanceToNow = require("./lib/formatDateDistanceToNow");
+const {
+  getUnreadUserNotificationsCountAsync,
+} = require("./db/queries/notifications");
 
 const app = express();
 
@@ -27,11 +31,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // set global locals variables
-app.use((req, res, next) => {
-  res.locals.user = req.user;
-  res.locals.formatDateDistanceToNow = formatDateDistanceToNow;
-  next();
-});
+app.use(
+  asyncHandler(async (req, res, next) => {
+    res.locals.user = req.user;
+    res.locals.formatDateDistanceToNow = formatDateDistanceToNow;
+    res.locals.prevUrl = req.originalUrl === "/" ? "" : req.get("Referrer"); // only set back url if current url is not the home page
+    res.locals.unreadUserNotificationsCount =
+      await getUnreadUserNotificationsCountAsync(req.user.id);
+    next();
+  }),
+);
 
 // routes
 app.use(routes);
