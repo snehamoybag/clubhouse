@@ -84,13 +84,13 @@
 }
 
 .post__edit-form_input {
-  height: 10rem;
+  /* height: 7rem; */
   padding: 1em;
-  border: 1px solid var(--clr-neutral-400);
+  border: 1px solid var(--clr-primary-400);
 }
 
-.post__edit-form_input {
-  border-color: var(--clr-primary-400);
+.post__edit-form_input:focus {
+  border-color: var(--clr-neut-400);
   outline-color: var(--clr-primary-400);
 }
 

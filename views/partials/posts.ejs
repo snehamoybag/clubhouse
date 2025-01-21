@@ -93,7 +93,7 @@
               maxlength="2000"
               required
             ><%= post.message %></textarea>
-            <label for="edit-post-input-<%= post.id %>" class="post__edit-form_max-limit">max: 2000 characters</label>         
+            <label for="edit-post-input-<%= post.id %>" class="post__edit-form_max-limit">(max. 2000 characters)</label>         
           </p>
           <button type="submit" class="btn btn--submit">Done</button>
         </form>
@@ -126,7 +126,6 @@
       getControlledEl(btnEl).classList.remove("hidden")
     }
 
-
     const closePostOptions = (btnEl) => {
      const srOnlyEl = btnEl.querySelector(".sr-only")
 
@@ -153,6 +152,11 @@
     });
 
     // toggle post edit field
+    const getPostMessageEl = (btnEl) => {
+      const postId = btnEl.dataset.postId
+      return document.querySelector(`#post-message-${postId}`)
+    }
+
     const openPostEditField = (btnEl) => {
       btnEl.setAttribute("aria-expanded", true)
       btnEl.textContent = "Cancel edit"
@@ -168,11 +172,6 @@
       getControlledEl(btnEl).classList.add("hidden")
     }
 
-    const getPostMessageEl = (btnEl) => {
-      const postId = btnEl.dataset.postId
-      return document.querySelector(`#post-message-${postId}`)
-    }
-
     const hidePostMessageEl = (btnEl) => {
       const messageEl = getPostMessageEl(btnEl)
       messageEl.classList.add("hidden")
@@ -184,12 +183,26 @@
       messageEl.classList.remove("hidden")
     }
 
+    const setPostMessageEditInputElHeight = (postId) => {
+      const messageElHeight = document.querySelector(`#post-message-${postId}`).offsetHeight
+      const editInputEl = document.querySelector(`#edit-post-input-${postId}`)
+
+      if (messageElHeight < 100) {
+        const extraHeight = 30
+        editInputEl.style.height = messageElHeight + extraHeight + "px"
+      }
+      else {
+        editInputEl.style.height = messageElHeight + "px"
+      }
+    }
+
     const togglePostEditField = (btnEl) => {
       if (isControlledElOpen(btnEl)) {
         closePostEditField(btnEl)
         showPostMessageEl(btnEl)
       }
       else {
+        setPostMessageEditInputElHeight(btnEl.dataset.postId)
         hidePostMessageEl(btnEl)
         openPostEditField(btnEl)
       }
@@ -200,7 +213,6 @@
     editPostBtnEls.forEach((btnEl) => {
       btnEl.addEventListener("click", () => togglePostEditField(btnEl))
     })
-   
   </script> 
   </div>
 <% }; %>
