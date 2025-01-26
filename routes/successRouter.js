@@ -4,7 +4,7 @@ const handleNotAuthenticated = require("../middlewares/handleNotAuthenticated");
 
 const router = new Router();
 
-router.get("/signup", handleNotAuthenticated, successController.signupGET);
+router.get("/signup", successController.signupGET);
 router.get("/logout", successController.logoutGET);
 
 router.get("/join-club", handleNotAuthenticated, successController.joinClubGET);

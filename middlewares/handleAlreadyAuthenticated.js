@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
         "No need you're already a member of Clubhouse.",
       ),
     );
-  } else {
-    next();
   }
+
+  next();
 };

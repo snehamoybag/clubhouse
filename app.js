@@ -36,8 +36,12 @@ app.use(
     res.locals.user = req.user;
     res.locals.formatDateDistanceToNow = formatDateDistanceToNow;
     res.locals.prevUrl = req.originalUrl === "/" ? "" : req.get("Referrer"); // only set back url if current url is not the home page
-    res.locals.unreadUserNotificationsCount =
-      await getUnreadUserNotificationsCountAsync(req.user.id);
+
+    if (req.user) {
+      res.locals.unreadUserNotificationsCount =
+        await getUnreadUserNotificationsCountAsync(req.user.id);
+    }
+
     next();
   }),
 );
@@ -46,6 +50,7 @@ app.use(
 app.use(routes);
 
 // error handler
+// comment out this middleware if you do not know from where the error is coming
 app.use(errorHandler);
 
 // error 404 route. Make sure it is at the end of all middleware functions

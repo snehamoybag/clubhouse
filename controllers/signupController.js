@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const { body, check, validationResult } = require("express-validator");
 const { addUserAsync } = require("../db/queries/users");
-const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 
 const nameValidationChain = (filedName) =>
   body(filedName)
