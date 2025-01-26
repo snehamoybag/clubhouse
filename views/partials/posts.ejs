@@ -72,6 +72,12 @@
             </li>
           <% }; %>
 
+          <% if (post.author_id !== user.id) { %>
+            <li>
+              <a href="/report/post/?postId=<%= post.id %>">Report post</a>
+            </li>
+          <% }; %>
+          
           </ul>
         </div>
       </section>

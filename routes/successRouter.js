@@ -21,4 +21,6 @@ router.get(
 
 router.get("/edit", handleNotAuthenticated, successController.editGET);
 
+router.get("/report", handleNotAuthenticated, successController.reportGET);
+
 module.exports = router;

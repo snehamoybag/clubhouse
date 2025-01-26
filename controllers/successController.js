@@ -77,3 +77,10 @@ exports.editGET = (req, res) => {
     getViewData("Edit Successful!", message, req.get("Referrer"), "Go back"),
   );
 };
+
+exports.reportGET = (req, res) => {
+  const reportType = req.query.type;
+  const message = `The ${reportType} has been reported successfully!`;
+
+  res.render("root", getViewData("Report Successful!", message));
+};

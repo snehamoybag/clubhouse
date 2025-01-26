@@ -10,6 +10,7 @@ const clubRouter = require("./clubRouter");
 const clubsListRouter = require("./clubsListRouter");
 const editRouter = require("./editRouter");
 const deleteRouter = require("./deleteRouter");
+const reportRouter = require("./reportRouter");
 
 const router = new Router();
 
@@ -23,5 +24,6 @@ router.use("/club", clubRouter);
 router.use("/list-of-clubs", clubsListRouter);
 router.use("/edit", editRouter);
 router.use("/delete", deleteRouter);
+router.use("/report", reportRouter);
 
 module.exports = router;

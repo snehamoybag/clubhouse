@@ -31,9 +31,11 @@ router.post(
 );
 
 router.get("/:id/control-panel", clubController.controlPanelGET);
+router.get("/:id/control-panel/join-requests", clubController.joinRequestsGET);
+
 router.get(
-  "/:id/control-panel/join-requests",
-  clubController.clubJoinRequestsGET,
+  "/:id/control-panel/reported-posts",
+  clubController.reportedClubPostsGET,
 );
 
 module.exports = router;

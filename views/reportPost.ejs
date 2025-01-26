@@ -1,0 +1,23 @@
+<main>
+  <h1 class="title title--primary">Report Post</h1>
+  <form 
+    action="" 
+    method="post"
+    onsubmit="return confirm('Are you sure you want to report this post?')"
+  >
+    <fieldset>
+      <h2>Report post #99</h2>
+      <% if (isPostInClub) { %>
+        <p>
+          <input type="radio" name="reportTo" id="report-to-club" value="club">
+          <label for="report-to-club">Report to club admins</label>
+        </p>
+      <% }; %>
+      <p>
+        <input type="radio" name="reportTo" id="report-to-site" value="site">
+        <label for="report-to-site">Report to site admins</label>
+      </p>
+    </fieldset>
+    <button type="submit">Submit</button>
+  </form>
+</main>

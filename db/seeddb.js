@@ -48,7 +48,7 @@ const query = `
     club_id INTEGER,
     FOREIGN KEY(club_id) REFERENCES clubs(id),
     FOREIGN KEY(post_id) REFERENCES posts(id)
-  )
+  );
 
   CREATE TABLE IF NOT EXISTS clubs_join_requests (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -57,7 +57,7 @@ const query = `
     date TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id),
     FOREIGN KEY(club_id) REFERENCES clubs(id)
-  )
+  );
 
   CREATE TABLE IF NOT EXISTS users_notifications (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -67,7 +67,18 @@ const query = `
     is_read BOOLEAN,
     date TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id)
-  )
+  );
+  
+  CREATE TABLE IF NOT EXISTS reported_posts (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    post_id INTEGER,
+    reporter_id INTEGER,
+    club_id INTEGER,
+    date TIMESTAMP,
+    FOREIGN KEY(post_id) REFERENCES posts(id),
+    FOREIGN KEY(reporter_id) REFERENCES users(id),
+    FOREIGN KEY(club_id) REFERENCES clubs(id)
+  );
 `;
 
 const main = async () => {

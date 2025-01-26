@@ -20,10 +20,6 @@ exports.addPostAsync = async (message, timeStamp, authorId, clubId) => {
       "INSERT INTO posts_in_clubs(club_id, post_id) VALUES($1, $2)",
       [clubId, postId],
     );
-  } else {
-    await pool.query("INSERT INTO posts_in_clubs(post_id) VALUES($1)", [
-      postId,
-    ]);
   }
 };
 
@@ -96,12 +92,93 @@ exports.getUserPostsAsync = async (userId, limit, offset = 0) => {
   return rows;
 };
 
+exports.getPostClubIdAsync = async (postId) => {
+  const { rows } = await pool.query(
+    "SELECT club_id FROM posts_in_clubs WHERE post_id = $1",
+    [postId],
+  );
+
+  return Number(rows[0].club_id);
+};
+
+exports.isPostValidAsync = async (postId) => {
+  const query = `
+    SELECT CASE WHEN EXISTS (
+      SELECT 1 FROM posts WHERE id = $1
+    )
+      THEN 1 
+      ELSE 0 
+    END;
+  `;
+
+  const { rows } = await pool.query(query, [postId]);
+  return Boolean(rows[0].case);
+};
+
 exports.isPostAuthorAsync = async (postId, userId) => {
   const query = `
-    SELECT 1 FROM posts_of_users
-    WHERE posts_of_users.post_id = $1 AND posts_of_users.user_id = $2;
+    SELECT CASE IF EXISTS (
+      SELECT 1 FROM posts_of_users
+      WHERE posts_of_users.post_id = $1 AND posts_of_users.user_id = $2;
+    ) 
+      THEN 1 
+      ELSE 0 
+    END;
   `;
 
   const { rows } = await pool.query(query, [postId, userId]);
-  return Boolean(rows[0]);
+  return Boolean(rows[0].case);
+};
+
+exports.isPostInClubAsync = async (postId) => {
+  const query = `
+    SELECT CASE WHEN EXISTS (
+      SELECT 1 FROM posts_in_clubs WHERE post_id = $1
+    )
+      THEN 1 
+      ELSE 0
+    END;
+  `;
+
+  const { rows } = await pool.query(query, [postId]);
+  return Boolean(rows[0].case);
+};
+
+exports.getReportedPostsAsync = async (clubId, limit, offset = 0) => {
+  const query = `
+    SELECT * FROM reported_posts 
+    WHERE (
+      club_id = $1 
+      OR 
+      $1 IS NULL AND club_id IS NULL
+    )
+    ORDER BY date ASC
+    LIMIT $2 OFFSET $3;
+  `;
+
+  const { rows } = await pool.query(query, [clubId, limit, offset]);
+  return rows;
+};
+
+exports.reportPostToClubAdminAsync = async (
+  postId,
+  reporterId,
+  clubId = null,
+) => {
+  const query = `INSERT INTO reported_posts(post_id, reporter_id, club_id, date) VALUES($1, $2, $3, $4)`;
+  await pool.query(query, [postId, reporterId, clubId, new Date()]);
+};
+
+exports.isPostAlreadyReportedByUserAsync = async (postId, userId) => {
+  const query = `
+    SELECT CASE WHEN EXISTS (
+      SELECT 1 FROM reported_posts WHERE post_id = $1 AND reporter_id = $2
+    )
+      THEN 1 
+      ELSE 0 
+    END;
+  `;
+
+  const { rows } = await pool.query(query, [postId, userId]);
+  return Boolean(rows[0].case);
 };

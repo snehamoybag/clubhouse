@@ -15,7 +15,7 @@ const {
   deleteClubJoinRequestAsync,
   isClubMemberAsync,
 } = require("../db/queries/clubs");
-const { getPostsAsync } = require("../db/queries/posts");
+const { getPostsAsync, getReportedPostsAsync } = require("../db/queries/posts");
 const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
 const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
@@ -167,7 +167,7 @@ exports.editClubPrivacyPOST = asyncHandler(async (req, res) => {
   res.redirect("/success/edit/?type=club&name=privacy");
 });
 
-exports.clubJoinRequestsGET = asyncHandler(async (req, res) => {
+exports.joinRequestsGET = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);
   const joinRequests = await getClubJoinRequestsAsync(clubId, 30);
 
@@ -223,4 +223,14 @@ exports.declineClubJoinRequestPOST = asyncHandler(async (req, res) => {
   await sendNotificactionToUserAsync(senderId, notficationMessage, clubLink);
 
   res.status(200).redirect(req.get("Referrer"));
+});
+
+exports.reportedClubPostsGET = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+
+  res.render("root", {
+    title: "Reported Club Posts",
+    mainView: "clubPostReports",
+    reportedPosts: await getReportedPostsAsync(clubId, 30),
+  });
 });

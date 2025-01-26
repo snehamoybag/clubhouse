@@ -1,0 +1,29 @@
+<main>
+  <h1 class="title title--primary"><%= title %></h1>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Post Id</th>
+        <th scope="col">Reporter Id</th>
+        <th scope="col">Date</th>
+      </tr>
+    </thead>
+    <% if (!reportedPosts.length) { %>
+      <tbody>
+        <tr>
+          <td colspan="3">No reported posts found.</td>  
+        </tr>
+      </tbody>
+    <% } else { %>
+      <tbody>
+        <% reportedPosts.forEach((post) => { %>
+          <tr>
+          <td><a href=""><%= post.post_id %></a></td>
+          <td><a href=""><%= post.reporter_id %></a></td>
+          <td><%= locals.formatDateDistanceToNow(post.date) %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    <% }; %>
+  </table>
+</main>
