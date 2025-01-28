@@ -79,6 +79,14 @@ const query = `
     FOREIGN KEY(reporter_id) REFERENCES users(id),
     FOREIGN KEY(club_id) REFERENCES clubs(id)
   );
+
+  CREATE TABLE IF NOT EXISTS banned_club_members (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    club_id INTEGER,
+    user_id INTEGER,
+    FOREIGN KEY(club_id) REFERENCES clubs(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  );
 `;
 
 const main = async () => {

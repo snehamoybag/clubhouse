@@ -14,6 +14,10 @@ const {
 } = require("../db/queries/reports");
 const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 const { sendNotificactionToUserAsync } = require("../db/queries/notifications");
+const {
+  addUserToClubBanListAsync,
+  removeClubMemberAsync,
+} = require("../db/queries/clubs");
 
 const handleInvalidPostId = async (req, res, next) => {
   const postId = Number(req.query.postId);
@@ -110,6 +114,7 @@ exports.reviewPostPOST = [
 
     const postId = Number(req.query.postId);
     const post = await getPostAsync(postId);
+    const postAuthorId = Number(post.author_id);
     const postClubId = await getPostClubIdAsync(postId);
     const reporterIds = await getPostReporterIdsAsync(postId);
 
@@ -135,7 +140,7 @@ exports.reviewPostPOST = [
         );
 
         await sendNotificactionToUserAsync(
-          Number(post.author_id),
+          postAuthorId,
           "We've decided to remove one of your post as it violates club's rules/guidlines. Please refrain from posting such messages in future, repeated violations can lead to ban.",
           postClubId ? `/club/${postClubId}` : "",
         );
@@ -144,15 +149,18 @@ exports.reviewPostPOST = [
       case "deletePostAndBanAuthor":
         await deletePostFromReportedPostsAsync(postId);
         await deletePostAsync(postId);
-        // ban author from club
+
+        await addUserToClubBanListAsync(postClubId, postAuthorId);
+        await removeClubMemberAsync(postClubId, postAuthorId);
 
         sendReviewNotificationToReportersAsync(
           reporterIds,
-          "W've decided to remove the post you've reported earlier as it violates our rules/guidlines. We've also banned the author for repeating such behaviors. Thankyou for reporting and making this community a better place.",
+          "We've decided to remove the post you've reported earlier as it violates our rules/guidlines. We've also banned the author for repeating such behaviors. Thankyou for reporting and making this community a better place.",
           postClubId ? `/club/${postClubId}` : "",
         );
 
         await sendNotificactionToUserAsync(
+          postAuthorId,
           "You've been banned from the club for violating our rules/guidlines.",
           postClubId ? `/club/${postClubId}` : "",
         );

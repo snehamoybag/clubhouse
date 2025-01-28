@@ -3,10 +3,12 @@ const clubController = require("../controllers/clubController");
 const postController = require("../controllers/postController");
 const handleNotAuthenticated = require("../middlewares/handleNotAuthenticated");
 const handleInvalidClub = require("../middlewares/handleInvalidClub");
+const handleUserBannedFromClub = require("../middlewares/handleUserBannedFromClub");
 
 const router = new Router();
 
 router.all("/*", handleNotAuthenticated);
+router.all("/:id/", handleUserBannedFromClub);
 router.post("/:id/*", handleInvalidClub);
 
 // make sure the 'new' routes are above '/:id' routes
@@ -37,5 +39,9 @@ router.get(
   "/:id/control-panel/reported-posts",
   clubController.reportedClubPostsGET,
 );
+
+router.get("/:id/control-panel/ban-list", clubController.banListGET);
+router.post("/:id/control-panel/ban-list/add", clubController.banUserPOST);
+router.post("/:id/control-panel/ban-list/remove", (req, res) => {});
 
 module.exports = router;

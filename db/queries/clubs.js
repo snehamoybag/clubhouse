@@ -165,3 +165,37 @@ exports.getClubJoinRequestsAsync = async (clubId, limit, offset = 0) => {
   const { rows } = await pool.query(query, [clubId, limit, offset]);
   return rows;
 };
+
+exports.addUserToClubBanListAsync = async (clubId, userId) => {
+  await pool.query(
+    "INSERT INTO banned_club_members(club_id, user_id) VALUES($1, $2)",
+    [clubId, userId],
+  );
+};
+
+exports.getClubBannedUsersAsync = async (clubId, limit, offset = 0) => {
+  const query = `
+    SELECT users.id, users.first_name, users.last_name FROM banned_club_members 
+    INNER JOIN users ON users.id = banned_club_members.user_id
+    WHERE banned_club_members.club_id = $1
+    ORDER BY id DESC
+    LIMIT $2 OFFSET $3;
+  `;
+
+  const { rows } = await pool.query(query, [clubId, limit, offset]);
+  return rows;
+};
+
+exports.isUserBannedFromClubAsync = async (clubId, userId) => {
+  const query = `
+    SELECT CASE WHEN EXISTS (
+      SELECT 1 FROM banned_club_members WHERE club_id = $1 AND user_id = $2
+    )
+      THEN 1 
+      ELSE 0 
+    END;
+  `;
+
+  const { rows } = await pool.query(query, [clubId, userId]);
+  return Boolean(rows[0].case);
+};

@@ -37,7 +37,7 @@ exports.joinClubGET = (req, res) => {
       "Club joined successfully!",
       `Congratulations! You're now an honourable member of '${req.query.clubName}'. 🥳`,
       `/club/${req.query.clubId}`,
-      "Go to Clubpage",
+      "Go to club",
     ),
   );
 };
@@ -46,7 +46,7 @@ exports.clubJoinRequestSendGET = (req, res) => {
   res.render(
     "root",
     getViewData(
-      "Requrest send successfully!",
+      "Request send successfully!",
       `Request to join '${req.query.clubName}' is successful. Please wait for the admin's approval.`,
       `/club/${req.query.clubId}`,
       "Go to Clubpage",
@@ -61,7 +61,7 @@ exports.leaveClubGET = (req, res) => {
       "Leaving club successful!",
       "You're no longer a member of the club.",
       `/club/${req.query.clubId}`,
-      "Return to Clubpage",
+      "Return to club",
     ),
   );
 };
@@ -83,4 +83,25 @@ exports.reportGET = (req, res) => {
   const message = `The ${reportType} has been reported successfully!`;
 
   res.render("root", getViewData("Report Successful!", message));
+};
+
+exports.userBannedGET = (req, res) => {
+  const clubId = Number(req.query.clubId);
+
+  let message =
+    "User added to the club's banned list successfuly. The user will not be able to join or interact with the club ever again.";
+
+  if (!clubId) {
+    message = "Successfuly banned the user from the site.";
+  }
+
+  res.render(
+    "root",
+    getViewData(
+      "User Banned!",
+      message,
+      `/club/${clubId}`,
+      "Return to club page",
+    ),
+  );
 };

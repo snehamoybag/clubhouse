@@ -60,6 +60,12 @@
             </li>
           <% }; %>
 
+          <% if (post.author_id !== user.id) { %>
+            <li>
+              <a href="/report/post/?postId=<%= post.id %>">Report post</a>
+            </li>
+          <% }; %>
+
           <% if (post.author_id === user.id || locals.memberRole === "admin" || locals.memberRole === "mod") { %>
             <li>
               <form 
@@ -72,9 +78,15 @@
             </li>
           <% }; %>
 
-          <% if (post.author_id !== user.id) { %>
+          <% if (post.author_id !== user.id && (locals.memberRole === "admin" || locals.memberRole === "mod")) { %>
             <li>
-              <a href="/report/post/?postId=<%= post.id %>">Report post</a>
+              <form 
+                action="<%= locals.club.id %>/control-panel/ban-list/add/?userId=<%= post.author_id %>"
+                method="post"
+                onsubmit="return confirm('Are you sure you want to ban this user from the club?')"
+              >
+                <button type="submit">Ban author</button>
+              </form>
             </li>
           <% }; %>
           

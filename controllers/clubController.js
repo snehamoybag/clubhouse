@@ -14,6 +14,8 @@ const {
   sendClubJoinRequestAsync,
   deleteClubJoinRequestAsync,
   isClubMemberAsync,
+  addUserToClubBanListAsync,
+  getClubBannedUsersAsync,
 } = require("../db/queries/clubs");
 const { getPostsAsync } = require("../db/queries/posts");
 const { getReportedPostsAsync } = require("../db/queries/reports");
@@ -235,4 +237,26 @@ exports.reportedClubPostsGET = asyncHandler(async (req, res) => {
     clubId,
     reportedPosts: await getReportedPostsAsync(clubId, 30),
   });
+});
+
+exports.banListGET = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  const bannedUsers = await getClubBannedUsersAsync(clubId, 30);
+
+  res.render("root", {
+    title: "Club's Ban List",
+    mainView: "clubBanList",
+    clubId,
+    bannedUsers,
+  });
+});
+
+exports.banUserPOST = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  const userId = Number(req.query.userId);
+
+  await addUserToClubBanListAsync(clubId, userId);
+  await removeClubMemberAsync(clubId, userId);
+
+  res.redirect(`/success/user-banned/?clubId=${clubId}`);
 });
