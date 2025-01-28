@@ -9,4 +9,6 @@ router.all("/*", handleNotAuthenticated);
 router.get("/post", reportController.postGET);
 router.post("/post", reportController.postPOST);
 
+router.get("/review/post", reportController.reviewPostGET);
+router.post("/review/post", reportController.reviewPostPOST);
 module.exports = router;

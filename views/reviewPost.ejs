@@ -1,0 +1,40 @@
+<main>
+  <h1 class="title title--primay">Review Post</h1>
+  <div class="post">
+    <h2 class="post__author"><b>Author</b>: <a href=""><%= post.author_first_name %> <%= post.author_last_name %></a></h2>
+    <% if (reviewer === "club" && post.author_club_role) { %>
+      <p class="post__author_club_role"><b>Club role</b>: <%= post.author_club_role %></p>
+    <% }; %>
+    <p class="post__message">
+      <b>Message</b>: <%= post.message %>
+    </p>
+    <p class="post__time">
+      <b>Posted</b>: 
+      <time datetime="<%= post.date %>">
+        <%= locals.formatDateDistanceToNow(post.date) %>
+      </time>
+    </p>
+  </div>
+  <div class="actions">
+    <h2 class="title title-secondary">Take actions</h2>
+    <form action="" method="post">
+      <button 
+        type="submit" 
+        name="reviewAction" 
+        value="ignore" 
+      >Ignore report</button>
+      <button 
+        type="submit"
+        name="reviewAction"
+        value="deletePost"
+        onclick="return confirm('Are you sure you want to delete this post?')"
+      >Delete post</button>
+      <button
+        type="submit"
+        name="reviewAction"
+        value="deletePostAndBanAuthor"
+        onclick="return confirm('Are you sure you want to delete the post and ban the author?')"
+      >Delete post and ban author</button>
+    </form>
+  </div>
+</main>

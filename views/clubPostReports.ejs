@@ -4,8 +4,8 @@
     <thead>
       <tr>
         <th scope="col">Post Id</th>
-        <th scope="col">Reporter Id</th>
         <th scope="col">Date</th>
+        <th scope="col">Action</th>
       </tr>
     </thead>
     <% if (!reportedPosts.length) { %>
@@ -16,11 +16,11 @@
       </tbody>
     <% } else { %>
       <tbody>
-        <% reportedPosts.forEach((post) => { %>
+        <% reportedPosts.forEach((report) => { %>
           <tr>
-          <td><a href=""><%= post.post_id %></a></td>
-          <td><a href=""><%= post.reporter_id %></a></td>
-          <td><%= locals.formatDateDistanceToNow(post.date) %></td>
+          <td><%= report.post_id %></td>
+          <td><%= locals.formatDateDistanceToNow(report.date) %></td>
+          <td><a href="/report/review/post/?postId=<%= report.post_id %>&reviewer=club">Review</a></td>
           </tr>
         <% }); %>
       </tbody>
