@@ -142,9 +142,9 @@ exports.isPostValidAsync = async (postId) => {
 
 exports.isPostAuthorAsync = async (postId, userId) => {
   const query = `
-    SELECT CASE IF EXISTS (
+    SELECT CASE WHEN EXISTS (
       SELECT 1 FROM posts_of_users
-      WHERE posts_of_users.post_id = $1 AND posts_of_users.user_id = $2;
+      WHERE posts_of_users.post_id = $1 AND posts_of_users.user_id = $2
     ) 
       THEN 1 
       ELSE 0 

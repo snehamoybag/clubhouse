@@ -4,9 +4,11 @@ const {
   deletePostAsync,
   isPostAuthorAsync,
   editPostAsync,
+  getPostAsync,
 } = require("../db/queries/posts");
 const { getMemberClubRoleAsync } = require("../db/queries/clubs");
 const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
+const { sendNotificactionToUserAsync } = require("../db/queries/notifications");
 
 exports.addPOST = asyncHandler(async (req, res) => {
   const clubId = req.params.id ? Number(req.params.id) : null;
@@ -48,6 +50,16 @@ exports.deletePOST = asyncHandler(async (req, res) => {
   if (!isAdminOrMod && !isPostAuthor) {
     throw new CustomAccessDeniedError(
       "Only the post's author or club admins/moderators can delete this post.",
+    );
+  }
+
+  // if deleted by admin or mod let the author of the post know
+  if (isAdminOrMod && !isPostAuthor) {
+    const post = await getPostAsync(postId);
+    await sendNotificactionToUserAsync(
+      Number(post.author_id),
+      "We've deleted one of your post as it violates club's rules/guidelines.",
+      `/club/${clubId}`,
     );
   }
 
