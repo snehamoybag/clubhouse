@@ -77,6 +77,14 @@ a {
   color: var(--clr-primary-400);
 }
 
+a[disabled] {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: var(--clr-neutral-700);
+  opacity: 0.5;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

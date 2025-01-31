@@ -45,7 +45,9 @@ exports.deletePostAsync = async (postId) => {
   await pool.query("DELETE FROM posts WHERE id = $1", [postId]);
 };
 
-exports.getPostsAsync = async (clubId, limit, offset = 0) => {
+exports.getPostsAsync = async (clubId, limit, currentPage = 1) => {
+  const offset = currentPage <= 1 ? 0 : limit * (currentPage - 1);
+
   const query = `
     SELECT posts.*, users.id AS author_id, 
       users.first_name AS author_first_name,
@@ -96,7 +98,9 @@ exports.getPostAsync = async (postId) => {
   return rows[0];
 };
 
-exports.getUserPostsAsync = async (userId, limit, offset = 0) => {
+exports.getUserPostsAsync = async (userId, limit, currentPage = 1) => {
+  const offset = currentPage <= 1 ? 0 : limit * (currentPage - 1);
+
   const query = `
     SELECT posts.*,  
       clubs.id AS club_id, clubs.name AS club_name, clubs.privacy AS club_privacy, 

@@ -1,0 +1,13 @@
+<div class="pagination">
+  <a 
+    href="?postsCurrentPage=<%= locals.postsCurrentPage || 1 %>&postsLoadDirection=prev"
+    <%= locals.postsCurrentPage <= 1 ? "disabled" : ""; %>
+  ><< Prev
+  </a>
+  <span>|</span>
+  <a
+    href="?postsCurrentPage=<%= locals.postsCurrentPage || 1 %>&postsLoadDirection=next"
+    <%= locals.posts.length <= 1 ? "disabled" : ""; %>
+  >Next >>
+  </a>
+</div>

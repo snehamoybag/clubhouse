@@ -25,28 +25,32 @@ const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError")
 const url = require("node:url");
 const { getUserByIdAsync } = require("../db/queries/users");
 const { sendNotificactionToUserAsync } = require("../db/queries/notifications");
+const handlePostsPagination = require("../middlewares/handlePostsPagination");
 
-exports.GET = asyncHandler(async (req, res) => {
-  const clubId = Number(req.params.id);
-  const club = await getClubAsync(clubId);
+exports.GET = [
+  handlePostsPagination,
+  asyncHandler(async (req, res) => {
+    const clubId = Number(req.params.id);
+    const club = await getClubAsync(clubId);
 
-  if (!club) {
-    throw new CustomNotFoundError("Club not found.");
-  }
+    if (!club) {
+      throw new CustomNotFoundError("Club not found.");
+    }
 
-  const userId = req.user.id;
-  const memberRole = await getMemberClubRoleAsync(clubId, userId);
-  const posts = await getPostsAsync(clubId, 30);
+    const userId = req.user.id;
+    const memberRole = await getMemberClubRoleAsync(clubId, userId);
+    const posts = await getPostsAsync(clubId, 30, res.locals.postsCurrentPage);
 
-  res.render("root", {
-    mainView: "club",
-    title: club.name,
-    club,
-    posts,
-    memberRole,
-    styles: "club",
-  });
-});
+    res.render("root", {
+      mainView: "club",
+      title: club.name,
+      club,
+      posts,
+      memberRole,
+      styles: "club",
+    });
+  }),
+];
 
 exports.joinClubPOST = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);
