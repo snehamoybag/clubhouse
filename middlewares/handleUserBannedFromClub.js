@@ -5,7 +5,9 @@ module.exports = async (req, res, next) => {
   const clubId = Number(req.params.id);
 
   if (await isUserBannedFromClubAsync(clubId, req.user.id)) {
-    next(new CustomAccessDeniedError("You've been banned from this club."));
+    return next(
+      new CustomAccessDeniedError("You've been banned from this club."),
+    );
   }
 
   next();
