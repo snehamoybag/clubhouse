@@ -1,39 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
-const { body, check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const { addUserAsync } = require("../db/queries/users");
-
-const nameValidationChain = (filedName) =>
-  body(filedName)
-    .trim()
-    .notEmpty()
-    .withMessage(`${filedName} cannot be empty.`)
-    .isAlpha()
-    .withMessage(`${filedName} must be only letters (Aa-Zz)`)
-    .isLength({ max: 35 })
-    .withMessage(`${filedName} must be between 1 to 35 characters`);
-
-const formValidationChains = [
-  nameValidationChain("firstName"),
-  nameValidationChain("lastName"),
-
-  body("email")
-    .trim()
-    .notEmpty()
-    .withMessage("Emaill address cannot be empty.")
-    .isEmail()
-    .withMessage("Invalid email address."),
-
-  body("password")
-    .notEmpty()
-    .withMessage("Password cannot be empty.")
-    .isLength({ min: 8, max: 32 })
-    .withMessage("Password must be between 8 to 32 characters."),
-
-  check("confirmPassword", "Passwords do not match.").custom(
-    (value, { req }) => value === req.body.password,
-  ),
-];
+const {
+  nameValidations,
+  emailValidations,
+  passwordValidations,
+  confirmPasswordValidations,
+} = require("../validations/uservalidations");
 
 const getViewData = (fieldValues, errors) => ({
   title: "Sign up",
@@ -47,8 +21,11 @@ exports.GET = asyncHandler(async (req, res) => {
 });
 
 exports.POST = [
-  formValidationChains,
-
+  nameValidations("firstName"),
+  nameValidations("lastName"),
+  emailValidations("email"),
+  passwordValidations("password"),
+  confirmPasswordValidations("password", "confirmPassword"),
   asyncHandler(async (req, res) => {
     const validationErrors = validationResult(req);
 
