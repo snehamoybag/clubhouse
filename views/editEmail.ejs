@@ -1,0 +1,54 @@
+<main>
+  <h1 class="title title--primary"><%= title %></h1>
+  <form action="/edit/profile/<%= user.id %>/email" method="post" class="form">
+    <p class="form__input-wrapper">
+      <label for="current-email" class="form__label"
+        >Current email address</label
+      >
+      <input
+        type="email"
+        name="currentEmail"
+        id="current-email"
+        value="<%= locals.fieldValues && fieldValues.currentEmail ? fieldValues.currentEmail : ''; %>"
+        class="form__input <%= locals.errors && errors.currentEmail ? 'error' : ''; %>"
+        required
+      />
+      <label for="current-email" class="form__label error">
+        <%= locals.errors && errors.currentEmail ? errors.currentEmail.msg : "";
+        %>
+      </label>
+    </p>
+    <p class="form__input-wrapper">
+      <label for="new-email" class="form__label">New email address</label>
+      <input
+        type="email"
+        name="newEmail"
+        id="new-email"
+        value="<%= locals.fieldValues && fieldValues.newEmail ? fieldValues.newEmail : ''; %>"
+        class="form__input <%= locals.errors && errors.newEmail ? 'error' : ''; %>"
+        required
+      />
+      <label for="new-email" class="form__label error">
+        <%= locals.errors && errors.newEmail ? errors.newEmail.msg : ""; %>
+      </label>
+    </p>
+    <p class="form__input-wrapper">
+      <label for="confirm-new-email" class="form__label"
+        >Confirm new email address</label
+      >
+      <input
+        type="email"
+        name="confirmNewEmail"
+        id="confirm-new-email"
+        value="<%= locals.fieldValues && fieldValues.confirmNewEmail ? fieldValues.confirmNewEmail : ''; %>"
+        class="form__input <%= locals.errors && errors.confirmNewEmail ? 'error' : ''; %>"
+        required
+      />
+      <label for="confirm-new-email" class="form__label error">
+        <%= locals.errors && errors.confirmNewEmail ? errors.confirmNewEmail.msg
+        : ""; %>
+      </label>
+    </p>
+    <button type="submit" class="btn btn--submit">Update Email</button>
+  </form>
+</main>

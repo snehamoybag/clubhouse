@@ -21,7 +21,6 @@ exports.editPOST = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const postId = Number(req.params.id);
   const message = req.body[`editPost${postId}`];
-  console.log(message);
 
   const isPostAuthor = await isPostAuthorAsync(postId, userId);
 

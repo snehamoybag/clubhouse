@@ -1,0 +1,36 @@
+<main>
+  <h1 class="title title--primary"><%= title %></h1>
+  <form class="form" action="/edit/profile/<%= user.id %>/name" method="post">
+    <p class="form__input-wrapper">
+      <label for="first-name" class="form__label">First name</label>
+      <input
+        type="text"
+        id="first-name"
+        name="firstName"
+        maxlength="35"
+        value="<%= locals.fieldValues && fieldValues.firstName ? locals.fieldValues.firstName : user.first_name; %>"
+        class="form__input <%= locals.errors && errors.firstName ? 'error' : ''; %>"
+        required
+      />
+      <label for="first-name" class="form__label error">
+        <%= locals.errors && errors.firstName ? errors.firstName.msg : ""; %>
+      </label>
+    </p>
+    <p class="form__input-wrapper">
+      <label for="last-name" class="form__label">Last name</label>
+      <input
+        type="text"
+        id="last-name"
+        name="lastName"
+        maxlength="35"
+        value="<%= locals.fieldValues && fieldValues.lastName ? fieldValues.lastName : user.last_name %>"
+        class="form__input <%= locals.errors && errors.lastName ? 'error' : ''; %>"
+        required
+      />
+      <label for="last-name" class="form__label error">
+        <%= locals.errors && errors.lastName ? errors.lastName.msg : ""; %>
+      </label>
+    </p>
+    <button type="submit" class="btn btn--submit">Update Name</button>
+  </form>
+</main>

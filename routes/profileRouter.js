@@ -19,4 +19,10 @@ router.post(
   profileController.markNotificationAsReadSilentlyPOST,
 );
 
+router.get(
+  "/:id/settings",
+  handleNotProfileOwner,
+  profileController.setttingsGET,
+);
+
 module.exports = router;

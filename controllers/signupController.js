@@ -1,5 +1,4 @@
 const asyncHandler = require("express-async-handler");
-const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const { addUserAsync } = require("../db/queries/users");
 const {
@@ -36,18 +35,12 @@ exports.POST = [
       return;
     }
 
-    bcrypt.hash(req.body.password, 10, async (error, hashedPassword) => {
-      if (error) {
-        throw error;
-      }
-
-      await addUserAsync(
-        req.body.firstName,
-        req.body.lastName,
-        req.body.email,
-        hashedPassword,
-      );
-    });
+    await addUserAsync(
+      req.body.firstName,
+      req.body.lastName,
+      req.body.email,
+      req.body.password,
+    );
 
     res.redirect("/success/signup");
   }),

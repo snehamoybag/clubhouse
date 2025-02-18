@@ -17,12 +17,18 @@
   object-position: center;
 }
 
+.profile__name-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .profile__name {
   font-weight: var(--fw-bold);
 }
 
-.profile__name + p {
-  margin-top: 1rem;
+.profile__id {
+  font-weight: var(--fw-regular);
+  opacity: 0.5;
 }
 
 .profile .posts {

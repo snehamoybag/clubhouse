@@ -1,5 +1,6 @@
 const { body, check } = require("express-validator");
 const { doesEmailExistAsync } = require("../db/queries/users");
+const getIsPasswordMatchingAsync = require("../lib/getIsPasswordMatchingAsync");
 
 exports.nameValidations = (filedName) => {
   return body(filedName)
@@ -61,4 +62,15 @@ exports.confirmPasswordValidations = (
       return confirmPasswordValue === req.body[passwordFieldName];
     },
   );
+};
+
+exports.currentPasswordValidations = (fieldName) => {
+  return check(fieldName).custom(async (fieldValue, { req }) => {
+    if (!(await getIsPasswordMatchingAsync(fieldValue, req.user.password))) {
+      // async call back must throw error message
+      throw new Error("Current password do not match.");
+    }
+
+    return true;
+  });
 };

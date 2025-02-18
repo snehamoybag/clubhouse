@@ -1,9 +1,12 @@
 const pool = require("../../configs/pool");
+const getHashPasswordAsync = require("../../lib/getHashPasswordAsync");
 
 exports.addUserAsync = async (firstName, lastName, email, password) => {
-  await pool.query(
+  const hashedPassword = await getHashPasswordAsync(password);
+
+  await await pool.query(
     "INSERT INTO users(first_name, last_name, email, password) VALUES($1, $2, $3, $4)",
-    [firstName, lastName, email, password],
+    [firstName, lastName, email, hashedPassword],
   );
 };
 
@@ -54,11 +57,12 @@ exports.updateUserEmailAsync = async (id, email) => {
 };
 
 exports.updateUserPasswordAsync = async (id, password) => {
+  const hashedPassword = await getHashPasswordAsync(password);
   const query = `
     UPDATE users 
       SET password = $2
     WHERE id = $1;
   `;
 
-  await pool.query(query, [id, password]);
+  await pool.query(query, [id, hashedPassword]);
 };

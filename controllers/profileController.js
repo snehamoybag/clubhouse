@@ -3,10 +3,25 @@ const {
   getUserNotificationsAsync,
   markUserNotificationAsReadAsync,
 } = require("../db/queries/notifications");
-const { getUserByIdAsync } = require("../db/queries/users");
+const {
+  getUserByIdAsync,
+  updateUserNameAsync,
+  updateUserEmailAsync,
+  updateUserPasswordAsync,
+} = require("../db/queries/users");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
 const { getUserPostsAsync } = require("../db/queries/posts");
 const handlePostsPagination = require("../middlewares/handlePostsPagination");
+const {
+  nameValidations,
+  currentEmailValidations,
+  emailValidations,
+  confirmEmailValidations,
+  passwordValidations,
+  currentPasswordValidations,
+  confirmPasswordValidations,
+} = require("../validations/uservalidations");
+const { validationResult } = require("express-validator");
 
 exports.GET = [
   handlePostsPagination,
@@ -62,3 +77,113 @@ exports.markNotificationAsReadSilentlyPOST = async (req, res) => {
     res.status(500).end();
   }
 };
+
+exports.setttingsGET = (req, res) => {
+  res.render("root", {
+    title: "Profile Setttings",
+    mainView: "profileSettings",
+  });
+};
+
+const getEditNameViewData = (fieldValues, errors) => ({
+  title: "Edit Name",
+  mainView: "editUserName",
+  fieldValues,
+  errors,
+});
+
+exports.editNameGET = (req, res) => {
+  res.render("root", getEditNameViewData());
+};
+
+exports.editNamePOST = [
+  nameValidations("firstName"),
+  nameValidations("lastName"),
+  asyncHandler(async (req, res) => {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+      res
+        .status(422)
+        .render(
+          "root",
+          getEditNameViewData(req.body, validationErrors.mapped()),
+        );
+      return;
+    }
+
+    const { firstName, lastName } = req.body;
+
+    await updateUserNameAsync(req.user.id, firstName, lastName);
+
+    res.redirect(`/success/edit/?type=Profile&name=name`);
+  }),
+];
+
+const getEditEmailViewData = (fieldValues, errors) => ({
+  title: "Edit Email",
+  mainView: "editEmail",
+  fieldValues,
+  errors,
+});
+
+exports.editEmailGET = (req, res) => {
+  res.render("root", getEditEmailViewData());
+};
+
+exports.editEmailPOST = [
+  currentEmailValidations("currentEmail"),
+  emailValidations("newEmail"),
+  confirmEmailValidations("newEmail", "confirmNewEmail"),
+  asyncHandler(async (req, res) => {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+      res
+        .status(422)
+        .render(
+          "root",
+          getEditEmailViewData(req.body, validationErrors.mapped()),
+        );
+      return;
+    }
+
+    await updateUserEmailAsync(req.user.id, req.body.newEmail);
+
+    res.redirect("/success/edit/?type=Profile&name=email");
+  }),
+];
+
+const getEditPasswordViewData = (fieldValues, errors) => ({
+  title: "Edit Password",
+  mainView: "editPassword",
+  fieldValues,
+  errors,
+});
+
+exports.editPasswordGET = (req, res) => {
+  res.render("root", getEditPasswordViewData());
+};
+
+exports.editPasswordPOST = [
+  currentPasswordValidations("currentPassword"),
+  passwordValidations("newPassword"),
+  confirmPasswordValidations("newPassword", "confirmNewPassword"),
+  asyncHandler(async (req, res) => {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+      res
+        .status(422)
+        .render(
+          "root",
+          getEditPasswordViewData(req.body, validationErrors.mapped()),
+        );
+      return;
+    }
+
+    await updateUserPasswordAsync(req.user.id, req.body.newPassword);
+
+    res.redirect("/success/edit/?type=Profile&name=password");
+  }),
+];

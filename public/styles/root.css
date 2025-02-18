@@ -225,6 +225,20 @@ td {
   box-shadow: none;
 }
 
+.btn--edit-profile {
+  width: 1.25rem;
+  border: none;
+}
+
+.btn--edit-profile:hover {
+  fill: var(--clr-neutral-900);
+  transform: scale(105%);
+}
+
+.btn--edit-profile:active {
+  transform: scale(95%);
+}
+
 .title {
   font-family: var(--ff-title);
   font-weight: var(--fw-bold);
