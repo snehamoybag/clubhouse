@@ -1,14 +1,11 @@
 <main>
-  <h2 class="title title--primary">Create new account</h2>
+  <h1 class="title title--primary">Create new account</h1>
   <form action="/sign-up" method="POST" class="form">
     <p class="form__input-wrapper">
       <label for="first-name" class="form__label">
-        First name<span class="required" title="required">*</span> : 
+        First name<span class="required" title="required">*</span> :
       </label>
-      <label id="first-name" class="form_label">
-        <%= locals.errors && errors.firstName ? errors.firstName.msg : ""; %>
-      </label>
-      <input 
+      <input
         type="text"
         id="first-name"
         name="firstName"
@@ -16,15 +13,15 @@
         placeholder="John"
         value="<%= locals.fieldValues ? fieldValues.firstName : ''; %>"
         required
-        class="form__input"
+        class="form__input <%= locals.errors && errors.firstName ? 'error' : ''; %>"
       />
+      <label id="first-name" class="form__label error">
+        <%= locals.errors && errors.firstName ? errors.firstName.msg : ""; %>
+      </label>
     </p>
     <p class="form__input-wrapper">
       <label for="last-name" class="form__label">
-        Last name<span class="required" title="required">*</span> : 
-      </label>
-      <label id="last-name" class="form_label">
-        <%= locals.errors && errors.lastName ? errors.lastName.msg : ""; %>
+        Last name<span class="required" title="required">*</span> :
       </label>
       <input
         type="text"
@@ -34,15 +31,15 @@
         placeholder="Doe"
         value="<%= locals.fieldValues ? fieldValues.lastName : ''; %>"
         required
-        class="form__input"
+        class="form__input <%= locals.errors && errors.lastName ? 'error' : ''; %>"
       />
+      <label id="last-name" class="form__label error">
+        <%= locals.errors && errors.lastName ? errors.lastName.msg : ""; %>
+      </label>
     </p>
     <p class="form__input-wrapper">
       <label for="email" class="form__label">
-        Email address<span class="required" title="required">*</span> : 
-      </label>
-      <label id="email" class="form_label">
-        <%= locals.errors && errors.email ? errors.email.msg : ""; %>
+        Email address<span class="required" title="required">*</span> :
       </label>
       <input
         type="email"
@@ -52,44 +49,48 @@
         maxlength="320"
         value="<%= locals.fieldValues ? fieldValues.email : ''; %>"
         required
-        class="form__input"
+        class="form__input <%= locals.errors && errors.email ? 'error' : ''; %>"
       />
+      <label id="email" class="form__label error">
+        <%= locals.errors && errors.email ? errors.email.msg : ""; %>
+      </label>
     </p>
     <p class="form__input-wrapper">
       <label for="password" class="form__label">
         Password<span class="required" title="required">*</span> :
       </label>
-      <label id="password" class="form_label">
-        <%= locals.errors && errors.password ? errors.password.msg : ""; %>
-      </label>
-      <input 
-        type="password" 
+      <input
+        type="password"
         id="password"
         name="password"
         minlength="8"
         maxlength="32"
         value="<%= locals.fieldValues ? fieldValues.password : ''; %>"
         required
-        class="form__input"
+        class="form__input <%= locals.errors && errors.password ? 'error' : ''; %>"
       />
+      <label id="password" class="form__label error">
+        <%= locals.errors && errors.password ? errors.password.msg : ""; %>
+      </label>
     </p>
     <p class="form__input-wrapper">
       <label for="confirm-password" class="form__label">
         Confirm password<span class="required" title="required">*</span> :
       </label>
-      <label id="confirm-password" class="form_label">
-        <%= locals.errors && errors.confirmPassword ? errors.confirmPassword.msg : ""; %>
-      </label>
-      <input 
-        type="text" 
+      <input
+        type="text"
         id="confirm-password"
         name="confirmPassword"
         minlength="8"
         maxlength="32"
         value="<%= locals.fieldValues ? fieldValues.confirmPassword : ''; %>"
         required
-        class="form__input"
+        class="form__input <%= locals.errors && errors.confirmPassword ? 'error' : ''; %>"
       />
+      <label id="confirm-password" class="form__label error">
+        <%= locals.errors && errors.confirmPassword ? errors.confirmPassword.msg
+        : ""; %>
+      </label>
     </p>
     <button type="submit" class="btn btn--submit">Sign up</button>
   </form>

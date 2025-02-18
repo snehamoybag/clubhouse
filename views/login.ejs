@@ -1,12 +1,9 @@
 <main>
-  <h1>Login to Clubhouse</h1>
+  <h1 class="title title--primary">Login to Clubhouse</h1>
   <form action="/login" method="POST" class="form">
     <p class="form__input-wrapper">
       <label for="email" class="form__label">
-        Email address<span class="required" title="required">*</span> : 
-      </label>
-      <label id="email" class="form_label">
-        <%= locals.errors && errors.email ? errors.email : ""; %>
+        Email address<span class="required" title="required">*</span> :
       </label>
       <input
         type="email"
@@ -16,26 +13,29 @@
         maxlength="320"
         value="<%= locals.fieldValues ? fieldValues.email : ''; %>"
         required
-        class="form__input"
+        class="form__input <%= locals.errors && errors.email ? 'error' : ''; %>"
       />
+      <label id="email" class="form__label error">
+        <%= locals.errors && errors.email ? errors.email : ""; %>
+      </label>
     </p>
     <p class="form__input-wrapper">
       <label for="password" class="form__label">
         Password<span class="required" title="required">*</span> :
       </label>
-      <label id="password" class="form_label">
-        <%= locals.errors && errors.password ? errors.password : ""; %>
-      </label>
-      <input 
-        type="password" 
+      <input
+        type="password"
         id="password"
         name="password"
         minlength="8"
         maxlength="32"
         value="<%= locals.fieldValues ? fieldValues.password : ''; %>"
         required
-        class="form__input"
+        class="form__input <%= locals.errors && errors.password ? 'error' : ''; %>"
       />
+      <label id="password" class="form__label error">
+        <%= locals.errors && errors.password ? errors.password : ""; %>
+      </label>
     </p>
     <button type="submit" class="btn btn--submit">Login</button>
   </form>
