@@ -7,9 +7,7 @@ const {
   getMemberClubRoleAsync,
   getNumberOfClubAdminsAsync,
   removeClubMemberAsync,
-  editClubNameAsync,
-  editClubAboutAsync,
-  editClubPrivacyAsync,
+  updateClubInfoAsync,
   getClubJoinRequestsAsync,
   sendClubJoinRequestAsync,
   deleteClubJoinRequestAsync,
@@ -157,6 +155,51 @@ exports.newClubPOST = [
   }),
 ];
 
+const getEditClubViewDataAsync = async (clubId, fieldValues, errors) => ({
+  title: "Edit Club",
+  mainView: "editClub",
+  fieldValues,
+  errors,
+  club: await getClubAsync(clubId),
+});
+
+exports.editClubGET = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  res.render("root", await getEditClubViewDataAsync(clubId));
+});
+
+exports.editClubPOST = [
+  nameValidations("name"),
+  aboutValidations("about"),
+  privacyValidations("privacy"),
+  asyncHandler(async (req, res) => {
+    const validationErrors = validationResult(req);
+    const clubId = Number(req.params.id);
+
+    if (!validationErrors.isEmpty()) {
+      return res
+        .status(422)
+        .render(
+          "root",
+          await getEditClubViewDataAsync(
+            clubId,
+            req.body,
+            validationErrors.mapped(),
+          ),
+        );
+    }
+
+    await updateClubInfoAsync(
+      clubId,
+      req.body.name,
+      req.body.about,
+      req.body.privacy,
+    );
+
+    res.redirect("/success/edit/?type=Club&name=info");
+  }),
+];
+
 exports.controlPanelGET = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);
   const club = await getClubAsync(clubId);
@@ -179,24 +222,6 @@ exports.controlPanelGET = asyncHandler(async (req, res) => {
     mainView: "clubControlPanel",
     club,
   });
-});
-
-exports.editClubNamePOST = asyncHandler(async (req, res) => {
-  const clubId = Number(req.params.id);
-  await editClubNameAsync(clubId, req.body.clubName);
-  res.redirect("/success/edit/?type=club&name=name");
-});
-
-exports.editClubAboutPOST = asyncHandler(async (req, res) => {
-  const clubId = Number(req.params.id);
-  await editClubAboutAsync(clubId, req.body.clubAbout);
-  res.redirect("/success/edit/?type=club&name=about");
-});
-
-exports.editClubPrivacyPOST = asyncHandler(async (req, res) => {
-  const clubId = Number(req.params.id);
-  await editClubPrivacyAsync(clubId, req.body.clubPrivacy);
-  res.redirect("/success/edit/?type=club&name=privacy");
 });
 
 exports.joinRequestsGET = asyncHandler(async (req, res) => {

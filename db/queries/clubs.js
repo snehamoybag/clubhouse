@@ -117,25 +117,16 @@ exports.removeClubMemberAsync = async (clubId, memberId) => {
   await pool.query(query, [clubId, memberId]);
 };
 
-exports.editClubNameAsync = async (clubId, newName) => {
-  await pool.query("UPDATE clubs SET name = $2 WHERE id = $1", [
-    clubId,
-    newName,
-  ]);
-};
+exports.updateClubInfoAsync = async (clubId, name, about, privacy) => {
+  const query = `
+    UPDATE clubs
+      SET name = $2,
+      about = $3,
+      privacy = $4
+    WHERE id = $1;
+  `;
 
-exports.editClubAboutAsync = async (clubId, newAbout) => {
-  await pool.query("UPDATE clubs SET about = $2 WHERE id = $1", [
-    clubId,
-    newAbout,
-  ]);
-};
-
-exports.editClubPrivacyAsync = async (clubId, newPrivacy) => {
-  await pool.query("UPDATE clubs SET privacy = $2 WHERE id = $1", [
-    clubId,
-    newPrivacy,
-  ]);
+  await pool.query(query, [clubId, name, about, privacy]);
 };
 
 exports.sendClubJoinRequestAsync = async (clubId, userId) => {

@@ -3,117 +3,20 @@
     <h1 class="title title--primary">Control Panel</h1>
     <p>Here you can manage and monitor your club's activities.</p>
     <ul>
-      <li><a href="/club/<%= club.id %>/control-panel/join-requests">Join Requests</a></li>
-      <li><a href="/club/<%= club.id %>/control-panel/reported-posts">Reported Posts</a></li>
-      <li><a href="/club/<%= club.id %>/control-panel/ban-list">Ban List</a></li>
+      <li>
+        <a href="/club/<%= club.id %>/control-panel/join-requests"
+          >Join Requests</a
+        >
+      </li>
+      <li>
+        <a href="/club/<%= club.id %>/control-panel/reported-posts"
+          >Reported Posts</a
+        >
+      </li>
+      <li>
+        <a href="/club/<%= club.id %>/control-panel/ban-list">Ban List</a>
+      </li>
+      <li><a href="/edit/club/<%= club.id %>">Edit club</a></li>
     </ul>
   </section>
-
-  <section>
-    <h2>Club Settings</h2>
-    <ul>
-
-      <li>
-        <button type="button" id="btn-edit-club-name" data-btn="edit-club-open" aria-controls="form-edit-club-name" aria-expanded="false">Change name</button>
-        <form id="form-edit-club-name" action="/edit/club/<%= club.id %>/name" method="post" class="hidden">
-          <p>
-            <label for="club-name" class="sr-only">Enter new club name: </label>
-            <input type="text" id="club-name" name="clubName" value="<%= club.name %>" required />
-          </p>
-          <div class="btns-wrapper">
-            <button type="submit">Done</button>
-            <button type="button" data-btn="edit-club-close" aria-controls="form-edit-club-name" aria-expanded="true">Cancel</button>
-          </div>
-        </form>
-      </li>
-
-      <li>
-        <button type="button" id="btn-edit-club-about" data-btn="edit-club-open" aria-controls="form-edit-club-about" aria-expanded="false">Update about club</button>
-        <form id="form-edit-club-about" action="/edit/club/<%= club.id %>/about" method="post" class="hidden">
-          <p>
-            <label for="club-about" class="sr-only">Enter new club about: </label>
-            <textarea id="club-about" name="clubAbout" maxlength="2000" required ><%= club.about %></textarea>
-            <label for="club-about">max: 2000 characters</label>
-          </p>
-
-          <div class="btns-wrapper">
-            <button type="submit">Done</button>
-            <button type="button" data-btn="edit-club-close" aria-controls="form-edit-club-about" aria-expanded="true">Cancel</button>
-          </div>
-        </form>
-      </li>
-
-      <li>
-        <button type="button" id="btn-edit-club-privacy" data-btn="edit-club-open" aria-controls="form-edit-club-privacy" aria-expanded="false">Edit privacy</button>
-        <form id="form-edit-club-privacy" action="/edit/club/<%= club.id %>/privacy" method="post" class="hidden">
-          <p>
-            <label for="club-privacy" class="sr-only">Select new club privacy: </label>
-            <select name="clubPrivacy" id="club-privacy">
-              <option value="open" <%= club.privacy === "open" ? "selected" : ""; %>>Open</option>
-              <option value="invite-only" <%= club.privacy === "invite-only" ? "selected" : ""; %>>Invite-only</option>
-              <option value="closed" <%= club.privacy === "closed" ? "selected" : ""; %>>Closed</option>
-            </select>
-          </p>
-
-          <div class="btns-wrapper">
-            <button type="submit">Done</button>
-            <button type="button" data-btn="edit-club-close" aria-controls="form-edit-club-privacy" aria-expanded="true">Cancel</button>
-          </div>
-        </form>
-      </li>
-
-    </ul>
-  </section>
-
-
-  <script>
-    const getControlledEl = (btnEl) =>  {
-      const id = btnEl.getAttribute("aria-controls")
-      return document.querySelector(`#${id}`)
-    }
-
-    const isControlledElOpen = (btnEl) => {
-      return btnEl.getAttribute("aria-expanded") === "true"
-    }
-
-    const openControlledEl = (btnEl) => {
-      btnEl.setAttribute("aria-expanded", true)
-      getControlledEl(btnEl).classList.remove("hidden")
-    }
-
-    const closeControlledEl = (btnEl) => {
-      btnEl.setAttribute("aria-expanded", false)
-      getControlledEl(btnEl).classList.add("hidden")
-    }
-
-    const toggleControlledEl = (btnEl) => {
-      if (isControlledElOpen(btnEl)) {
-        closeControlledEl(btnEl)
-        return
-      }
-
-      openControlledEl(btnEl)
-    }
-
-    const cancelEdit = (cancelBtnEl) => {
-      getControlledEl(cancelBtnEl).classList.add("hidden")
-    }
-
-    const editOpenBtnEls = document.querySelectorAll("[data-btn='edit-club-open']")
-    const cancelEditBtnEls = document.querySelectorAll("[data-btn='edit-club-close']")
-
-    editOpenBtnEls.forEach((btnEl) => {
-      btnEl.addEventListener("click", () => toggleControlledEl(btnEl))
-    })
-
-    cancelEditBtnEls.forEach((btnEl) => {
-      btnEl.addEventListener("click", (e) => {
-        e.preventDefault() // prevent form submition
-
-        if (isControlledElOpen(btnEl)) {
-          cancelEdit(btnEl)
-        }
-      })
-    })
-  </script>
 </main>
