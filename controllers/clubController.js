@@ -26,6 +26,12 @@ const url = require("node:url");
 const { getUserByIdAsync } = require("../db/queries/users");
 const { sendNotificactionToUserAsync } = require("../db/queries/notifications");
 const handlePostsPagination = require("../middlewares/handlePostsPagination");
+const {
+  nameValidations,
+  aboutValidations,
+  privacyValidations,
+} = require("../validations/clubValidations");
+const { validationResult } = require("express-validator");
 
 exports.GET = [
   handlePostsPagination,
@@ -110,23 +116,46 @@ exports.leaveClubPOST = asyncHandler(async (req, res) => {
   res.redirect(redirectUrl);
 });
 
+const getCreateClubViewData = (fieldValues, errors) => ({
+  title: "Create New Club",
+  mainView: "newClub",
+  fieldValues,
+  errors,
+});
+
 exports.newClubGET = (req, res) => {
-  res.render("root", { title: "Create New Club", mainView: "newClub" });
+  res.render("root", getCreateClubViewData());
 };
 
-exports.newClubPOST = asyncHandler(async (req, res) => {
-  // add club and return the id of it
-  const clubId = await addClubAsync(
-    req.body.name,
-    req.body.about,
-    req.body.privacy,
-  );
+exports.newClubPOST = [
+  nameValidations("name"),
+  aboutValidations("about"),
+  privacyValidations("privacy"),
+  asyncHandler(async (req, res) => {
+    const validationErrors = validationResult(req);
 
-  await addClubMemberAsync(clubId, req.user.id);
-  await assignClubRoleAdminAsync(clubId, req.user.id);
+    if (!validationErrors.isEmpty()) {
+      return res
+        .status(422)
+        .render(
+          "root",
+          getCreateClubViewData(req.body, validationErrors.mapped()),
+        );
+    }
 
-  res.redirect(`/club/${clubId}`);
-});
+    // add club and return the id of it
+    const clubId = await addClubAsync(
+      req.body.name,
+      req.body.about,
+      req.body.privacy,
+    );
+
+    await addClubMemberAsync(clubId, req.user.id);
+    await assignClubRoleAdminAsync(clubId, req.user.id);
+
+    res.redirect(`/club/${clubId}`);
+  }),
+];
 
 exports.controlPanelGET = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);

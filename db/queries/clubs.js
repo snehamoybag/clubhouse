@@ -199,3 +199,17 @@ exports.isUserBannedFromClubAsync = async (clubId, userId) => {
   const { rows } = await pool.query(query, [clubId, userId]);
   return Boolean(rows[0].case);
 };
+
+exports.isClubNameAvailableAsync = async (name) => {
+  const query = `
+    SELECT CASE WHEN EXISTS (
+      SELECT 1 FROM clubs WHERE name = $1
+    )
+      THEN 0 
+      ELSE 1 
+    END;
+  `;
+
+  const { rows } = await pool.query(query, [name.trim()]);
+  return Boolean(rows[0].case);
+};

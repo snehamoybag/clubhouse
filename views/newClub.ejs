@@ -1,5 +1,5 @@
 <main>
-  <h1>Create new club</h1>
+  <h1 class="title title--primary"><%= title %></h1>
   <form action="" method="post" class="form">
     <p class="form__input-wrapper">
       <label for="name" class="form__label">
@@ -7,36 +7,51 @@
       </label>
       <input
         type="text"
-        class="form__input"
+        class="form__input <%= locals.errors && errors.name ? 'error' : ''; %>"
         id="name"
         name="name"
+        value="<%= locals.fieldValues && fieldValues.name ? fieldValues.name : ''; %>"
         maxlength="128"
         placeholder="Geo Nature"
         required
       />
+      <label for="name" class="form__label error">
+        <%= locals.errors && errors.name ? errors.name.msg : ""; %>
+      </label>
     </p>
     <p class="form__input-wrapper">
       <label for="about" class="form__label">
         About club<span class="required" title="required">*</span> :
       </label>
       <textarea
-        class="form__textarea"
+        class="form__textarea <%= locals.errors && errors.about ? 'error' : ''; %>"
         name="about"
         id="about"
         maxlength="255"
         placeholder="We talk about nature and geography..."
         required
-      ></textarea>
+      ><%= locals.fieldValues && fieldValues.about ? fieldValues.about : ''; %></textarea>
+      <label for="about" class="form__label error">
+        <%= locals.errors && errors.about ? errors.about.msg : ""; %>
+      </label>
     </p>
     <p class="form__input-wrapper">
       <label for="privacy" class="form__label">
         Club privacy<span class="required" title="required">*</span> :
       </label>
-      <select name="privacy" id="privacy" class="form__select" required>
-        <option value="open" selected>Open</option>
-        <option value="invite-only">Invite only</option>
-        <option value="closed">Closed</option>
+      <select
+        name="privacy"
+        id="privacy"
+        class="form__select <%= locals.errors && errors.privacy ? 'error' : ''; %>"
+        required
+      >
+        <option value="open" <%= locals.fieldValues && fieldValues.privacy === 'open' ? 'selected' : ''; %>>Open</option>
+        <option value="invite-only" <%= locals.fieldValues && fieldValues.privacy === 'invite-only' ? 'selected' : ''; %>>Invite only</option>
+        <option value="closed" <%= locals.fieldValues && fieldValues.privacy === 'closed' ? 'selected' : ''; %>>Closed</option>
       </select>
+      <label for="privacy" class="form__label error">
+        <%= locals.errors && errors.privacy ? errors.privacy.msg : ""; %>
+      </label>
     </p>
     <button type="submit" class="btn btn--submit">Create</button>
   </form>
