@@ -74,3 +74,9 @@ exports.currentPasswordValidations = (fieldName) => {
     return true;
   });
 };
+
+exports.bioValidations = (fieldName) => {
+  return body(fieldName)
+    .isLength({ max: 255 })
+    .withMessage("Bio must not be more than 255 characters.");
+};

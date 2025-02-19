@@ -66,3 +66,13 @@ exports.updateUserPasswordAsync = async (id, password) => {
 
   await pool.query(query, [id, hashedPassword]);
 };
+
+exports.updateUserBioAsync = async (id, bio) => {
+  const query = `
+    UPDATE users
+      SET bio = $2
+    WHERE id = $1;
+  `;
+
+  await pool.query(query, [id, bio]);
+};

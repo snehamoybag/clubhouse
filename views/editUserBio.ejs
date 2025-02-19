@@ -1,0 +1,19 @@
+<main>
+  <h1 class="title title--primary"><%= title %></h1>
+  <form class="form" action="/edit/profile/<%= user.id %>/bio" method="post">
+    <p class="form__input-wrapper">
+      <label for="bio" class="form__label">Write bio:</label>
+      <textarea
+        name="bio"
+        id="bio"
+        class="form__textarea <%= locals.errors && errors.bio ? 'error' : ''; %>"
+        placeholder="I am actually awesome.."
+        maxlength="255"
+      ><%= locals.fieldValues && fieldValues.bio ? fieldValues.bio : user.bio %></textarea>
+      <label for="bio" class="form__label error">
+        <%= locals.errors && errors.bio ? errors.bio.msg : "" %>
+      </label>
+    </p>
+    <button type="submit" class="btn btn--submit">Update</button>
+  </form>
+</main>

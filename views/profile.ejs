@@ -9,7 +9,14 @@
           <h3 class="profile__name"><%= profile.first_name %> <%= profile.last_name %></h3>
           <p class="profile__id" title="User Id">#<%= profile.id %></p>
         </div>
-        <p class="profile__bio"><%= profile.bio %></p>
+        <% if (profile.bio) { %>
+          <div class="profile__bio-wrapper">
+            <p class="profile__bio"><%= profile.bio %></p>
+            <% if (user.id === profile.id) { %>
+              <a href="/edit/profile/<%= profile.id %>/bio">update bio</a>
+            <% } %>
+          </div>
+        <% } %>
         <p class="profile__aura">Aura: <b><%= profile.aura %></b></p>
       </div>
       <% if (user.id === profile.id) { %>

@@ -21,6 +21,9 @@ router.all("/profile/:id/*", handleNotProfileOwner);
 router.get("/profile/:id/name", profileController.editNameGET);
 router.post("/profile/:id/name", profileController.editNamePOST);
 
+router.get("/profile/:id/bio", profileController.editBioGET);
+router.post("/profile/:id/bio", profileController.editBioPOST);
+
 router.get("/profile/:id/email", profileController.editEmailGET);
 router.post("/profile/:id/email", profileController.editEmailPOST);
 

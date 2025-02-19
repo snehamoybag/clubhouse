@@ -8,6 +8,7 @@ const {
   updateUserNameAsync,
   updateUserEmailAsync,
   updateUserPasswordAsync,
+  updateUserBioAsync,
 } = require("../db/queries/users");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
 const { getUserPostsAsync } = require("../db/queries/posts");
@@ -20,6 +21,7 @@ const {
   passwordValidations,
   currentPasswordValidations,
   confirmPasswordValidations,
+  bioValidations,
 } = require("../validations/uservalidations");
 const { validationResult } = require("express-validator");
 
@@ -185,5 +187,35 @@ exports.editPasswordPOST = [
     await updateUserPasswordAsync(req.user.id, req.body.newPassword);
 
     res.redirect("/success/edit/?type=Profile&name=password");
+  }),
+];
+
+const getEditBioViewData = (fieldValues, errors) => ({
+  title: "Update Bio",
+  mainView: "editUserBio",
+  fieldValues,
+  errors,
+});
+
+exports.editBioGET = (req, res) => {
+  res.render("root", getEditBioViewData());
+};
+
+exports.editBioPOST = [
+  bioValidations("bio"),
+  asyncHandler(async (req, res) => {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+      return res
+        .status(422)
+        .render(
+          "root",
+          getEditBioViewData(req.body, validationErrors.mapped()),
+        );
+    }
+
+    await updateUserBioAsync(req.user.id, req.body.bio);
+    res.redirect("/success/edit/?type=Profile&name=bio");
   }),
 ];
