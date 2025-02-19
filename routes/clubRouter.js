@@ -2,19 +2,19 @@ const { Router } = require("express");
 const clubController = require("../controllers/clubController");
 const postController = require("../controllers/postController");
 const handleNotAuthenticated = require("../middlewares/handleNotAuthenticated");
-const handleInvalidClub = require("../middlewares/handleInvalidClub");
 const handleUserBannedFromClub = require("../middlewares/handleUserBannedFromClub");
+const handleInvalidClub = require("../middlewares/handleInvalidClub");
 
 const router = new Router();
 
 router.all("/*", handleNotAuthenticated);
-router.all("/:id/", handleUserBannedFromClub);
-router.post("/:id/*", handleInvalidClub);
 
 // make sure the 'new' routes are above '/:id' routes
 // else  'new' will be considered an id of club
 router.get("/new", clubController.newClubGET);
 router.post("/new", clubController.newClubPOST);
+
+router.all("/:id", handleInvalidClub, handleUserBannedFromClub);
 
 router.get("/:id", clubController.GET);
 

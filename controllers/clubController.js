@@ -33,10 +33,6 @@ exports.GET = [
     const clubId = Number(req.params.id);
     const club = await getClubAsync(clubId);
 
-    if (!club) {
-      throw new CustomNotFoundError("Club not found.");
-    }
-
     const userId = req.user.id;
     const memberRole = await getMemberClubRoleAsync(clubId, userId);
     const posts = await getPostsAsync(clubId, 30, res.locals.postsCurrentPage);
@@ -126,7 +122,7 @@ exports.newClubPOST = asyncHandler(async (req, res) => {
     req.body.privacy,
   );
 
-  await addClubMemberAsync(clubId, req.user.id, new Date());
+  await addClubMemberAsync(clubId, req.user.id);
   await assignClubRoleAdminAsync(clubId, req.user.id);
 
   res.redirect(`/club/${clubId}`);
