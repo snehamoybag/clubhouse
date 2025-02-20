@@ -42,6 +42,9 @@ router.get(
 
 router.get("/:id/control-panel/ban-list", clubController.banListGET);
 router.post("/:id/control-panel/ban-list/add", clubController.banUserPOST);
-// router.post("/:id/control-panel/ban-list/remove", (req, res) => {});
+router.post(
+  "/:id/control-panel/ban-list/remove",
+  clubController.removeUserBanPOST,
+);
 
 module.exports = router;

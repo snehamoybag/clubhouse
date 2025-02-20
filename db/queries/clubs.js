@@ -164,6 +164,13 @@ exports.addUserToClubBanListAsync = async (clubId, userId) => {
   );
 };
 
+exports.removeUserFromClubBanListAsync = async (clubId, userId) => {
+  await pool.query(
+    "DELETE FROM banned_club_members WHERE club_id = $1 AND user_id = $2",
+    [clubId, userId],
+  );
+};
+
 exports.getClubBannedUsersAsync = async (clubId, limit, offset = 0) => {
   const query = `
     SELECT users.id, users.first_name, users.last_name FROM banned_club_members 
