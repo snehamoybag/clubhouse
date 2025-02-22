@@ -15,6 +15,10 @@ const {
   addUserToClubBanListAsync,
   getClubBannedUsersAsync,
   removeUserFromClubBanListAsync,
+  getUserClubsAsync,
+  saveClubInvitationAsync,
+  doesUserHaveClubInvitationAsync,
+  deleteClubInvitationAsync,
 } = require("../db/queries/clubs");
 const { getPostsAsync } = require("../db/queries/posts");
 const { getReportedPostsAsync } = require("../db/queries/reports");
@@ -48,6 +52,7 @@ exports.GET = [
       club,
       posts,
       memberRole,
+      hasClubInvitation: await doesUserHaveClubInvitationAsync(clubId, userId),
       styles: "club",
     });
   }),
@@ -323,4 +328,97 @@ exports.removeUserBanPOST = asyncHandler(async (req, res) => {
   await removeUserFromClubBanListAsync(clubId, userId);
 
   res.status(200).redirect(`/club/${clubId}/control-panel/ban-list`);
+});
+
+exports.inviteToClubGET = asyncHandler(async (req, res) => {
+  const invitedUser = await getUserByIdAsync(Number(req.query.invitedUserId));
+
+  if (!invitedUser) {
+    throw new CustomNotFoundError("User not found.");
+  }
+
+  res.render("root", {
+    title: `Inviting ${invitedUser.first_name} ${invitedUser.last_name} to a club`,
+    mainView: "inviteToClub",
+    userClubs: await getUserClubsAsync(req.user.id, 30),
+    invitedUser,
+  });
+});
+
+exports.inviteToClubPOST = asyncHandler(async (req, res) => {
+  const invitedUser = await getUserByIdAsync(Number(req.query.invitedUserId));
+  const invitedByUser = req.user;
+
+  if (!invitedUser) {
+    throw new CustomNotFoundError("User not found.");
+  }
+
+  const selectedClub = await getClubAsync(Number(req.body.club));
+
+  if (!selectedClub) {
+    throw new CustomNotFoundError("Club not found.");
+  }
+
+  if (await isClubMemberAsync(selectedClub.id, invitedUser.id)) {
+    throw new CustomBadRequestError("User is already in the club.");
+  }
+
+  await saveClubInvitationAsync(
+    selectedClub.id,
+    invitedUser.id,
+    invitedByUser.id,
+  );
+
+  await sendNotificactionToUserAsync(
+    invitedUser.id,
+    `${invitedByUser.first_name} ${invitedByUser.last_name} has invited you to join ${selectedClub.name}.`,
+    `/club/${selectedClub.id}`,
+  );
+
+  res.status(200).render("root", {
+    title: "Invitation send!",
+    mainView: "success",
+    message: `You have successfully invited ${invitedUser.first_name} ${invitedUser.last_name} to join ${selectedClub.name}. `,
+    redirectLink: `/profile/${invitedUser.id}`,
+    redirectText: "Go back",
+  });
+});
+
+exports.handleClubInvitePOST = asyncHandler(async (req, res) => {
+  // TODO
+  // on accept join the club
+  const clubId = Number(req.params.id);
+  const action = req.body.action;
+
+  switch (action) {
+    case "accept":
+      await addClubMemberAsync(clubId, req.user.id);
+      deleteClubInvitationAsync(clubId, req.user.id);
+
+      res.status(200).render("root", {
+        title: "Invitation Accepted!",
+        mainView: "success",
+        message:
+          "You've successfully accepted the invitation to join the club.",
+        redirectLink: `/club/${clubId}`,
+        redirectText: "View club",
+      });
+      break;
+
+    case "decline":
+      deleteClubInvitationAsync(clubId, req.user.id);
+
+      res.status(200).render("root", {
+        title: "Invitation Declined",
+        mainView: "success",
+        message:
+          "You've successfully declined the invitation to join the club.",
+        redirectLink: `/club/${clubId}`,
+        redirectText: "Go back",
+      });
+      break;
+
+    default:
+      throw new CustomBadRequestError("Invalid action");
+  }
 });

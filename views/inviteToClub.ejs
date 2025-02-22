@@ -1,0 +1,31 @@
+<main>
+  <h1 class="title title--primary"><%= title %></h1>
+
+  <% if (userClubs.length) { %>
+    <form action="/club/invite?invitedUserId=<%= invitedUser.id %>" method="post" class="form">
+      <fieldset class="form__fieldset">
+        <legend class="form__legend">Choose a club:</legend>
+        <% userClubs.forEach((club) => { %>
+          <p class="form__input-wrapper">
+            <input 
+            type="radio" 
+            name="club" 
+            id="club<%= club.id %>" 
+            value="<%= club.id %>"
+            class="form__radio"
+            required
+            >
+            <label for="club<%= club.id %>" class="form__label">
+              <%= club.name %>
+            </label>
+          </p>
+        <% }); %>
+      </fieldset>
+      <button type="submit" class="btn btn--submit">Invite</button>
+    </form>
+  <% } else { %>
+    <p>
+      You are not in any club, please join a club first to invite.
+    </p>
+  <% } %>
+</main>

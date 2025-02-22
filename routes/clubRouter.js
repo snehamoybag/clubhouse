@@ -9,10 +9,13 @@ const router = new Router();
 
 router.all("/*", handleNotAuthenticated);
 
-// make sure the 'new' routes are above '/:id' routes
-// else  'new' will be considered an id of club
+// make sure any of these routes are above '/:id' routes
+// else  'new' etc. will be considered an id of club
 router.get("/new", clubController.newClubGET);
 router.post("/new", clubController.newClubPOST);
+
+router.get("/invite", clubController.inviteToClubGET);
+router.post("/invite", clubController.inviteToClubPOST);
 
 router.all("/:id", handleInvalidClub, handleUserBannedFromClub);
 
@@ -31,6 +34,8 @@ router.post(
   "/:id/decline-join-request",
   clubController.declineClubJoinRequestPOST,
 );
+
+router.post("/:id/club-invite", clubController.handleClubInvitePOST);
 
 router.get("/:id/control-panel", clubController.controlPanelGET);
 router.get("/:id/control-panel/join-requests", clubController.joinRequestsGET);

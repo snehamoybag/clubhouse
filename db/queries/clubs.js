@@ -34,6 +34,22 @@ exports.getAllClubsAsync = async (limit, offset = 0) => {
   return rows;
 };
 
+exports.getUserClubsAsync = async (userId, limit, offset = 0) => {
+  const query = `
+    SELECT clubs.*, members_of_clubs.member_role
+    FROM clubs
+    INNER JOIN members_of_clubs 
+      ON members_of_clubs.club_id = clubs.id
+    
+    WHERE members_of_clubs.member_id = $1
+    ORDER BY clubs.name ASC
+    LIMIT $2 OFFSET $3;
+  `;
+
+  const { rows } = await pool.query(query, [userId, limit, offset]);
+  return rows;
+};
+
 exports.addClubAsync = async (name, about, privacy) => {
   const { rows } = await pool.query(
     "INSERT INTO clubs(name, about, privacy) VALUES($1, $2, $3) RETURNING id",
@@ -210,4 +226,38 @@ exports.isClubNameAvailableAsync = async (name) => {
 
   const { rows } = await pool.query(query, [name.trim()]);
   return Boolean(rows[0].case);
+};
+
+exports.saveClubInvitationAsync = async (
+  clubId,
+  invitedUserId,
+  invitedByUserId,
+) => {
+  const query = `
+    INSERT INTO users_invited_clubs(
+      club_id, 
+      invited_user_id, 
+      invited_by_user_id, 
+      date
+    ) VALUES (
+      $1, $2, $3, $4 
+    );
+  `;
+
+  await pool.query(query, [clubId, invitedUserId, invitedByUserId, new Date()]);
+};
+
+exports.deleteClubInvitationAsync = async (clubId, invitedUserId) => {
+  const query =
+    "DELETE FROM users_invited_clubs WHERE club_id = $1 AND invited_user_id = $2";
+
+  await pool.query(query, [clubId, invitedUserId]);
+};
+
+exports.doesUserHaveClubInvitationAsync = async (clubId, userId) => {
+  const query =
+    "SELECT 1 FROM users_invited_clubs WHERE club_id = $1 AND invited_user_id = $2";
+  const { rows } = await pool.query(query, [clubId, userId]);
+
+  return rows.length > 0;
 };

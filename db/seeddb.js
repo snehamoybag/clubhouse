@@ -11,7 +11,7 @@ const query = `
     bio VARCHAR(255),
     email VARCHAR(320) UNIQUE,
     password VARCHAR(255),
-    aura INTEGER,
+    aura INTEGER
   );
   
   CREATE TABLE IF NOT EXISTS clubs(
@@ -83,6 +83,14 @@ const query = `
     FOREIGN KEY(club_id) REFERENCES clubs(id)
   );
 
+   CREATE TABLE IF NOT EXISTS liked_posts (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    post_id INTEGER,
+    user_id INTEGER,
+    FOREIGN KEY(post_id) REFERENCES posts(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+  );
+
   CREATE TABLE IF NOT EXISTS banned_club_members (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     club_id INTEGER,
@@ -90,6 +98,17 @@ const query = `
     FOREIGN KEY(club_id) REFERENCES clubs(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS users_invited_clubs (
+    id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    club_id INTEGER,
+    invited_user_id INTEGER,
+    invited_by_user_id INTEGER,
+    date TIMESTAMP,
+    FOREIGN KEY(club_id) REFERENCES clubs(id),
+    FOREIGN KEY(invited_user_id) REFERENCES users(id),
+    FOREIGN KEY(invited_by_user_id) REFERENCES users(id)
+  )
 `;
 
 const main = async () => {

@@ -6,6 +6,14 @@
 
   <% if (!locals.memberRole) { %>
 
+    <% if (locals.hasClubInvitation) { %>
+      <form action="/club/<%= club.id %>/club-invite" method="post" class="form">
+        <p>Do you want to accept the invitation to join the club?</p>
+        <button type="submit" class="btn btn--accept" name="action" value="accept">Accept</button>
+        <button type="submit" class="btn btn--decilince" name="action" value="decline">Decline</button>
+      </form>
+    <% } %>
+
     <!-- join button -->
     <% if (club.privacy !== "closed") { %>
       <form 

@@ -6,3 +6,4 @@
 - Profile avatar
 - User Aura
 - Invite user to club
+- polish the ui

@@ -41,6 +41,9 @@ exports.deletePostAsync = async (postId) => {
   // delete from reported_posts
   await pool.query("DELETE FROM reported_posts WHERE post_id = $1", [postId]);
 
+  // delete from liked_posts table
+  await pool.query("DELETE FROM liked_posts WHERE post_id = $1", [postId]);
+
   // delete from posts table
   await pool.query("DELETE FROM posts WHERE id = $1", [postId]);
 };
@@ -49,7 +52,8 @@ exports.getPostsAsync = async (clubId, limit, currentPage = 1) => {
   const offset = currentPage <= 1 ? 0 : limit * (currentPage - 1);
 
   const query = `
-    SELECT posts.*, users.id AS author_id, 
+    SELECT posts.*, 
+      users.id AS author_id, 
       users.first_name AS author_first_name,
       users.last_name AS author_last_name, 
       members_of_clubs.member_role AS author_club_role
@@ -107,11 +111,13 @@ exports.getUserPostsAsync = async (userId, limit, currentPage = 1) => {
       users.id AS author_id, 
       users.first_name AS author_first_name,
       users.last_name AS author_last_name
+
     FROM posts 
     INNER JOIN posts_of_users ON posts_of_users.post_id = posts.id
     INNER JOIN users ON users.id = posts_of_users.user_id
     LEFT JOIN posts_in_clubs ON posts_in_clubs.post_id = posts.id
     LEFT JOIN clubs ON clubs.id = posts_in_clubs.club_id
+
     WHERE posts_of_users.user_id = $1
     ORDER BY posts.date DESC 
     LIMIT $2 OFFSET $3;
@@ -171,4 +177,23 @@ exports.isPostInClubAsync = async (postId) => {
 
   const { rows } = await pool.query(query, [postId]);
   return Boolean(rows[0].case);
+};
+
+// like post if post not already liked
+// unlike if post already liked
+exports.likeUnlikePostAsync = async (postId, userId) => {
+  const query = `
+    SELECT CASE WHEN EXISTS (
+      SELECT 1 FROM liked_posts WHERE post_id = $1 AND user_id = $2
+    )
+      THEN (
+        DELETE FROM liked_posts WHERE post_id = $1 AND user_id = $2
+      )
+      ELSE (
+        INSERT INTO liked_posts(post_id, user_id) VALUES($1, $2)
+      )
+    END;
+  `;
+
+  await pool.query(query, [postId, userId]);
 };
