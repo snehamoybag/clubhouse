@@ -1,5 +1,76 @@
 const pool = require("../../configs/pool");
 
+exports.getGlobalPostsAsync = async (limit, offset = 0) => {
+  const query = `
+    SELECT posts.*, 
+      users.id AS author_id, 
+      users.first_name AS author_first_name,
+      users.last_name AS author_last_name
+
+      FROM posts
+      INNER JOIN posts_of_users ON posts_of_users.post_id = posts.id
+      INNER JOIN users ON users.id = posts_of_users.user_id
+      LEFT JOIN posts_in_clubs ON posts_in_clubs.post_id = posts.id
+
+      WHERE posts_in_clubs.club_id IS NULL
+
+      ORDER BY posts.date DESC
+      LIMIT $1 OFFSET $2;
+  `;
+
+  const { rows } = await pool.query(query, [limit, offset]);
+  return rows;
+};
+
+exports.getClubPostsAsync = async (clubId, limit, offset = 0) => {
+  const query = `
+    SELECT posts.*, 
+      users.id AS author_id, 
+      users.first_name AS author_first_name,
+      users.last_name AS author_last_name, 
+      members_of_clubs.member_role AS author_club_role
+
+      FROM posts
+      INNER JOIN posts_of_users ON posts_of_users.post_id = posts.id
+      INNER JOIN users ON users.id = posts_of_users.user_id
+      INNER JOIN posts_in_clubs ON posts_in_clubs.post_id = posts.id
+      INNER JOIN members_of_clubs 
+        ON members_of_clubs.member_id = posts_of_users.user_id 
+        AND members_of_clubs.club_id = posts_in_clubs.club_id
+
+      WHERE posts_in_clubs.club_id = $1
+
+      ORDER BY posts.date DESC
+      LIMIT $2 OFFSET $3;
+  `;
+
+  const { rows } = await pool.query(query, [clubId, limit, offset]);
+  return rows;
+};
+
+exports.getUserPostsAsync = async (userId, limit, offset = 0) => {
+  const query = `
+    SELECT posts.*,  
+      clubs.id AS club_id, clubs.name AS club_name, clubs.privacy AS club_privacy, 
+      users.id AS author_id, 
+      users.first_name AS author_first_name,
+      users.last_name AS author_last_name
+
+    FROM posts 
+    INNER JOIN posts_of_users ON posts_of_users.post_id = posts.id
+    INNER JOIN users ON users.id = posts_of_users.user_id
+    LEFT JOIN posts_in_clubs ON posts_in_clubs.post_id = posts.id
+    LEFT JOIN clubs ON clubs.id = posts_in_clubs.club_id
+
+    WHERE posts_of_users.user_id = $1
+    ORDER BY posts.date DESC 
+    LIMIT $2 OFFSET $3;
+  `;
+
+  const { rows } = await pool.query(query, [userId, limit, offset]);
+  return rows;
+};
+
 exports.addPostAsync = async (message, timeStamp, authorId, clubId) => {
   // insert into 'posts' tabe
   const { rows } = await pool.query(
@@ -48,38 +119,6 @@ exports.deletePostAsync = async (postId) => {
   await pool.query("DELETE FROM posts WHERE id = $1", [postId]);
 };
 
-exports.getPostsAsync = async (clubId, limit, currentPage = 1) => {
-  const offset = currentPage <= 1 ? 0 : limit * (currentPage - 1);
-
-  const query = `
-    SELECT posts.*, 
-      users.id AS author_id, 
-      users.first_name AS author_first_name,
-      users.last_name AS author_last_name, 
-      members_of_clubs.member_role AS author_club_role
-
-      FROM posts
-      LEFT JOIN posts_of_users ON posts_of_users.post_id = posts.id
-      INNER JOIN users ON users.id = posts_of_users.user_id
-      LEFT JOIN posts_in_clubs ON posts_in_clubs.post_id = posts.id
-      LEFT JOIN members_of_clubs 
-        ON members_of_clubs.member_id = posts_of_users.user_id 
-        AND members_of_clubs.club_id = posts_in_clubs.club_id
-
-      WHERE 
-        (
-          (posts_in_clubs.club_id = $3) 
-          OR 
-          ($3 IS NULL AND posts_in_clubs.club_id IS NULL)
-        )
-      ORDER BY posts.date DESC
-      LIMIT $1 OFFSET $2;
-  `;
-
-  const { rows } = await pool.query(query, [limit, offset, clubId]);
-  return rows;
-};
-
 exports.getPostAsync = async (postId) => {
   const query = `
     SELECT posts.*, users.id AS author_id, 
@@ -100,31 +139,6 @@ exports.getPostAsync = async (postId) => {
 
   const { rows } = await pool.query(query, [postId]);
   return rows[0];
-};
-
-exports.getUserPostsAsync = async (userId, limit, currentPage = 1) => {
-  const offset = currentPage <= 1 ? 0 : limit * (currentPage - 1);
-
-  const query = `
-    SELECT posts.*,  
-      clubs.id AS club_id, clubs.name AS club_name, clubs.privacy AS club_privacy, 
-      users.id AS author_id, 
-      users.first_name AS author_first_name,
-      users.last_name AS author_last_name
-
-    FROM posts 
-    INNER JOIN posts_of_users ON posts_of_users.post_id = posts.id
-    INNER JOIN users ON users.id = posts_of_users.user_id
-    LEFT JOIN posts_in_clubs ON posts_in_clubs.post_id = posts.id
-    LEFT JOIN clubs ON clubs.id = posts_in_clubs.club_id
-
-    WHERE posts_of_users.user_id = $1
-    ORDER BY posts.date DESC 
-    LIMIT $2 OFFSET $3;
-  `;
-
-  const { rows } = await pool.query(query, [userId, limit, offset]);
-  return rows;
 };
 
 exports.getPostClubIdAsync = async (postId) => {

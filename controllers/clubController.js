@@ -20,7 +20,7 @@ const {
   doesUserHaveClubInvitationAsync,
   deleteClubInvitationAsync,
 } = require("../db/queries/clubs");
-const { getPostsAsync } = require("../db/queries/posts");
+const { getClubPostsAsync } = require("../db/queries/posts");
 const { getReportedPostsAsync } = require("../db/queries/reports");
 const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
@@ -44,7 +44,7 @@ exports.GET = [
 
     const userId = req.user.id;
     const memberRole = await getMemberClubRoleAsync(clubId, userId);
-    const posts = await getPostsAsync(clubId, 30, res.locals.postsCurrentPage);
+    const posts = await getClubPostsAsync(clubId, 30);
 
     res.render("root", {
       mainView: "club",
