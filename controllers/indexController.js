@@ -1,17 +1,19 @@
 const asyncHandler = require("express-async-handler");
 const { getGlobalPostsAsync } = require("../db/queries/posts");
-const handlePostsPagination = require("../middlewares/handlePostsPagination");
 
-exports.GET = [
-  handlePostsPagination,
-  asyncHandler(async (req, res) => {
-    const posts = await getGlobalPostsAsync(30);
+exports.GET = asyncHandler(async (req, res) => {
+  const pageSize = 30;
+  const currentPage = Number(req.query.page) || 1;
+  const posts = await getGlobalPostsAsync(pageSize, currentPage);
 
-    res.render("root", {
-      title: "Clubhouse",
-      mainView: "index",
-      posts,
-      styles: "index",
-    });
-  }),
-];
+  res.render("root", {
+    title: "Clubhouse",
+    mainView: "index",
+    posts,
+    pagination: {
+      page: currentPage,
+      pageSize,
+    },
+    styles: "index",
+  });
+});

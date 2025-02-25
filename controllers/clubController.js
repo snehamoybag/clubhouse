@@ -28,7 +28,6 @@ const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError")
 const url = require("node:url");
 const { getUserByIdAsync } = require("../db/queries/users");
 const { sendNotificactionToUserAsync } = require("../db/queries/notifications");
-const handlePostsPagination = require("../middlewares/handlePostsPagination");
 const {
   nameValidations,
   aboutValidations,
@@ -36,27 +35,31 @@ const {
 } = require("../validations/clubValidations");
 const { validationResult } = require("express-validator");
 
-exports.GET = [
-  handlePostsPagination,
-  asyncHandler(async (req, res) => {
-    const clubId = Number(req.params.id);
-    const club = await getClubAsync(clubId);
+exports.GET = asyncHandler(async (req, res) => {
+  const clubId = Number(req.params.id);
+  const club = await getClubAsync(clubId);
 
-    const userId = req.user.id;
-    const memberRole = await getMemberClubRoleAsync(clubId, userId);
-    const posts = await getClubPostsAsync(clubId, 30);
+  const userId = req.user.id;
+  const memberRole = await getMemberClubRoleAsync(clubId, userId);
 
-    res.render("root", {
-      mainView: "club",
-      title: club.name,
-      club,
-      posts,
-      memberRole,
-      hasClubInvitation: await doesUserHaveClubInvitationAsync(clubId, userId),
-      styles: "club",
-    });
-  }),
-];
+  const currentPageNum = Number(req.query.page || 1);
+  const pageSize = 30;
+  const posts = await getClubPostsAsync(clubId, pageSize, currentPageNum);
+
+  res.render("root", {
+    mainView: "club",
+    title: club.name,
+    club,
+    posts,
+    pagination: {
+      page: currentPageNum,
+      pageSize,
+    },
+    memberRole,
+    hasClubInvitation: await doesUserHaveClubInvitationAsync(clubId, userId),
+    styles: "club",
+  });
+});
 
 exports.joinClubPOST = asyncHandler(async (req, res) => {
   const clubId = Number(req.params.id);

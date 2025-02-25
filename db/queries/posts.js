@@ -1,6 +1,8 @@
 const pool = require("../../configs/pool");
 
-exports.getGlobalPostsAsync = async (limit, offset = 0) => {
+exports.getGlobalPostsAsync = async (pageSize, pageNum = 1) => {
+  const offset = pageSize * (pageNum - 1);
+
   const query = `
     SELECT posts.*, 
       users.id AS author_id, 
@@ -14,15 +16,17 @@ exports.getGlobalPostsAsync = async (limit, offset = 0) => {
 
       WHERE posts_in_clubs.club_id IS NULL
 
-      ORDER BY posts.date DESC
+      ORDER BY posts.date DESC, posts.id DESC 
       LIMIT $1 OFFSET $2;
   `;
 
-  const { rows } = await pool.query(query, [limit, offset]);
+  const { rows } = await pool.query(query, [pageSize, offset]);
   return rows;
 };
 
-exports.getClubPostsAsync = async (clubId, limit, offset = 0) => {
+exports.getClubPostsAsync = async (clubId, pageSize, pageNum = 1) => {
+  const offset = pageSize * (pageNum - 1);
+
   const query = `
     SELECT posts.*, 
       users.id AS author_id, 
@@ -44,11 +48,13 @@ exports.getClubPostsAsync = async (clubId, limit, offset = 0) => {
       LIMIT $2 OFFSET $3;
   `;
 
-  const { rows } = await pool.query(query, [clubId, limit, offset]);
+  const { rows } = await pool.query(query, [clubId, pageSize, offset]);
   return rows;
 };
 
-exports.getUserPostsAsync = async (userId, limit, offset = 0) => {
+exports.getUserPostsAsync = async (userId, pageSize, pageNum = 1) => {
+  const offset = pageSize * (pageNum - 1);
+
   const query = `
     SELECT posts.*,  
       clubs.id AS club_id, clubs.name AS club_name, clubs.privacy AS club_privacy, 
@@ -67,7 +73,7 @@ exports.getUserPostsAsync = async (userId, limit, offset = 0) => {
     LIMIT $2 OFFSET $3;
   `;
 
-  const { rows } = await pool.query(query, [userId, limit, offset]);
+  const { rows } = await pool.query(query, [userId, pageSize, offset]);
   return rows;
 };
 

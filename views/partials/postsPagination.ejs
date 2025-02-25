@@ -1,13 +1,15 @@
 <div class="pagination">
   <a 
-    href="?postsCurrentPage=<%= locals.postsCurrentPage || 1 %>&postsLoadDirection=prev"
-    <%= locals.postsCurrentPage <= 1 ? "disabled" : ""; %>
-  ><< Prev
+    href="?page=<%= pagination.page - 1 %>"
+    class="pagination__link pagination__link--prev <%= pagination.page === 1 ? 'disabled' : ''; %>"
+  >
+    << prev 
   </a>
   <span>|</span>
   <a
-    href="?postsCurrentPage=<%= locals.postsCurrentPage || 1 %>&postsLoadDirection=next"
-    <%= locals.posts.length <= 1 ? "disabled" : ""; %>
-  >Next >>
+    href="?page=<%= pagination.page + 1 %>"
+    class="pagination__link pagination__link--prev <%= posts.length <= pagination.pageSize ? 'disabled' : ''; %>"
+  >
+    Next >>
   </a>
 </div>

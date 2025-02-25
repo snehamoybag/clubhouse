@@ -12,7 +12,6 @@ const {
 } = require("../db/queries/users");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
 const { getUserPostsAsync } = require("../db/queries/posts");
-const handlePostsPagination = require("../middlewares/handlePostsPagination");
 const {
   nameValidations,
   currentEmailValidations,
@@ -25,47 +24,50 @@ const {
 } = require("../validations/uservalidations");
 const { validationResult } = require("express-validator");
 
-exports.GET = [
-  handlePostsPagination,
-  asyncHandler(async (req, res) => {
-    const profileId = Number(req.params.id);
-    const profileUser = await getUserByIdAsync(profileId);
+(exports.GET = asyncHandler(async (req, res) => {
+  const profileId = Number(req.params.id);
+  const profileUser = await getUserByIdAsync(profileId);
 
-    if (!profileUser) {
-      throw new CustomNotFoundError("Profile not found.");
-    }
+  if (!profileUser) {
+    throw new CustomNotFoundError("Profile not found.");
+  }
 
-    const isUserProfileOwner = profileId === Number(req.user.id);
-    const title = isUserProfileOwner
-      ? "Profile"
-      : `Profile of ${profileUser.first_name} ${profileUser.last_name}`;
+  const isUserProfileOwner = profileId === Number(req.user.id);
+  const title = isUserProfileOwner
+    ? "Profile"
+    : `Profile of ${profileUser.first_name} ${profileUser.last_name}`;
 
-    const postsOfProfileUser = await getUserPostsAsync(
-      profileId,
-      10,
-      res.locals.postsCurrentPage,
-    );
+  const pageSize = 10;
+  const pageNum = Number(req.query.page) || 1;
 
-    res.render("root", {
-      title,
-      mainView: "profile",
-      profile: profileUser,
-      isUserProfileOwner,
-      posts: postsOfProfileUser,
-      styles: "profile",
-    });
-  }),
-];
-
-exports.noitficationsGET = asyncHandler(async (req, res) => {
-  const notifications = await getUserNotificationsAsync(req.user.id, 30);
+  const postsOfProfileUser = await getUserPostsAsync(
+    profileId,
+    pageSize,
+    pageNum,
+  );
 
   res.render("root", {
-    title: "Notifications",
-    mainView: "userNotifications",
-    notifications,
+    title,
+    mainView: "profile",
+    profile: profileUser,
+    isUserProfileOwner,
+    posts: postsOfProfileUser,
+    pagination: {
+      page: pageNum,
+      pageSize,
+    },
+    styles: "profile",
   });
-});
+})),
+  (exports.noitficationsGET = asyncHandler(async (req, res) => {
+    const notifications = await getUserNotificationsAsync(req.user.id, 30);
+
+    res.render("root", {
+      title: "Notifications",
+      mainView: "userNotifications",
+      notifications,
+    });
+  }));
 
 // try-catching cause we want errors to happen silently on client side
 exports.markNotificationAsReadSilentlyPOST = async (req, res) => {
