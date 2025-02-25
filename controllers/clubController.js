@@ -388,8 +388,6 @@ exports.inviteToClubPOST = asyncHandler(async (req, res) => {
 });
 
 exports.handleClubInvitePOST = asyncHandler(async (req, res) => {
-  // TODO
-  // on accept join the club
   const clubId = Number(req.params.id);
   const action = req.body.action;
 
