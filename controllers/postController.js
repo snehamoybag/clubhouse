@@ -5,10 +5,13 @@ const {
   isPostAuthorAsync,
   editPostAsync,
   getPostAsync,
+  likePostAsync,
+  unlikePostAsync,
 } = require("../db/queries/posts");
 const { getMemberClubRoleAsync } = require("../db/queries/clubs");
 const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
 const { sendNotificactionToUserAsync } = require("../db/queries/notifications");
+const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 
 exports.addPOST = asyncHandler(async (req, res) => {
   const clubId = req.params.id ? Number(req.params.id) : null;
@@ -54,7 +57,7 @@ exports.deletePOST = asyncHandler(async (req, res) => {
 
   // if deleted by admin or mod let the author of the post know
   if (isAdminOrMod && !isPostAuthor) {
-    const post = await getPostAsync(postId);
+    const post = await getPostAsync(userId, postId);
     await sendNotificactionToUserAsync(
       Number(post.author_id),
       "We've deleted one of your post as it violates club's rules/guidelines.",
@@ -65,4 +68,24 @@ exports.deletePOST = asyncHandler(async (req, res) => {
   await deletePostAsync(postId);
 
   res.status(200).redirect(req.get("Referrer"));
+});
+
+exports.likePOST = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const postId = Number(req.params.postId);
+
+  const post = await getPostAsync(userId, postId);
+
+  if (!post) {
+    throw new CustomBadRequestError("Invalid post.");
+  }
+
+  if (post.is_liked_by_user) {
+    await unlikePostAsync(userId, postId);
+  } else {
+    await likePostAsync(userId, postId);
+  }
+
+  const scrollToPostUrl = `${req.get("referrer")}#post${postId}`;
+  res.status(200).redirect(scrollToPostUrl);
 });

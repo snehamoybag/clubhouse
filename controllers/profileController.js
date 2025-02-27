@@ -11,7 +11,7 @@ const {
   updateUserBioAsync,
 } = require("../db/queries/users");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
-const { getUserPostsAsync } = require("../db/queries/posts");
+const { getProfilePostsAsync } = require("../db/queries/posts");
 const {
   nameValidations,
   currentEmailValidations,
@@ -24,7 +24,7 @@ const {
 } = require("../validations/uservalidations");
 const { validationResult } = require("express-validator");
 
-(exports.GET = asyncHandler(async (req, res) => {
+exports.GET = asyncHandler(async (req, res) => {
   const profileId = Number(req.params.id);
   const profileUser = await getUserByIdAsync(profileId);
 
@@ -40,7 +40,8 @@ const { validationResult } = require("express-validator");
   const pageSize = 10;
   const pageNum = Number(req.query.page) || 1;
 
-  const postsOfProfileUser = await getUserPostsAsync(
+  const postsOfProfileUser = await getProfilePostsAsync(
+    req.user.id,
     profileId,
     pageSize,
     pageNum,
@@ -58,16 +59,17 @@ const { validationResult } = require("express-validator");
     },
     styles: "profile",
   });
-})),
-  (exports.noitficationsGET = asyncHandler(async (req, res) => {
-    const notifications = await getUserNotificationsAsync(req.user.id, 30);
+});
 
-    res.render("root", {
-      title: "Notifications",
-      mainView: "userNotifications",
-      notifications,
-    });
-  }));
+exports.noitficationsGET = asyncHandler(async (req, res) => {
+  const notifications = await getUserNotificationsAsync(req.user.id, 30);
+
+  res.render("root", {
+    title: "Notifications",
+    mainView: "userNotifications",
+    notifications,
+  });
+});
 
 // try-catching cause we want errors to happen silently on client side
 exports.markNotificationAsReadSilentlyPOST = async (req, res) => {

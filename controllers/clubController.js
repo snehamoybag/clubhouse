@@ -44,7 +44,12 @@ exports.GET = asyncHandler(async (req, res) => {
 
   const currentPageNum = Number(req.query.page || 1);
   const pageSize = 30;
-  const posts = await getClubPostsAsync(clubId, pageSize, currentPageNum);
+  const posts = await getClubPostsAsync(
+    req.user.id,
+    clubId,
+    pageSize,
+    currentPageNum,
+  );
 
   res.render("root", {
     mainView: "club",

@@ -119,8 +119,14 @@
         </section>
         <section class="post__footer">
           <p>
-            Number of likes: <%= post.number_of_likes %> TODO
+            Number of likes: <%= post.likes_count %>
           </p>
+          <p>
+            is liked by user: <%= post.is_liked_by_user %>
+          </p>
+          <form action="/like/post/<%= post.id %>" method="post">
+            <button type="submit" class="btn"><%= post.is_liked_by_user ? 'Unlike' : 'Like' %></button>
+          </form>
         </section> 
       </article>
     <% }); %>

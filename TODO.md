@@ -1,6 +1,5 @@
 # Features to implement
 
-- re-write paginations implementation
 - Oldschool Emojis support while writing post
 - Like/unlike posts
 - Quote post
