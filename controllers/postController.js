@@ -89,7 +89,7 @@ exports.likePOST = asyncHandler(async (req, res) => {
     if (userId !== post.author_id) {
       await sendNotificactionToUserAsync(
         post.author_id,
-        `${req.user.first_name} ${req.user.last_name} liked one of your post`,
+        `${req.user.first_name} ${req.user.last_name} has liked one of your post.`,
         `/post/${post.id}`,
       );
     }
