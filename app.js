@@ -51,7 +51,7 @@ app.use(routes);
 
 // error handler
 // comment out this middleware if you do not know from where the error is coming
-app.use(errorHandler);
+// app.use(errorHandler);
 
 // error 404 route. Make sure it is at the end of all middleware functions
 app.use(notFound404Handler);
