@@ -4,7 +4,7 @@ const getHashPasswordAsync = require("../../lib/getHashPasswordAsync");
 exports.addUserAsync = async (firstName, lastName, email, password) => {
   const hashedPassword = await getHashPasswordAsync(password);
 
-  await await pool.query(
+  await pool.query(
     "INSERT INTO users(first_name, last_name, email, password) VALUES($1, $2, $3, $4)",
     [firstName, lastName, email, hashedPassword],
   );
