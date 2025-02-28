@@ -45,14 +45,17 @@
   font-size: var(--fs-200);
 }
 
-.post__body {
-  padding: 1em 0;
-}
-
 .post__message {
   word-wrap: break-word;
   word-break: normal;
   line-height: 1.4;
+  padding: 1em 0;
+}
+
+.post__message > a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 .post__options_list {

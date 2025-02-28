@@ -12,6 +12,7 @@ const editRouter = require("./editRouter");
 const deleteRouter = require("./deleteRouter");
 const reportRouter = require("./reportRouter");
 const likeRouter = require("./likeRouter");
+const postRouer = require("./postRouter");
 
 const router = new Router();
 
@@ -27,5 +28,6 @@ router.use("/edit", editRouter);
 router.use("/delete", deleteRouter);
 router.use("/report", reportRouter);
 router.use("/like", likeRouter);
+router.use("/post", postRouer);
 
 module.exports = router;

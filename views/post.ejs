@@ -1,0 +1,232 @@
+<main>
+  <article id="post<%= post.id %>" class="post">
+    <section class="post__head">
+      <div class="post__author-details">
+        <div class="post__title-wrapper">
+          <!-- <img src="" alt="" class="post__avatar"> -->
+          <h2 class="post__author-name">
+            <a href="/profile/<%= post.author_id %>">
+              <%= post.author_first_name %> <%= post.author_last_name %>
+            </a> 
+            <span class="post__author-id" title="atuthor ID">#<%= post.author_id %></span>
+          </h2>
+          <% if (post.club_id) { %>
+            <p class="in-club-icon"><span class="sr-only">in club</span></p>
+            <h2 class="post__club-name">
+              <a href="/club/<%= post.club_id %>">
+                <%= post.club_name %>
+              </a>
+            </h2>
+          <% }; %>
+        </div>
+
+        <div class="post__time-role-wrapper">
+          <p class="post__time">
+            <time datetime="<%= post.date %>">
+              <%= locals.formatDateDistanceToNow(post.date) %>
+            </time>
+          </p>
+          <% if (post.author_club_role) { %>
+            &middot; <p class="post__role"><%= post.author_club_role %></p>
+          <% }; %>
+        </div>
+      </div>
+      <div class="post__options">
+        <button 
+          id="btn-post-options"
+          type="button" 
+          class="post__btn post__btn--options" 
+          aria-controls="post-options-<%= post.id %>" 
+          aria-expanded="false"
+          title="post options"
+          data-btn="post-options"
+        >
+          <sapn class="sr-only">Open post options</sapn>
+        </button>
+        <ul id="post-options-<%= post.id %>" class="post__options_list hidden" aria-label="Post options">
+        <% if (post.author_id === user.id) { %>
+          <li>
+            <button 
+              type="button" 
+              id="btn-edit-post"
+              aria-controls="form-post-edit-<%= post.id %>"
+              aria-expanded="false"
+              data-btn="edit-post"
+              data-post-id="<%= post.id %>"
+            >
+              Edit post
+            </button>
+          </li>
+        <% }; %>
+
+        <% if (post.author_id !== user.id) { %>
+          <li>
+            <a href="/report/post/?postId=<%= post.id %>">Report post</a>
+          </li>
+        <% }; %>
+
+        <% if (post.author_id === user.id || locals.memberRole === "admin" || locals.memberRole === "mod") { %>
+          <li>
+            <form 
+              action="/delete/post/?postId=<%= post.id %>&clubId=<%= locals.club ? club.id : '' ; %>"
+              method="post"
+              onsubmit="return confirm('Are you sure, you want to delete this post?')"
+            >
+              <button type="submit">delete post</button>
+            </form>
+          </li>
+        <% }; %>
+
+        <% if (post.author_id !== user.id && (locals.memberRole === "admin" || locals.memberRole === "mod")) { %>
+          <li>
+            <form 
+              action="<%= locals.club.id %>/control-panel/ban-list/add/?userId=<%= post.author_id %>"
+              method="post"
+              onsubmit="return confirm('Are you sure you want to ban this user from the club?')"
+            >
+              <button type="submit">Ban author</button>
+            </form>
+          </li>
+        <% }; %>
+        
+        </ul>
+      </div>
+    </section>
+    <section class="post__body">
+      <p id="post-message-<%= post.id %>" class="post__message"><%= post.message %></p>
+
+      <form 
+        id="form-post-edit-<%= post.id %>" 
+        action="/edit/post/<%= post.id %>" 
+        method="post" 
+        class="post__edit-form hidden"
+      >
+        <p class="post__edit-form_input-wrapper">
+          <label for="edit-post-input-<%= post.id %>" class="sr-only">Edit post</label>
+          <textarea 
+            id="edit-post-input-<%= post.id %>"
+            class="post__edit-form_input"
+            name="editPost<%= post.id %>"
+            maxlength="2000"
+            required
+          ><%= post.message %></textarea>
+          <label for="edit-post-input-<%= post.id %>" class="post__edit-form_max-limit">(max. 2000 characters)</label>         
+        </p>
+        <button type="submit" class="btn btn--submit">Done</button>
+      </form>
+
+    </section>
+    <section class="post__footer">
+      <p>
+        Number of likes: <%= post.likes_count %>
+      </p>
+      <p>
+        is liked by user: <%= post.is_liked_by_user %>
+      </p>
+      <form action="/like/post/<%= post.id %>" method="post">
+        <button type="submit" class="btn"><%= post.is_liked_by_user ? 'Unlike' : 'Like' %></button>
+      </form>
+    </section> 
+  </article>
+</main>
+
+
+<script>
+  const isControlledElOpen = (btnEl) => {
+    return btnEl.getAttribute("aria-expanded") === "true"
+  }
+
+ const getControlledEl = (btnEl) => {
+    const controlledElId = btnEl.getAttribute("aria-controls")
+    return document.querySelector(`#${controlledElId}`)
+ }
+
+ // toggle post options   
+  const openPostOptions = (btnEl) => {
+   const srOnlyEl = btnEl.querySelector(".sr-only")
+
+    btnEl.setAttribute("aria-expanded", true)
+    btnEl.classList.add("close")
+    srOnlyEl.textContent = "close post options"
+    
+
+    getControlledEl(btnEl).classList.remove("hidden")
+  }
+
+  const closePostOptions = (btnEl) => {
+   const srOnlyEl = btnEl.querySelector(".sr-only")
+
+    btnEl.setAttribute("aria-expanded", false)
+    btnEl.classList.remove("close")
+    srOnlyEl.textContent = "open post options"
+
+    getControlledEl(btnEl).classList.add("hidden")
+  }
+
+  const togglePostOptions = (btnEl) => {
+    if (isControlledElOpen(btnEl)) {
+      closePostOptions(btnEl)
+    }
+    else {
+      openPostOptions(btnEl)
+    }
+  }
+
+  const postOptionsBtnEl = document.querySelector("#btn-post-options")
+  postOptionsBtnEl.addEventListener("click", () => togglePostOptions(postOptionsBtnEl))
+
+  // toggle post edit field
+  const getPostMessageEl = (btnEl) => {
+    const postId = btnEl.dataset.postId
+    return document.querySelector(`#post-message-${postId}`)
+  }
+
+  const openPostEditField = (btnEl) => {
+    btnEl.setAttribute("aria-expanded", true)
+    btnEl.textContent = "Cancel edit"
+
+    getControlledEl(btnEl).classList.remove("hidden")
+  }
+
+
+  const closePostEditField = (btnEl) => {
+    btnEl.setAttribute("aria-expanded", false)
+    btnEl.textContent = "Edit post"
+
+    getControlledEl(btnEl).classList.add("hidden")
+  }
+
+  const hidePostMessageEl = (btnEl) => {
+    const messageEl = getPostMessageEl(btnEl)
+    messageEl.classList.add("hidden")
+  }
+
+
+  const showPostMessageEl = (btnEl) => {
+    const messageEl = getPostMessageEl(btnEl)
+    messageEl.classList.remove("hidden")
+  }
+
+  const setPostMessageEditInputElHeight = (postId) => {
+    const editInputEl = document.querySelector(`#edit-post-input-${postId}`)
+    editInputEl.style.height = 20 + "rem"
+  }
+
+  const togglePostEditField = (btnEl) => {
+    if (isControlledElOpen(btnEl)) {
+      closePostEditField(btnEl)
+      showPostMessageEl(btnEl)
+    }
+    else {
+      setPostMessageEditInputElHeight(btnEl.dataset.postId)
+      hidePostMessageEl(btnEl)
+      openPostEditField(btnEl)
+    }
+  }
+  
+  const editPostBtnEl = document.querySelector("#btn-edit-post")
+
+  if (editPostBtnEl) {
+    editPostBtnEl.addEventListener("click", () => togglePostEditField(editPostBtnEl))
+  }
+</script> 

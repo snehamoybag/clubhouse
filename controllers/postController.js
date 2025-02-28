@@ -12,6 +12,26 @@ const { getMemberClubRoleAsync } = require("../db/queries/clubs");
 const CustomAccessDeniedError = require("../lib/errors/CustomAccessDeniedError");
 const { sendNotificactionToUserAsync } = require("../db/queries/notifications");
 const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
+const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
+
+exports.GET = asyncHandler(async (req, res) => {
+  const postId = Number(req.params.id);
+  const post = await getPostAsync(req.user.id, postId);
+
+  if (!post) {
+    throw new CustomNotFoundError("Post not found.");
+  }
+
+  const title =
+    post.message.length > 20 ? post.message.substring(0, 20) : post.message;
+
+  res.render("root", {
+    title: title + "...",
+    post,
+    mainView: "post",
+    styles: "post-page",
+  });
+});
 
 exports.addPOST = asyncHandler(async (req, res) => {
   const clubId = req.params.id ? Number(req.params.id) : null;
@@ -67,7 +87,13 @@ exports.deletePOST = asyncHandler(async (req, res) => {
 
   await deletePostAsync(postId);
 
-  res.status(200).redirect(req.get("Referrer"));
+  res.status(200).render("root", {
+    title: "Post Deleted!",
+    message: "The post message has been deleted successfully.",
+    redirectText: "Return to homepage",
+    redirectLink: "/",
+    mainView: "success",
+  });
 });
 
 exports.likePOST = asyncHandler(async (req, res) => {
