@@ -84,6 +84,15 @@ exports.likePOST = asyncHandler(async (req, res) => {
     await unlikePostAsync(userId, postId);
   } else {
     await likePostAsync(userId, postId);
+
+    // send notification to post author
+    if (userId !== post.author_id) {
+      await sendNotificactionToUserAsync(
+        post.author_id,
+        `${req.user.first_name} ${req.user.last_name} liked one of your post`,
+        `/post/${post.id}`,
+      );
+    }
   }
 
   const scrollToPostUrl = `${req.get("referrer")}#post${postId}`;
