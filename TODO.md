@@ -1,8 +1,10 @@
 # Features to implement
 
 - Oldschool Emojis support while writing post
-- Like/unlike posts
-- Quote post
+- Like/unlike posts ✅
+- comments on post messges
+- reply to a pos
+- mention user on post
 - Profile avatar
-- User Aura
+- User Aura ✅
 - polish the ui

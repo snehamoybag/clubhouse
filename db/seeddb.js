@@ -11,7 +11,6 @@ const query = `
     bio VARCHAR(255),
     email VARCHAR(320) UNIQUE,
     password VARCHAR(255),
-    aura INTEGER
   );
   
   CREATE TABLE IF NOT EXISTS clubs(
