@@ -16,6 +16,7 @@ exports.GET = asyncHandler(async (req, res) => {
     pagination: {
       page: currentPage,
       pageSize,
+      numOfItems: posts.length,
     },
     styles: "index",
   });

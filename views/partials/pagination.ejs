@@ -8,7 +8,7 @@
   <span>|</span>
   <a
     href="?page=<%= pagination.page + 1 %>"
-    class="pagination__link pagination__link--prev <%= posts.length <= pagination.pageSize ? 'disabled' : ''; %>"
+    class="pagination__link pagination__link--prev <%= pagination.numOfItems <= pagination.pageSize ? 'disabled' : ''; %>"
   >
     Next >>
   </a>

@@ -59,6 +59,7 @@ exports.GET = asyncHandler(async (req, res) => {
     pagination: {
       page: currentPageNum,
       pageSize,
+      numOfItems: posts.length,
     },
     memberRole,
     hasClubInvitation: await doesUserHaveClubInvitationAsync(clubId, userId),

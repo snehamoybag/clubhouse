@@ -56,6 +56,7 @@ exports.GET = asyncHandler(async (req, res) => {
     pagination: {
       page: pageNum,
       pageSize,
+      numOfItems: postsOfProfileUser.length,
     },
     styles: "profile",
   });
