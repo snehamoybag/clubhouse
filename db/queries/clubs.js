@@ -25,12 +25,30 @@ exports.getClubAsync = async (clubId) => {
   return rows[0];
 };
 
-exports.getAllClubsAsync = async (limit, offset = 0) => {
+exports.getAllClubsAsync = async (pageSize, pageNum = 1) => {
+  const offset = pageSize * (pageNum - 1);
+
   const { rows } = await pool.query("SELECT * FROM clubs LIMIT $1 OFFSET $2", [
-    limit,
+    pageSize,
     offset,
   ]);
 
+  return rows;
+};
+
+exports.getSearchedClubsAsync = async (searchQuery, pageSize, pageNum = 1) => {
+  const offset = pageSize * (pageNum - 1);
+
+  const query = `
+    SELECT * FROM clubs 
+    WHERE name ILIKE $1 
+    LIMIT $2 OFFSET $3
+  `;
+  const { rows } = await pool.query(query, [
+    `%${searchQuery}%`,
+    pageSize,
+    offset,
+  ]);
   return rows;
 };
 

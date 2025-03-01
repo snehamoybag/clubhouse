@@ -1,0 +1,24 @@
+<div class="searchbar">
+  <form class="form searchbar__form" method="get" action="">
+    <p class="form__input-wrapper">
+      <label for="clubs-search" class="searchbar__label"><span class="sr-only">Search club</span></label>
+      <input 
+        type="search"
+        class="searchbar__input"
+        id="clubs-search"
+        name="searchedClub"
+        value="<%= search.query ? search.query : '' %>"
+        placeholder="Search club"
+        maxlength="128"
+        required
+      />
+    </p>
+    <button type="submit" class="btn btn--search">Search</button>
+  </form>
+
+  <% if (search.query) { %>
+    <p class="searchbar__result">
+      Results for search : "<b><%= search.query %></b>"
+    </p>
+  <% } %>
+</div>
