@@ -1,0 +1,56 @@
+<div class="avatar-wrapper">
+  <img 
+    id="profile-avatar"
+    src="/assets/avatars/<%= profile.avatar || '1_empty.png' %>"
+    alt="profile avatar"
+    class="avatar"
+  >
+
+  <% if (user.id === profile.id) { %>
+    <button id="change-avatar-btn" type="button" class="btn">Change</button>
+
+    <dialog class="avatar-select-modal" id="avatar-select-modal">
+      <h2 class="title title--secondary">Choose an avatar</h2>
+      <form action="./<%= profile.id %>/avatar" method="post">
+        <fieldset class="avatar-select-modal__avatars">
+          <legend class="sr-only">avatars</legend>
+
+        <% avatars.forEach((avatar) => { 
+          const avatarName = (avatar.split("."))[0];
+        %>
+          <p>
+            <label for="<%= avatarName %>" class="avatar__btn">
+              <span class="sr-only"><%= avatarName %></span>
+              
+              <img src="/assets/avatars/<%= avatar %>" alt="<%= avatarName %>">
+              <input 
+                type="radio" 
+                class="form__input"
+                name="avatar"
+                id="<%= avatarName %>"
+                value="<%= avatar %>"
+                required
+                <%= profile.avatar === avatar ? "checked" : ""; %>
+              >
+            </label>
+          </p>
+        <% }); %>
+
+        </fieldset>
+        <div class="btns-wrapper">
+          <button type="submit" class="btn btn--submit">Change</button>
+          <button type="button" id="avatar-modal-close-btn" class="btn btn--close">close</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script>
+      const changeAvatarBtnEl = document.querySelector("#change-avatar-btn");
+      const avatarModalEl = document.querySelector("#avatar-select-modal");
+      const avatarModalCloseBtnEl = document.querySelector("#avatar-modal-close-btn");
+      
+      changeAvatarBtnEl.addEventListener("click", () => avatarModalEl.showModal());
+      avatarModalCloseBtnEl.addEventListener("click",() => avatarModalEl.close());
+    </script>
+  <% } %>
+<div>

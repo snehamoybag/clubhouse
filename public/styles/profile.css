@@ -1,4 +1,5 @@
 @import "./partials/post.css";
+@import "./partials/avatar.css";
 
 .profile-head {
   background-color: var(--clr-neutral-100);

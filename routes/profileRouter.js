@@ -25,4 +25,6 @@ router.get(
   profileController.setttingsGET,
 );
 
+router.post("/:id/avatar", handleNotProfileOwner, profileController.avatarPOST);
+
 module.exports = router;

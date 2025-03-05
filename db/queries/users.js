@@ -115,3 +115,14 @@ exports.updateUserBioAsync = async (id, bio) => {
 
   await pool.query(query, [id, bio]);
 };
+
+// avatar should end with the extension name e.g. "dog.jpg"
+exports.updateUserAvatarAsync = async (id, avatar) => {
+  const query = `
+    UPDATE users 
+      SET avatar = $2 
+    WHERE id = $1;
+  `;
+
+  await pool.query(query, [id, avatar]);
+};

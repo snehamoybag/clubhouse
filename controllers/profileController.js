@@ -9,6 +9,7 @@ const {
   updateUserEmailAsync,
   updateUserPasswordAsync,
   updateUserBioAsync,
+  updateUserAvatarAsync,
 } = require("../db/queries/users");
 const CustomNotFoundError = require("../lib/errors/CustomNotFoundError");
 const { getProfilePostsAsync } = require("../db/queries/posts");
@@ -23,6 +24,8 @@ const {
   bioValidations,
 } = require("../validations/uservalidations");
 const { validationResult } = require("express-validator");
+const getAvatars = require("../lib/getAvatars");
+const CustomBadRequestError = require("../lib/errors/CustomBadRequestError");
 
 exports.GET = asyncHandler(async (req, res) => {
   const profileId = Number(req.params.id);
@@ -47,6 +50,8 @@ exports.GET = asyncHandler(async (req, res) => {
     pageNum,
   );
 
+  const avatars = getAvatars();
+
   res.render("root", {
     title,
     mainView: "profile",
@@ -58,6 +63,7 @@ exports.GET = asyncHandler(async (req, res) => {
       pageSize,
       numOfItems: postsOfProfileUser.length,
     },
+    avatars,
     styles: "profile",
   });
 });
@@ -224,3 +230,16 @@ exports.editBioPOST = [
     res.redirect("/success/edit/?type=Profile&name=bio");
   }),
 ];
+
+exports.avatarPOST = asyncHandler(async (req, res) => {
+  const avatars = getAvatars();
+  const selectedAvatar = req.body.avatar;
+
+  if (!avatars.includes(selectedAvatar)) {
+    throw new CustomBadRequestError("Invalid avatar.");
+  }
+
+  await updateUserAvatarAsync(req.user.id, selectedAvatar);
+
+  res.status(200).redirect(`/profile/${req.user.id}`);
+});
