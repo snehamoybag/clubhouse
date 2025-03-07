@@ -239,7 +239,27 @@ td {
   transform: scale(95%);
 }
 
-.title {
+.btn--like {
+  width: 1em;
+  height: 1em;
+  border: none;
+}
+
+.btn--like > svg {
+  stroke: var(--clr-neutral-700);
+}
+
+.btn--like:hover > svg {
+  stroke: var(--clr-neutral-900);
+  transform: scale(90%);
+}
+
+.btn--like.liked > svg {
+  stroke-width: 2px;
+  stroke: var(--clr-primary-400);
+}
+
+.btn .title {
   font-family: var(--ff-title);
   font-weight: var(--fw-bold);
 }

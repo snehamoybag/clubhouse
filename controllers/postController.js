@@ -23,10 +23,12 @@ exports.GET = asyncHandler(async (req, res) => {
   }
 
   const title =
-    post.message.length > 20 ? post.message.substring(0, 20) : post.message;
+    post.message.length > 50
+      ? post.message.substring(0, 50) + "..."
+      : post.message;
 
   res.render("root", {
-    title: title + "...",
+    title,
     post,
     mainView: "post",
     styles: "post-page",

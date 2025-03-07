@@ -5,15 +5,25 @@
 
 .post__head {
   display: flex;
-  justify-content: space-between;
-  align-items: start;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.post__avatar {
+  width: 2rem;
+  aspect-ratio: 1/1;
+  border: 1px solid var(--clr-neutral-700);
+  border-radius: 50%;
+}
+
+.post__avatar:hover {
+  filter: brightness(75%);
 }
 
 .post__title-wrapper {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
@@ -58,8 +68,68 @@
   color: inherit;
 }
 
+.post__options {
+  align-self: start;
+  margin-left: auto;
+}
+
+.post__options-dialog {
+  border: 1px solid var(--clr-neutral-700);
+  margin-left: auto;
+  background: var(--clr-neutral-100);
+  box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+}
+
+/* the arrow of the dialog bubble */
+.post__options-dialog::before {
+  --size: 0.5rem;
+
+  content: "";
+  width: var(--size);
+  height: var(--size);
+  background: inherit;
+  border: inherit;
+  border-bottom: none;
+  border-right: none;
+  position: absolute;
+  top: calc((var(--size) / 2) * -1);
+  right: 0.25rem;
+  transform: rotate(45deg);
+}
+
 .post__options_list {
   list-style: none;
+}
+
+.post__options_list > li {
+  padding: 0.5em;
+  border-bottom: 1px solid var(--clr-neutral-200);
+}
+
+.post__options_list > li:last-of-type {
+  border-bottom: none;
+}
+
+.post__options_list button,
+.post__options_list a {
+  color: var(--clr-neutral-700);
+  border: none;
+  text-decoration: none;
+}
+
+.post__options_list button:hover,
+.post__options_list a:hover {
+  cursor: pointer;
+  color: var(--clr-primary-400);
+}
+
+.post__options_list button:active,
+.post__options_list a:active {
+  transform: scale(95%);
+}
+
+.post__options_list .danger {
+  color: var(--clr-alert-400);
 }
 
 .post__btn--options {
@@ -70,12 +140,11 @@
   cursor: pointer;
 }
 
-.post__btn--options::after {
-  content: "···";
-}
-
-.post__btn--options.close::after {
-  content: "X";
+.post__btn--options > svg {
+  --size: 1rem;
+  width: var(--size);
+  height: var(--size);
+  fill: var(--clr-neutral-700);
 }
 
 .post__edit-form_input-wrapper {
@@ -83,19 +152,39 @@
 }
 
 .post__edit-form_input {
-  /* height: 7rem; */
   padding: 1em;
   border: 1px solid var(--clr-primary-400);
 }
 
 .post__edit-form_input:focus {
-  border-color: var(--clr-neut-400);
+  border-color: var(--clr-neutral-400);
   outline-color: var(--clr-primary-400);
 }
 
 .post__edit-form_max-limit {
   text-align: right;
   margin-top: 0.5rem;
+}
+
+.post__like-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: min-content;
+  padding: 0.25em 0.75em;
+  border: 1px solid var(--clr-neutral-200);
+  border-radius: 100vh;
+}
+
+.post .btn--like {
+  --size: 1.25em;
+  width: var(--size);
+  height: var(--size);
+}
+
+.post__likes-count {
+  font-family: var(--ff-title);
+  color: var(--clr-neutral-700);
 }
 
 .in-club-icon {

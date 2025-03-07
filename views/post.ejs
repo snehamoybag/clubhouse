@@ -1,9 +1,14 @@
 <main>
+  <h1 class="sr-only"><%= title %></h1>
+
   <article id="post<%= post.id %>" class="post">
     <section class="post__head">
+      <a href="/profile/<%= post.author_id %>" class="post__avatar-wrapper">
+        <img src="/assets/avatars/<%= post.author_avatar || '1_empty.png' %>" alt="author avatar" class="post__avatar">
+      </a>
+
       <div class="post__author-details">
         <div class="post__title-wrapper">
-          <!-- <img src="" alt="" class="post__avatar"> -->
           <h2 class="post__author-name">
             <a href="/profile/<%= post.author_id %>">
               <%= post.author_first_name %> <%= post.author_last_name %>
@@ -42,54 +47,56 @@
           data-btn="post-options"
         >
           <sapn class="sr-only">Open post options</sapn>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000000"><path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z" aria-hidden="true"/></svg>
         </button>
-        <ul id="post-options-<%= post.id %>" class="post__options_list hidden" aria-label="Post options">
-        <% if (post.author_id === user.id) { %>
-          <li>
-            <button 
-              type="button" 
-              id="btn-edit-post"
-              aria-controls="form-post-edit-<%= post.id %>"
-              aria-expanded="false"
-              data-btn="edit-post"
-              data-post-id="<%= post.id %>"
-            >
-              Edit post
-            </button>
-          </li>
-        <% }; %>
+        <dialog id="post-options-<%= post.id %>" class="post__options-dialog" aria-label="Post options">
+          <ul class="post__options_list">
+          <% if (post.author_id === user.id) { %>
+            <li>
+              <button 
+                type="button" 
+                id="btn-edit-post"
+                aria-controls="form-post-edit-<%= post.id %>"
+                aria-expanded="false"
+                data-btn="edit-post"
+                data-post-id="<%= post.id %>"
+              >
+                Edit post
+              </button>
+            </li>
+          <% }; %>
 
-        <% if (post.author_id !== user.id) { %>
-          <li>
-            <a href="/report/post/?postId=<%= post.id %>">Report post</a>
-          </li>
-        <% }; %>
+          <% if (post.author_id !== user.id) { %>
+            <li>
+              <a href="/report/post/?postId=<%= post.id %>" class="danger">Report post</a>
+            </li>
+          <% }; %>
 
-        <% if (post.author_id === user.id || locals.memberRole === "admin" || locals.memberRole === "mod") { %>
-          <li>
-            <form 
-              action="/delete/post/?postId=<%= post.id %>&clubId=<%= locals.club ? club.id : '' ; %>"
-              method="post"
-              onsubmit="return confirm('Are you sure, you want to delete this post?')"
-            >
-              <button type="submit">delete post</button>
-            </form>
-          </li>
-        <% }; %>
+          <% if (post.author_id === user.id || locals.memberRole === "admin" || locals.memberRole === "mod") { %>
+            <li>
+              <form 
+                action="/delete/post/?postId=<%= post.id %>&clubId=<%= locals.club ? club.id : '' ; %>"
+                method="post"
+                onsubmit="return confirm('Are you sure, you want to delete this post?')"
+              >
+                <button type="submit">delete post</button>
+              </form>
+            </li>
+          <% }; %>
 
-        <% if (post.author_id !== user.id && (locals.memberRole === "admin" || locals.memberRole === "mod")) { %>
-          <li>
-            <form 
-              action="<%= locals.club.id %>/control-panel/ban-list/add/?userId=<%= post.author_id %>"
-              method="post"
-              onsubmit="return confirm('Are you sure you want to ban this user from the club?')"
-            >
-              <button type="submit">Ban author</button>
-            </form>
-          </li>
-        <% }; %>
-        
-        </ul>
+          <% if (post.author_id !== user.id && (locals.memberRole === "admin" || locals.memberRole === "mod")) { %>
+            <li>
+              <form 
+                action="<%= locals.club.id %>/control-panel/ban-list/add/?userId=<%= post.author_id %>"
+                method="post"
+                onsubmit="return confirm('Are you sure you want to ban this user from the club?')"
+              >
+                <button type="submit" class="danger">Ban author</button>
+              </form>
+            </li>
+          <% }; %>
+          </ul>
+        </dialog>
       </div>
     </section>
     <section class="post__body">
@@ -117,15 +124,24 @@
 
     </section>
     <section class="post__footer">
-      <p>
-        Number of likes: <%= post.likes_count %>
-      </p>
-      <p>
-        is liked by user: <%= post.is_liked_by_user %>
-      </p>
-      <form action="/like/post/<%= post.id %>" method="post">
-        <button type="submit" class="btn"><%= post.is_liked_by_user ? 'Unlike' : 'Like' %></button>
-      </form>
+      <div class="post__like-wrapper">
+        <form action="/like/post/<%= post.id %>" method="post">
+          <button 
+            type="submit" 
+            class="btn btn--like <%= post.is_liked_by_user ? 'liked' : ''; %>" 
+            title="<%= post.is_liked_by_user ? 'unlike' : 'like'; %>"
+          >
+            <span class="sr-only"><%= post.is_liked_by_user ? 'unlike' : 'like'; %></span>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="black" stroke-width="1" aria-hidden="true">
+              <path d="M2 10H5V22H2V10Z"/>
+              <path d="M7 10V22H18.5C19.88 22 21 20.88 21 19.5V12.5C21 11.12 19.88 10 18.5 10H13.69L14.64 5.43L14.67 5.2C14.67 4.4 14.33 3.67 13.76 3.19L12.5 2L7 10Z"/>
+            </svg>
+          </button>
+        </form>
+        <p class="post__likes-count">
+          <span class="sr-only">likes count:</span> <%= post.likes_count %>
+        </p>
+      </div>
     </section> 
   </article>
 </main>
@@ -150,7 +166,7 @@
     srOnlyEl.textContent = "close post options"
     
 
-    getControlledEl(btnEl).classList.remove("hidden")
+    getControlledEl(btnEl).show()
   }
 
   const closePostOptions = (btnEl) => {
@@ -160,7 +176,7 @@
     btnEl.classList.remove("close")
     srOnlyEl.textContent = "open post options"
 
-    getControlledEl(btnEl).classList.add("hidden")
+    getControlledEl(btnEl).close()
   }
 
   const togglePostOptions = (btnEl) => {

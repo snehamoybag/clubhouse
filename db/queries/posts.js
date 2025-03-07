@@ -25,6 +25,7 @@ exports.getGlobalPostsAsync = async (userId, pageSize, pageNum = 1) => {
       users.id AS author_id, 
       users.first_name AS author_first_name,
       users.last_name AS author_last_name,
+      users.avatar AS author_avatar,
       COALESCE(liked_posts.likes_count, 0) AS likes_count, -- making sure it returns 0 if no rows found while left joining tables
       COALESCE(user_likes.is_liked_by_user, FALSE) AS is_liked_by_user -- making sure it returns FALSE if now rows is found while left joining tables 
 
@@ -55,6 +56,8 @@ exports.getClubPostsAsync = async (userId, clubId, pageSize, pageNum = 1) => {
       users.id AS author_id, 
       users.first_name AS author_first_name,
       users.last_name AS author_last_name, 
+      users.avatar AS author_avatar,
+      COALESCE(liked_posts.likes_count, 0) AS likes_count, -- making sure it returns 0 if no rows found while left joining tables
       members_of_clubs.member_role AS author_club_role,
       COALESCE(liked_posts.likes_count, 0) AS likes_count, -- making sure it returns 0 if no rows found while left joining tables
       COALESCE(user_likes.is_liked_by_user, FALSE) AS is_liked_by_user -- making sure it returns FALSE if now rows is found while left joining tables 
@@ -95,6 +98,8 @@ exports.getProfilePostsAsync = async (
       users.id AS author_id, 
       users.first_name AS author_first_name,
       users.last_name AS author_last_name,
+      users.avatar AS author_avatar,
+      COALESCE(liked_posts.likes_count, 0) AS likes_count, -- making sure it returns 0 if no rows found while left joining tables
       liked_posts.likes_count,
       user_likes.is_liked_by_user,
       COALESCE(liked_posts.likes_count, 0) AS likes_count, -- making sure it returns 0 if no rows found while left joining tables
@@ -171,6 +176,7 @@ exports.getPostAsync = async (userId, postId) => {
     SELECT posts.*, users.id AS author_id, 
       users.first_name AS author_first_name,
       users.last_name AS author_last_name, 
+      users.avatar AS author_avatar,
       members_of_clubs.member_role AS author_club_role,
       COALESCE(liked_posts.likes_count, 0) AS likes_count, -- making sure it returns 0 if no rows found while left joining tables
       COALESCE(user_likes.is_liked_by_user, FALSE) AS is_liked_by_user -- making sure it returns FALSE if now rows is found while left joining tables 
