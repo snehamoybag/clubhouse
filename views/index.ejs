@@ -1,15 +1,22 @@
 <main>
-  <h1 class="sr-only">Global Club</h1>
-
   <% if (locals.user) { %>
+    <h1 class="sr-only">Global Club</h1>
     <%- include("./partials/postBox.ejs") %>
     <%- include("./partials/posts.ejs") %>
-
     <form action="/logout" method="post" class="form">
       <button type="submit" class="btn btn--logout">Logout</button>
     </form>
   <% } else { %>
-    <p>You are not logged in. Please <a href="/login">login</a> to add your message.</p>
-  <% }; %>
-  
+    <section>
+      <%- include("./partials/posts.ejs") %>
+    </section>
+    <section class="login-cta">
+      <h1 class="login-cta__title">There's more to do</h1>
+      <p class="login-cta__description">Join Clubs, create clubs, post messages and farm your Aura.</p>
+      <div class="login-cta__btns">
+        <a href="/login" class="login btn btn--submit">Log in</a>
+        <a href="/sign-up" class="signup btn btn--outline">Create new account</a>
+      </div>
+    </section>
+  <% }%>
 </main>
