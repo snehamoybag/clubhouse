@@ -55,10 +55,7 @@ exports.getUserByEmailAsync = async (email) => {
   const { rows } = await pool.query("SELECT * FROM users WHERE email = $1", [
     email,
   ]);
-  const userDetails = rows[0];
-
-  userDetails.aura = await getUserAuraAsync(userDetails.id);
-  return userDetails;
+  return rows[0];
 };
 
 exports.doesEmailExistAsync = async (email) => {
