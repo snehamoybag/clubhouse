@@ -13,6 +13,7 @@ const getViewData = (fieldValues, errors) => ({
   mainView: "signup",
   fieldValues,
   errors,
+  styles: "signup",
 });
 
 exports.GET = asyncHandler(async (req, res) => {

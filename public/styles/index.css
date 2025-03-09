@@ -1,19 +1,26 @@
 @import "./partials/post.css";
 @import "./partials/postbox.css";
 
+.index {
+  max-width: 40rem;
+  margin: 2rem auto;
+  position: relative;
+}
+
 .login-cta {
   width: 100%;
+  max-width: inherit;
   padding: 2em;
   text-align: center;
   background-color: var(--clr-neutral-100);
   box-shadow: 0 -10px 50px 20px var(--clr-neutral-100);
-  position: fixed;
+  position: sticky;
   bottom: 0;
 }
 
 .login-cta__title {
   font-family: var(--ff-title);
-  font-size: var(--fs-700);
+  font-size: var(--fs-900);
   font-weight: var(--fw-bold);
 }
 

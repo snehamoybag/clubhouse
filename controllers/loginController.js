@@ -4,6 +4,7 @@ const getViewData = (errors) => ({
   title: "Login to Clubhouse",
   mainView: "login",
   errors: errors,
+  styles: "login",
 });
 
 exports.GET = (req, res) => {

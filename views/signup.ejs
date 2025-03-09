@@ -1,97 +1,103 @@
-<main>
-  <h1 class="title title--primary">Create new account</h1>
-  <form action="/sign-up" method="POST" class="form">
-    <p class="form__input-wrapper">
-      <label for="first-name" class="form__label">
-        First name<span class="required" title="required">*</span> :
-      </label>
-      <input
-        type="text"
-        id="first-name"
-        name="firstName"
-        maxlength="35"
-        placeholder="John"
-        value="<%= locals.fieldValues ? fieldValues.firstName : ''; %>"
-        required
-        class="form__input <%= locals.errors && errors.firstName ? 'error' : ''; %>"
-      />
-      <label id="first-name" class="form__label error">
-        <%= locals.errors && errors.firstName ? errors.firstName.msg : ""; %>
-      </label>
-    </p>
-    <p class="form__input-wrapper">
-      <label for="last-name" class="form__label">
-        Last name<span class="required" title="required">*</span> :
-      </label>
-      <input
-        type="text"
-        id="last-name"
-        name="lastName"
-        maxlength="35"
-        placeholder="Doe"
-        value="<%= locals.fieldValues ? fieldValues.lastName : ''; %>"
-        required
-        class="form__input <%= locals.errors && errors.lastName ? 'error' : ''; %>"
-      />
-      <label id="last-name" class="form__label error">
-        <%= locals.errors && errors.lastName ? errors.lastName.msg : ""; %>
-      </label>
-    </p>
-    <p class="form__input-wrapper">
-      <label for="email" class="form__label">
-        Email address<span class="required" title="required">*</span> :
-      </label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        placeholder="johndoe21@email.com"
-        maxlength="320"
-        value="<%= locals.fieldValues ? fieldValues.email : ''; %>"
-        required
-        class="form__input <%= locals.errors && errors.email ? 'error' : ''; %>"
-      />
-      <label id="email" class="form__label error">
-        <%= locals.errors && errors.email ? errors.email.msg : ""; %>
-      </label>
-    </p>
-    <p class="form__input-wrapper">
-      <label for="password" class="form__label">
-        Password<span class="required" title="required">*</span> :
-      </label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        minlength="8"
-        maxlength="32"
-        value="<%= locals.fieldValues ? fieldValues.password : ''; %>"
-        required
-        class="form__input <%= locals.errors && errors.password ? 'error' : ''; %>"
-      />
-      <label id="password" class="form__label error">
-        <%= locals.errors && errors.password ? errors.password.msg : ""; %>
-      </label>
-    </p>
-    <p class="form__input-wrapper">
-      <label for="confirm-password" class="form__label">
-        Confirm password<span class="required" title="required">*</span> :
-      </label>
-      <input
-        type="text"
-        id="confirm-password"
-        name="confirmPassword"
-        minlength="8"
-        maxlength="32"
-        value="<%= locals.fieldValues ? fieldValues.confirmPassword : ''; %>"
-        required
-        class="form__input <%= locals.errors && errors.confirmPassword ? 'error' : ''; %>"
-      />
-      <label id="confirm-password" class="form__label error">
-        <%= locals.errors && errors.confirmPassword ? errors.confirmPassword.msg
-        : ""; %>
-      </label>
-    </p>
-    <button type="submit" class="btn btn--submit">Sign up</button>
-  </form>
+<main class="signup">
+  <div class="hero">
+    <h1 class="hero__title">Create new account</h1>
+    <p class="hero__description">Join Clubs, create clubs, post messages and farm your Aura.</p>
+  </div>
+  <div>
+    <form action="/sign-up" method="POST" class="form">
+      <p class="form__input-wrapper">
+        <label for="first-name" class="form__label">
+          First name<span class="required" title="required">*</span> :
+        </label>
+        <input
+          type="text"
+          id="first-name"
+          name="firstName"
+          maxlength="35"
+          placeholder="John"
+          value="<%= locals.fieldValues ? fieldValues.firstName : ''; %>"
+          required
+          class="form__input <%= locals.errors && errors.firstName ? 'error' : ''; %>"
+        />
+        <label id="first-name" class="form__label error">
+          <%= locals.errors && errors.firstName ? errors.firstName.msg : ""; %>
+        </label>
+      </p>
+      <p class="form__input-wrapper">
+        <label for="last-name" class="form__label">
+          Last name<span class="required" title="required">*</span> :
+        </label>
+        <input
+          type="text"
+          id="last-name"
+          name="lastName"
+          maxlength="35"
+          placeholder="Doe"
+          value="<%= locals.fieldValues ? fieldValues.lastName : ''; %>"
+          required
+          class="form__input <%= locals.errors && errors.lastName ? 'error' : ''; %>"
+        />
+        <label id="last-name" class="form__label error">
+          <%= locals.errors && errors.lastName ? errors.lastName.msg : ""; %>
+        </label>
+      </p>
+      <p class="form__input-wrapper">
+        <label for="email" class="form__label">
+          Email address<span class="required" title="required">*</span> :
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="johndoe21@email.com"
+          maxlength="320"
+          value="<%= locals.fieldValues ? fieldValues.email : ''; %>"
+          required
+          class="form__input <%= locals.errors && errors.email ? 'error' : ''; %>"
+        />
+        <label id="email" class="form__label error">
+          <%= locals.errors && errors.email ? errors.email.msg : ""; %>
+        </label>
+      </p>
+      <p class="form__input-wrapper">
+        <label for="password" class="form__label">
+          Password<span class="required" title="required">*</span> :
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          minlength="8"
+          maxlength="32"
+          value="<%= locals.fieldValues ? fieldValues.password : ''; %>"
+          required
+          class="form__input <%= locals.errors && errors.password ? 'error' : ''; %>"
+        />
+        <label id="password" class="form__label error">
+          <%= locals.errors && errors.password ? errors.password.msg : ""; %>
+        </label>
+      </p>
+      <p class="form__input-wrapper">
+        <label for="confirm-password" class="form__label">
+          Confirm password<span class="required" title="required">*</span> :
+        </label>
+        <input
+          type="text"
+          id="confirm-password"
+          name="confirmPassword"
+          minlength="8"
+          maxlength="32"
+          value="<%= locals.fieldValues ? fieldValues.confirmPassword : ''; %>"
+          required
+          class="form__input <%= locals.errors && errors.confirmPassword ? 'error' : ''; %>"
+        />
+        <label id="confirm-password" class="form__label error">
+          <%= locals.errors && errors.confirmPassword ? errors.confirmPassword.msg
+          : ""; %>
+        </label>
+      </p>
+      <button type="submit" class="btn btn--submit">Sign up</button>
+    </form>
+    <p class="signup__login-paragraph">Already have an account? <a href="/login">Login here</a>.</p>
+  </div>
 </main>

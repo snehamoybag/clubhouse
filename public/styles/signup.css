@@ -1,0 +1,13 @@
+.signup {
+  max-width: 30rem;
+  margin: 0 auto;
+}
+
+.signup > * {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.signup__login-paragraph {
+  margin-top: 1rem;
+}

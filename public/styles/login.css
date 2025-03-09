@@ -1,0 +1,27 @@
+.login {
+  max-width: 30rem;
+  margin: 0 auto;
+}
+
+.login > * {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.login__signup-paragraph {
+  margin-top: 1rem;
+}
+
+/* tablets */
+@media (min-width: 48em) {
+  .login {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    max-width: 45rem;
+  }
+
+  .login > * {
+    flex-basis: 100%;
+  }
+}
