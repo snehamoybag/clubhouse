@@ -214,6 +214,10 @@ td {
   display: none;
 }
 
+.btn {
+  text-decoration: none;
+}
+
 .btn:hover {
   cursor: pointer;
 }
@@ -300,9 +304,10 @@ td {
 
 .title--primary {
   font-size: var(--fs-700);
-  padding: 1em;
+  padding: 0.75em 1em;
   color: var(--clr-neutral-900);
-  border: 1px solid var(--clr-neutral-700);
+  border-top: 1px solid var(--clr-neutral-700);
+  border-bottom: 1px solid var(--clr-neutral-700);
 }
 
 .form > * + * {

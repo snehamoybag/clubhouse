@@ -1,21 +1,23 @@
 @import "./partials/post.css";
 @import "./partials/avatar.css";
 
+.profile {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
 .profile-head {
-  background-color: var(--clr-neutral-100);
   padding: 2em;
 }
 
 .profile-head__details {
-  display: flex;
-  gap: 1rem;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 1.5rem;
 }
 
-.profile__avatar {
-  width: 5rem;
-  aspect-ratio: 1/1;
-  object-fit: contain;
-  object-position: center;
+.avatar-wrapper {
+  align-self: center;
 }
 
 .profile__name-wrapper {
@@ -30,6 +32,46 @@
 .profile__id {
   font-weight: var(--fw-regular);
   opacity: 0.5;
+}
+
+.profile__bio {
+  margin-top: 0.5rem;
+}
+
+.profile__aura {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: 5rem;
+  padding: 0.25em 0.75em;
+  border: 1px solid var(--clr-neutral-200);
+  border-radius: 100vh;
+  margin-top: 1rem;
+}
+
+.profile__aura_points {
+  font-family: var(--ff-title);
+  font-size: var(--fs-700);
+  font-weight: var(--fw-bold);
+}
+
+.profile__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.profile__actions > .btn {
+  font-size: var(--fs-200);
+  font-weight: var(--fw-regular);
+  padding: 0.75em;
+  border-width: 1px;
+}
+
+.profile__actions_report:hover {
+  color: var(--clr-alert-400);
+  border-color: inherit;
 }
 
 .profile .posts {

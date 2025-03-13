@@ -4,29 +4,31 @@
     <h2 class="sr-only">Profile details</h2>
     <div class="profile-head__details">
       <%- include("./partials/avatar.ejs") %>
-      <div class="profile-head__texts-wrapper">
+      <div class="profile-head__text-wrapper">
         <div class="profile__name-wrapper">
           <h3 class="profile__name"><%= profile.first_name %> <%= profile.last_name %></h3>
           <p class="profile__id" title="User Id">#<%= profile.id %></p>
         </div>
         <% if (profile.bio) { %>
-          <div class="profile__bio-wrapper">
-            <p class="profile__bio"><%= profile.bio %></p>
-            <% if (user.id === profile.id) { %>
-              <a href="/edit/profile/<%= profile.id %>/bio">update bio</a>
-            <% } %>
-          </div>
+          <p class="profile__bio"><%= profile.bio %></p>
         <% } %>
-        <p class="profile__aura">Aura: <b><%= profile.aura %></b></p>
+        <p class="profile__aura" title="Aura"><span class="sr-only">Aura :</span> 
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="hsl(258, 50%, 43%)"><path d="M240-400q0 52 21 98.5t60 81.5q-1-5-1-9v-9q0-32 12-60t35-51l113-111 113 111q23 23 35 51t12 60v9q0 4-1 9 39-35 60-81.5t21-98.5q0-50-18.5-94.5T648-574q-20 13-42 19.5t-45 6.5q-62 0-107.5-41T401-690q-39 33-69 68.5t-50.5 72Q261-513 250.5-475T240-400Zm240 52-57 56q-11 11-17 25t-6 29q0 32 23.5 55t56.5 23q33 0 56.5-23t23.5-55q0-16-6-29.5T537-292l-57-56Zm0-492v132q0 34 23.5 57t57.5 23q18 0 33.5-7.5T622-658l18-22q74 42 117 117t43 163q0 134-93 227T480-80q-134 0-227-93t-93-227q0-129 86.5-245T480-840Z"/></svg>
+          <span class="profile__aura_points"><%= profile.aura %></span>
+        </p>
       </div>
       <% if (user.id === profile.id) { %>
         <a href="./<%= profile.id %>/settings" title="Profile Setttings">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="hsl(0, 0%, 20%)"><path d="M400-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM80-160v-112q0-33 17-62t47-44q51-26 115-44t141-18h14q6 0 12 2-8 18-13.5 37.5T404-360h-4q-71 0-127.5 18T180-306q-9 5-14.5 14t-5.5 20v32h252q6 21 16 41.5t22 38.5H80Zm560 40-12-60q-12-5-22.5-10.5T584-204l-58 18-40-68 46-40q-2-14-2-26t2-26l-46-40 40-68 58 18q11-8 21.5-13.5T628-460l12-60h80l12 60q12 5 22.5 11t21.5 15l58-20 40 70-46 40q2 12 2 25t-2 25l46 40-40 68-58-18q-11 8-21.5 13.5T732-180l-12 60h-80Zm40-120q33 0 56.5-23.5T760-320q0-33-23.5-56.5T680-400q-33 0-56.5 23.5T600-320q0 33 23.5 56.5T680-240ZM400-560q33 0 56.5-23.5T480-640q0-33-23.5-56.5T400-720q-33 0-56.5 23.5T320-640q0 33 23.5 56.5T400-560Zm0-80Zm12 400Z"/></svg>
         </a>
-      <% } else { %>
-        <a href="/club/invite/?invitedUserId=<%= profile.id %>">Invite to club</a>
       <% } %>
     </div>
+    <% if (user.id !== profile.id) { %>
+      <div class="profile__actions">
+        <a href="/club/invite/?invitedUserId=<%= profile.id %>" class="profile__actions_invite btn btn--submit">Invite to club</a>
+        <a href="/report/profile/<%= profile.id %>/?reporterId=<%= user.id %>" class="profile__actions_report btn btn--outline">Report User</a>
+      </div>
+    <% } %>
   </section>
   
   <section class="profile-posts">

@@ -7,7 +7,7 @@
   >
 
   <% if (user.id === profile.id) { %>
-    <button id="change-avatar-btn" type="button" class="btn">Change</button>
+    <button id="change-avatar-btn" type="button" class="avatar-wrapper__change-btn btn btn--outline">Change</button>
 
     <dialog class="avatar-select-modal" id="avatar-select-modal">
       <h2 class="title title--secondary">Choose an avatar</h2>
@@ -39,7 +39,7 @@
         </fieldset>
         <div class="btns-wrapper">
           <button type="submit" class="btn btn--submit">Change</button>
-          <button type="button" id="avatar-modal-close-btn" class="btn btn--close">close</button>
+          <button type="button" id="avatar-modal-close-btn" class="btn btn--outline" autofocus>Close</button>
         </div>
       </form>
     </dialog>
@@ -53,4 +53,4 @@
       avatarModalCloseBtnEl.addEventListener("click",() => avatarModalEl.close());
     </script>
   <% } %>
-<div>
+</div>
