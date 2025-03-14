@@ -1,17 +1,21 @@
-<main>
+<main class="notifications">
   <h1 class="title title--primary"><%= title %></h1>
   <ul class="notifications__list">
     <% notifications.forEach((notification) => { %>
-      <li 
-        data-name="notification-item"
-        data-notification-id="<%= notification.id %>"
-        data-notification-link="<%= notification.link %>"
-      >
-        <p>
-          <%= notification.message %>
-          <time datetime="<%= notification.date %>"><%= locals.formatDateDistanceToNow(notification.date) %></time>
+      <li class="notification <%= notification.is_read ? '' : 'unread' %>">
+        <p class="notification__message-wrapper">
+          <a 
+            href="<%= notification.link %>"
+            data-name="notification-link"
+            data-notification-id="<%= notification.id %>"
+            class="notification__message"
+          >
+            <%= notification.message %>
+          </a>
+          <time class="notification__time" datetime="<%= notification.date %>">
+            <%= locals.formatDateDistanceToNow(notification.date) %>
+          </time>
         </p>
-        <%= notification.is_read %>
       </li>
     <% }); %>
   </ul>
@@ -37,13 +41,12 @@
       }
     }
 
-    const notificationEls = document.querySelectorAll("[data-name='notification-item']")
+    const notificationEls = document.querySelectorAll("[data-name='notification-link']")
     notificationEls.forEach((notificationEl) => {
       notificationEl.addEventListener(
         "click", 
         () => {
           markAsReadAsync(notificationEl.dataset.notificationId)
-          location.href = notificationEl.dataset.notificationLink
         },
       )
     })

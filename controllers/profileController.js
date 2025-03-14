@@ -75,6 +75,7 @@ exports.noitficationsGET = asyncHandler(async (req, res) => {
     title: "Notifications",
     mainView: "userNotifications",
     notifications,
+    styles: "notifications",
   });
 });
 

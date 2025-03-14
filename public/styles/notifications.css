@@ -1,0 +1,36 @@
+.notifications {
+  max-width: var(--container-700);
+  margin: 0 auto;
+}
+
+.notifications__list {
+  list-style: none;
+}
+
+.notification {
+  padding: 1em;
+  border-bottom: 1px solid var(--clr-neutral-200);
+}
+
+.notification__message-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.notification__message {
+  color: var(--clr-neutral-700);
+  text-decoration: none;
+}
+
+.notification.unread .notification__message {
+  font-weight: var(--fw-bold);
+  color: var(--clr-primary-400);
+}
+
+.notification__time {
+  font-size: var(--fs-200);
+  font-weight: var(--fw-regular);
+  flex-shrink: 0;
+}

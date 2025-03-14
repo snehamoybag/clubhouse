@@ -20,6 +20,8 @@
   --fs-400: 1rem;
   --fs-700: 1.25rem;
   --fs-900: 2rem;
+
+  --container-700: 40rem;
 }
 
 /* CSS RESET */
@@ -189,6 +191,7 @@ td {
   font-weight: var(--fw-bold);
   font-size: 0.75rem;
   text-align: center;
+  padding: 0 2px;
   background-color: var(--clr-alert-400);
   color: var(--clr-neutral-100);
   position: absolute;
@@ -306,7 +309,6 @@ td {
   font-size: var(--fs-700);
   padding: 0.75em 1em;
   color: var(--clr-neutral-900);
-  border-top: 1px solid var(--clr-neutral-700);
   border-bottom: 1px solid var(--clr-neutral-700);
 }
 
