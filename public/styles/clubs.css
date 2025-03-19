@@ -1,0 +1,231 @@
+.clubs {
+  /* max-width: var(--container-700); */
+  margin: 0 auto;
+}
+
+.clubs__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1em;
+  border-bottom: 1px solid var(--clr-neutral-700);
+}
+
+.clubs__new-btn > svg {
+  --size: 2rem;
+  width: var(--size);
+  height: var(--size);
+  fill: var(--clr-primary-400);
+}
+
+.clubs__new-btn:hover > svg {
+  fill: var(--clr-neutral-900);
+}
+.clubs__search-form {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.clubs__searchbar {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  max-width: 30rem;
+  padding: 0.75em 1em;
+  border: 1px solid var(--clr-neutral-200);
+  border-radius: 100vh;
+}
+
+.clubs__searchbar:hover {
+  border-color: var(--clr-neutral-700);
+}
+
+.clubs__searchbar:focus-within {
+  border-color: var(--clr-neutral-900);
+  outline: 1px solid var(--clr-neutral-900);
+}
+
+.clubs__searchbar input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+}
+
+.clubs__searchbar_btn {
+  border: none;
+}
+
+.clubs__searchbar_btn > svg {
+  fill: var(--clr-neutral-700);
+}
+
+.clubs__searchbar_btn:hover > svg,
+.clubs__searchbar_btn:focus > svg {
+  fill: var(--clr-neutral-900);
+}
+
+.clubs__filters {
+  align-self: stretch;
+  position: relative;
+}
+
+.clubs__filters_btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 100%;
+  padding: 0.75em 1em;
+  border: 1px solid var(--clr-neutral-200);
+  border-radius: 100vh;
+}
+
+.clubs__filters_btn:hover {
+  color: var(--clr-neutral-700);
+  border-color: var(--clr-neutral-700);
+}
+
+.clubs__filters_btn:focus {
+  color: var(--clr-neutral-900);
+  border-color: var(--clr-neutral-900);
+}
+
+.clubs__filters_btn > svg {
+  --size: 1em;
+
+  width: var(--size);
+  height: var(--size);
+  fill: currentColor;
+}
+
+.clubs__filters_modal {
+  width: max-content;
+  padding: 0.5em;
+  border: 1px solid var(--clr-neutral-700);
+  margin-left: auto;
+  margin-top: 0.75rem;
+  background: var(--clr-neutral-100);
+  box-shadow: 5px 5px 5px hsla(0, 0%, 0%, 0.1);
+}
+
+/* arrow of the bubble */
+.clubs__filters_modal::before {
+  --size: 1rem;
+
+  content: "";
+  width: var(--size);
+  height: var(--size);
+  background: inherit;
+  border: inherit;
+  border-bottom: none;
+  border-right: none;
+  position: absolute;
+  top: calc((var(--size) / 2) * -1);
+  right: 10%;
+  transform: rotate(45deg);
+}
+
+.clubs__filters_modal .form__input-wrapper {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.5rem;
+  justify-content: start;
+}
+
+.clubs__filters_modal fieldset {
+  border: 1px solid var(--clr-neutral-200);
+  padding: 0.5em;
+}
+
+.clubs__filters_modal fieldset > * + * {
+  margin-top: 0.5rem;
+}
+
+.clubs__filters_modal .btn--submit {
+  display: block;
+  padding: 0.5em 0.75em;
+  margin-top: 0.5rem;
+}
+
+.clubs__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.club {
+  padding: 1em;
+  border: 1px solid var(--clr-neutral-200);
+}
+
+.club__details > * + * {
+  margin-top: 0.125rem;
+}
+
+.club__name {
+  font-size: 1.125rem;
+  font-weight: var(--fw-bold);
+}
+
+.club__members {
+  margin-top: 1rem;
+}
+
+.club__privacy > span {
+  text-transform: capitalize;
+}
+
+.club__privacy > .open {
+  color: var(--clr-neutral-900);
+}
+
+.club__privacy > .invite-only {
+  color: var(--clr-primary-400);
+}
+
+.club__privacy > .closed {
+  color: var(--clr-alert-400);
+}
+
+.club__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.club__icon {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25em 0.75em;
+  text-decoration: none;
+  color: var(--clr-neutral-700);
+  border: 1px solid var(--clr-neutral-200);
+  border-radius: 100vh;
+}
+
+.club__icon > svg {
+  --size: 1em;
+
+  width: var(--size);
+  height: var(--size);
+  fill: currentColor;
+}
+
+.club__icon:hover {
+  cursor: pointer;
+  color: var(--clr-neutral-900);
+}
+
+.club__icon.club__icon--joined:hover {
+  cursor: initial;
+  color: var(--clr-neutral-700);
+}

@@ -25,26 +25,58 @@ exports.getClubAsync = async (clubId) => {
   return rows[0];
 };
 
-exports.getAllClubsAsync = async (pageSize, pageNum = 1) => {
+const membersCountSubQuery = `
+  SELECT club_id, COUNT(member_id) AS members_count
+  FROM members_of_clubs 
+  GROUP BY club_id
+`;
+
+const userRoleSubQuery = `
+  SELECT club_id, member_role AS user_role
+  FROM members_of_clubs
+  WHERE member_id = $1 -- $1 must represent user id
+`;
+
+const clubsSelectQuery = `
+  SELECT 
+    clubs.*, 
+    COALESCE(clubs_members.members_count, 0) AS members_count,
+    roles.user_role
+  FROM clubs 
+  INNER JOIN (${membersCountSubQuery}) 
+    AS clubs_members ON clubs_members.club_id = clubs.id 
+  LEFT JOIN (${userRoleSubQuery}) 
+    AS roles ON roles.club_id = clubs.id
+`;
+
+exports.getClubsAsync = async (userId, pageSize, pageNum = 1) => {
   const offset = pageSize * (pageNum - 1);
 
-  const { rows } = await pool.query("SELECT * FROM clubs LIMIT $1 OFFSET $2", [
-    pageSize,
-    offset,
-  ]);
+  const query = `
+    ${clubsSelectQuery}
+    LIMIT $2 OFFSET $3
+  `;
+
+  const { rows } = await pool.query(query, [userId, pageSize, offset]);
 
   return rows;
 };
 
-exports.getSearchedClubsAsync = async (searchQuery, pageSize, pageNum = 1) => {
+exports.getSearchedClubsAsync = async (
+  userId,
+  searchQuery,
+  pageSize,
+  pageNum = 1,
+) => {
   const offset = pageSize * (pageNum - 1);
 
   const query = `
-    SELECT * FROM clubs 
-    WHERE name ILIKE $1 
-    LIMIT $2 OFFSET $3
+    ${clubsSelectQuery}
+    WHERE name ILIKE $2 
+    LIMIT $3 OFFSET $4
   `;
   const { rows } = await pool.query(query, [
+    userId,
     `%${searchQuery}%`,
     pageSize,
     offset,

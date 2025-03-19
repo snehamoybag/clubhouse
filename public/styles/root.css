@@ -234,12 +234,13 @@ td {
   font-weight: var(--fw-bold);
   text-transform: capitalize;
   padding: 1em 2.5em;
+  border: 2px solid;
 }
 
 .btn--submit {
   background-color: var(--clr-primary-400);
   color: var(--clr-neutral-100);
-  border: none;
+  border-color: var(--clr-neutral-900);
 }
 
 .btn--submit:hover {
@@ -249,7 +250,7 @@ td {
 .btn--outline {
   --clr: var(--clr-neutral-700);
   color: var(--clr);
-  border: 2px solid var(--clr);
+  border-color: var(--clr);
 }
 
 .btn--outline:hover {

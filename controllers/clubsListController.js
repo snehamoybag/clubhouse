@@ -1,10 +1,8 @@
 const asyncHandler = require("express-async-handler");
-const {
-  getAllClubsAsync,
-  getSearchedClubsAsync,
-} = require("../db/queries/clubs");
+const { getClubsAsync, getSearchedClubsAsync } = require("../db/queries/clubs");
 
 exports.GET = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
   const pageSize = 30;
   const currentPage = Number(req.query.page) || 1;
 
@@ -12,9 +10,14 @@ exports.GET = asyncHandler(async (req, res) => {
   let clubs = [];
 
   if (searchQuery) {
-    clubs = await getSearchedClubsAsync(searchQuery, pageSize, currentPage);
+    clubs = await getSearchedClubsAsync(
+      userId,
+      searchQuery,
+      pageSize,
+      currentPage,
+    );
   } else {
-    clubs = await getAllClubsAsync(pageSize, currentPage);
+    clubs = await getClubsAsync(userId, pageSize, currentPage);
   }
 
   res.render("root", {
@@ -29,5 +32,6 @@ exports.GET = asyncHandler(async (req, res) => {
       page: currentPage,
       pageSize,
     },
+    styles: "clubs",
   });
 });

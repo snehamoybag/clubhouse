@@ -8,3 +8,4 @@
 - Profile avatar
 - User Aura ✅
 - polish the ui
+- fix filters in clubs search
